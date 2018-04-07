@@ -1,19 +1,34 @@
 import { h } from 'hyperapp'
 
 export default ({ stream, openStream }) => {
-    const onclick = () => {
-        openStream({
-            channelName: stream.channel.name,
-            channelURL: stream.channel.url
-        })
-    }
+    const channelName = stream.channel.name
+    const channelURL = stream.channel.url
+    openStream = openStream.bind(null, { channelName, channelURL })
 
     return (
-        <div className='stream' onclick={ onclick }>
-            <h2 className='stream_channelName'>{ stream.channel.name }</h2>
-            <h4 className='stream_viewers'>{ stream.viewers }</h4>
-            <h3 className='stream_title'>{ stream.channel.status }</h3>
-            <h4 className='stream_game'>{ stream.game }</h4>
+        <div className='stream' onclick={ openStream }>
+            <img src={ stream.preview.medium } />
+            <div className='stream_info'>
+                <div className='stream_info_inner'>
+                    <div className='stream_channelInfo'>
+                        <h1 id={channelName + '_displayName'}>
+                            {stream.channel.display_name}
+                        </h1>
+
+                        <h3 id={channelName + '_viewers'}>
+                            <strong>{ stream.viewers }</strong>
+                        </h3>
+                    </div>
+
+                    <h2 id={channelName + '_game'}>
+                        {stream.game}
+                    </h2>
+
+                    <h3 id={channelName + '_title'}>
+                        {stream.channel.status}
+                    </h3>
+                </div>
+            </div>
         </div>
     )
 }

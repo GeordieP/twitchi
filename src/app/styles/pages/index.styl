@@ -1,0 +1,22 @@
+#streamsWrap
+    display: flex
+    justify-content: center
+
+#streams
+    // sass variables (for calculations; using CSS calc() is not working in media query setups)
+    $tileWidth = 320px
+    $gridGap = 15px
+    padding: $gridGap 0
+
+    // custom properties
+    --numCols: 1
+
+    display: inline-grid
+    grid-gap: $gridGap
+    grid-template-columns: repeat(var(--numCols), $tileWidth)
+
+    for n in (2..6)
+        // calculate breakpoint widths based on n desired columns and grid item/grid gap settings
+        // (tile width * desired col count) + (number of grid gaps * grid gap size)
+        @media (min-width: ($tileWidth * n + (n - 1) * $gridGap))
+            --numCols: n
