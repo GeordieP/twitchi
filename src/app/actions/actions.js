@@ -9,7 +9,7 @@ export default {
     setState: s => s,
 
     // TWITCH //
-    getStreamList: () => ipc.send('twitch-get-follow-list'),
+    refreshFollowList: () => ipc.send('twitch-get-follow-list'),
 
     // STREAMLINK //
     openStream: ({ channelName, channelURL }) => (state, actions) => {

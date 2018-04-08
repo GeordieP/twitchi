@@ -29,6 +29,11 @@ ipcActions.listen(dispatch)
 // send initial IPC messages to backend to get things rolling
 ipcActions.init()
 
+// in production mode (built application), send get follow list request on startup
+if (process.NODE_ENV === 'production') {
+    dispatch.refreshFollowList()
+}
+
 //
 //
 
