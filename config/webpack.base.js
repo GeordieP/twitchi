@@ -24,7 +24,7 @@ module.exports = {
             path.resolve('./src'),
             path.resolve('./src/app'),
         ],
-        extensions: ['.js', '.json', '.styl']
+        extensions: ['.js', '.jsx', '.json', '.styl']
     },
 
     plugins: [
@@ -48,7 +48,7 @@ module.exports = {
         rules: [
             {
                 // additional babel config exists in package.json babel section
-                test: /\.js?$/,
+                test: /\.js?x?$/,
                 loader: 'babel-loader'
             },
             {

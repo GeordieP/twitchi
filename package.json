@@ -73,7 +73,8 @@
                         "resolver",
                         {
                             "resolveDirs": [
-                                "src/app"
+                                "src/app",
+                                "test"
                             ]
                         }
                     ]
