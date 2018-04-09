@@ -32,7 +32,7 @@ function start() {
 
     if (process.env.NODE_ENV === 'development') {
         mainWindow.loadURL('http://localhost:8080')
-        // mainWindow.setMenu(null)
+        mainWindow.setMenu(null)
         mainWindow.webContents.openDevTools()
     } else {
         mainWindow.loadURL('file://' + path.resolve(__dirname, 'index.html'))

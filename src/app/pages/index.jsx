@@ -4,13 +4,13 @@ import { Link } from '@geordiep/h_tlrouter'
 import Stream from 'components/Stream'
 
 export default (state, actions) => (
-    <main id='content'>
-        <div>
-            <Link to='/preferences'>Preferences</Link>
-            <h1>Stream List</h1>
-            <button onclick={ actions.refreshFollowList }>Refresh</button>
-        </div>
-        <div id='streamsWrap'>
+    <main>
+        <nav>
+
+            <Link className='btn' to='/preferences'>🄿</Link>
+            <a href='#' className='btn' onclick={ actions.refreshFollowList }>🅁</a>
+        </nav>
+        <section className='content' id='streamsWrap'>
             <div id='streams'>
                 {
                     state.streams.length > 0
@@ -23,6 +23,6 @@ export default (state, actions) => (
                     : <p>No followed channels are currently live</p>
                 }
             </div>
-        </div>
+        </section>
     </main>
 )
