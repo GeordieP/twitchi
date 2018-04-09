@@ -30,7 +30,7 @@ ipcActions.listen(dispatch)
 ipcActions.init()
 
 // in production mode (built application), send get follow list request on startup
-if (process.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     dispatch.refreshFollowList()
 }
 
