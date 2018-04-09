@@ -15,26 +15,26 @@ describe('Index page', () => {
                 streams: mocks.store.streams.empty
             })
 
-            const el_streamsContainer = ElFinder(index(state, actions))
+            const el_noLiveContainer = ElFinder(index(state, actions))
                 .firstChild.byId('streamsWrap')
-                .firstChild.byId('streams')
+                .firstChild.byId('noLive')
 
             // streams container shold contain 1 child element
-            expect(el_streamsContainer.children.length)
+            expect(el_noLiveContainer.children.length)
                 .toEqual(1)
 
             // it should be the expected tag
-            expect(el_streamsContainer
+            expect(el_noLiveContainer
                    .firstChild.raw()
                    .nodeName)
                 .toEqual('p')
 
             // it should contain the expected string
-            // expect(streamsContainer.children[0].children[0])
-            expect(el_streamsContainer
+            // expect(noLiveContainer.children[0].children[0])
+            expect(el_noLiveContainer
                    .firstChild.byType('p')
                    .firstChild.raw())
-                .toEqual('No followed channels are currently live')
+                .toEqual('No followed channels are currently live.')
         })
 
         it('renders 1 Stream component when 1 stream is live', () => {

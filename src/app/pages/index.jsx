@@ -11,18 +11,22 @@ export default (state, actions) => (
             <a href='#' className='btn' onclick={ actions.refreshFollowList }>🅁</a>
         </nav>
         <section className='content' id='streamsWrap'>
-            <div id='streams'>
-                {
-                    state.streams.length > 0
-                    ? state.streams.map(stream => (
-                        <Stream
+          {state.streams.length > 0 ? (
+              <div id='streams'>
+              {
+                  state.streams.map(stream => (
+                      <Stream
                           stream={ stream }
                           key={ 'stream_'+stream }
-                          openStream={ actions.openStream }/>
-                    ))
-                    : <p>No followed channels are currently live</p>
-                }
-            </div>
+                          openStream={ actions.openStream } />
+                  ))
+              }
+              </div>
+          ) : (
+          <div id='noLive'>
+              <p>No followed channels are currently live.</p>
+          </div>
+          )}
         </section>
     </main>
 )

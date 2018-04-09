@@ -47,15 +47,15 @@ nav
 
 section.content
     grid-area: content
-    height: auto
     overflow: auto
 
-@media (min-width: 1150px)
+@media (min-width: 990px)
     :root
         --size_navBar: 60px
     main
         grid-template-rows: none
         grid-template-columns: var(--size_navBar) 1fr
         grid-template-areas: "nav content"
+
     nav
         flex-direction: column
