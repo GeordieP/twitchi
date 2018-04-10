@@ -22,6 +22,17 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('auth-refresh-token-res', (evt, res) => {
+        try {
+            res = parseResponse(res)
+            if (res.isError()) throw res
+
+            console.log('token refreshed successfully')
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
     ipc.on('twitch-get-follow-list-res', (evt, res) => {
         try {
             const { streams } = parseResponse(res).expect()

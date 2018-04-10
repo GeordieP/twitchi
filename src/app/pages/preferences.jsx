@@ -12,6 +12,8 @@ export default (state, actions) => (
             <div>
                 <h1>Preferences</h1>
                 <p>Prefs: { JSON.stringify(state.prefs) }</p>
+
+                <button onclick={ actions.refreshToken }>Change Account</button>
             </div>
         </section>
     </main>

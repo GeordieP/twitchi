@@ -9,6 +9,7 @@ export default {
     setState: s => s,
 
     // TWITCH //
+    refreshToken: () => ipc.send('auth-refresh-token'),
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
 
     // STREAMLINK //

@@ -33,6 +33,19 @@ function listen() {
         ipcReplyJson('auth-get-token-res', result)
     })
 
+    ipc.on('auth-refresh-token', async function(evt) {
+        let result
+
+        try {
+            const token = await auth.refreshToken()
+            result = Result.newOk()
+        } catch(e) {
+            result = Result.newError(e, 'ipcServer @ auth-refresh-token')
+        }
+        
+        ipcReplyJson('auth-refresh-token-res', result)
+    })
+
     /* TWITCH */
     ipc.on('twitch-get-follow-list', async function(evt) {
         let result

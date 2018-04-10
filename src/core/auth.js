@@ -54,6 +54,10 @@ const spawnLoginWindow = (onRedirect, onClosed, onCrashed) => new Promise((resol
 // save token to configuration file
 module.exports.saveToken = token => new Promise((resolve, reject) => {
     try {
+        if (token == null || token.length === 0) {
+            throw 'Received auth token was empty or null.'
+        }
+
         config.set('user-access-token', token)
 
         // include saved token in response
@@ -72,7 +76,8 @@ module.exports.getTokenExistingOrNew = () => new Promise((resolve, reject) => {
         res = config.get('user-access-token')
     } catch(e) {
         e.message = 'Error reading config file. ' + e.message
-        return reject(e)
+        reject(e)
+        return
     }
 
     // check token was found in in file, resolve it if so
@@ -99,7 +104,8 @@ module.exports.newToken = () => new Promise(async (resolve, reject) => {
             onCrashed
         )
     } catch(e) {
-        return reject(e)
+        reject(e)
+        return
     }
 
     function onRedirect(e, oldUrl, url) {
@@ -149,6 +155,22 @@ module.exports.newToken = () => new Promise(async (resolve, reject) => {
     }
 })
 
+// TODO: token refreshing should be done automatically if we detect the token has expired
+
+module.exports.refreshToken = () => new Promise((resolve, reject) => {
+    try {
+        // forget currently saved token
+        config.set('user-access-token', '')
+    } catch(e) {
+        reject(e)
+        return
+    }
+
+    // get new token
+    module.exports.getTokenExistingOrNew()
+        .then(resolve)
+        .catch(reject)
+})
+
 // TODO
-// module.exports.refreshToken = () => {} // token refreshing should be done automatically if we detect the token has expired
 // module.exports.revokeToken = () => {}
