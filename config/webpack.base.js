@@ -9,7 +9,9 @@ module.exports = {
         // app
         path.resolve('./src/app/main.js'),
         // styles
-        path.resolve('./src/app/styles/main.styl')
+        path.resolve('./src/app/styles/main.styl'),
+        // fontawesome
+        path.resolve('./src/app/fontawesome/css/fontawesome-all.min.css')
     ],
 
     output: {
@@ -55,6 +57,20 @@ module.exports = {
                 // stylus
                 test: /\.styl$/,
                 use: ['style-loader', 'css-loader', 'stylus-loader' ]
+            },
+            {
+                // CSS
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                    }
+                }]
             },
             {
                 test: /\.html$/,

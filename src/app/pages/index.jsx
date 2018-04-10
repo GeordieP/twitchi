@@ -7,8 +7,12 @@ export default (state, actions) => (
     <main>
         <nav>
 
-            <Link className='btn' to='/preferences'>🄿</Link>
-            <a href='#' className='btn' onclick={ actions.refreshFollowList }>🅁</a>
+          <Link className='btn' to='/preferences' title='Preferences'>
+              <i className='fas fa-cog'></i> 
+          </Link>
+          <a href='#' className='btn' title='Refresh List' onclick={ actions.refreshFollowList }>
+              <i className='fas fa-sync-alt'></i> 
+          </a>
         </nav>
         <section className='content' id='streamsWrap'>
           {state.streams.length > 0 ? (

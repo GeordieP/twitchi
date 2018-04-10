@@ -4,7 +4,9 @@ import { Link } from '@geordiep/h_tlrouter'
 export default (state, actions) => (
     <main>
         <nav>
-            <Link className='btn' to='/'>🄷</Link>
+          <Link className='btn' to='/' title='Following List'>
+              <i className='fas fa-th'></i> 
+          </Link>
         </nav>
         <section className='content'>
             <div>
