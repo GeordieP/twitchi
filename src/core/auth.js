@@ -3,6 +3,13 @@
 const { BrowserWindow } = require('electron')
 const config = require('./config')
 
+// import API info from separate file
+// this module simply exports an object containing the following keys:
+// clientID: "client id here",
+// redirectURI: "oauth redirect URI here"
+// this information can be grabbed from the twitch developers dashboard.
+const { clientID, redirectURI } = require('./twitchApiInfo')
+
 // match and capture access token from redirected URL string
 const REGEX_ACCESS_TOKEN = /#access_token=([^&]+)/
 // match and capture error information from redirected URL string
@@ -10,8 +17,6 @@ const REGEX_ERROR = /error=([^&]+)(?:.error_description=([^&]+))*/
 // match string word separator characters
 const REGEX_ARG_SEPARATOR = /\+/g
 
-const clientID = '668t6vmbj9pnd0fza0lfsoj9xwpl0ff'
-const redirectURI = 'http://localhost:46984/oauthCallback'
 const authURL = [
     'https://api.twitch.tv/kraken/oauth2/authorize',
     '?client_id=' + clientID,
