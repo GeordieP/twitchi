@@ -13,10 +13,25 @@ export const init = () => {
 }
 
 export const listen = dispatch => {
+    // currently there's no app action for sending prefs-get-all
+    // we only send it manually from this module (init and in some result handlers)
     ipc.on('prefs-get-all-res', (evt, res) => {
         try {
             const prefs = parseResponse(res).expect()
             dispatch.setState({ prefs })
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
+    ipc.on('prefs-set-one-res', (evt, res) => {
+        try {
+            res = parseResponse(res)
+            if (res.isError()) throw res
+
+            // set result was success, send request for all prefs
+            // so we can update our state prefs object
+            ipc.send('prefs-get-all')
         } catch(e) {
             handleErr(e)
         }

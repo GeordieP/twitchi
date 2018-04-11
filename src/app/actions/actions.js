@@ -13,6 +13,12 @@ export default {
     revokeToken: () => ipc.send('auth-revoke-token'),
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
 
+    // PREFERENCES //
+    updatePreferredQuality: quality => ipc.send('prefs-set-one', {
+        key: 'preferred-stream-quality',
+        value: quality
+    }),
+
     // STREAMLINK //
     openStream: ({ channelName, channelURL }) => (state, actions) => {
         ipc.send('streamlink-open-url', {
