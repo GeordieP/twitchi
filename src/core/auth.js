@@ -2,6 +2,7 @@
 
 const { BrowserWindow } = require('electron')
 const config = require('./config')
+const request = require('request-promise-native')
 
 // import API info from separate file
 // this module simply exports an object containing the following keys:
@@ -24,6 +25,12 @@ const authURL = [
     '&response_type=token',
     '&scope=user_read'
 ].join('')
+
+const getRevokeURI = token => ([
+    'https://id.twitch.tv/oauth2/revoke',
+    '?client_id=' + clientID,
+    '&token=' + token
+].join(''))
 
 const spawnLoginWindow = (onRedirect, onClosed, onCrashed) => new Promise((resolve, reject) => {
     try {
@@ -172,5 +179,25 @@ module.exports.refreshToken = () => new Promise((resolve, reject) => {
         .catch(reject)
 })
 
-// TODO
-// module.exports.revokeToken = () => {}
+module.exports.revokeToken = () => new Promise(async (resolve, reject) => {
+    try {
+        const token = config.get('user-access-token')
+
+        if (token == null || token.length === 0) {
+            throw new Error('Could not revoke token; config file token property was missing or empty.')
+        }
+
+        const revokeURI = getRevokeURI(token)
+        const data = await request({
+            method: 'POST',
+            uri: revokeURI
+        })
+
+        // forget currently saved token
+        config.set('user-access-token', '')
+        resolve()
+    } catch(e) {
+        reject(e)
+        return
+    }
+})

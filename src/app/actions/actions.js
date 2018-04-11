@@ -10,6 +10,7 @@ export default {
 
     // TWITCH //
     refreshToken: () => ipc.send('auth-refresh-token'),
+    revokeToken: () => ipc.send('auth-revoke-token'),
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
 
     // STREAMLINK //

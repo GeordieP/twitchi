@@ -27,7 +27,22 @@ export const listen = dispatch => {
             res = parseResponse(res)
             if (res.isError()) throw res
 
+            dispatch.refreshFollowList()
+
             console.log('token refreshed successfully')
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
+    ipc.on('auth-revoke-token-res', (evt, res) => {
+        try {
+            res = parseResponse(res)
+            if (res.isError()) throw res
+
+            dispatch.setState({ streams: [] })
+
+            console.log('successfully logged out')
         } catch(e) {
             handleErr(e)
         }
