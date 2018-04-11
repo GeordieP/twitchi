@@ -19,7 +19,7 @@ const REGEX_AVAILABLE_QUALITIES = /(Available streams: )(.+)/g
 const REGEX_STREAM_ENDED = /Stream ended/g
 // match ['1080', '60'] from '1080p60', for use in parsing real numbers
 // for resolution and fps from quality string
-const REGEX_NUMBERS_FROM_QUALITY_STR = /\d+/g
+const REGEX_NUMBERS_FROM_QUALITY_STR = /\d+p\d*/g
 
 // name of process to spawn - used to be livestreamer, now streamlink
 // TODO: allow changing this?
@@ -114,6 +114,7 @@ StreamInstance.prototype.close = function() {
 
         try {
             this.process.kill()
+            this.process = null
             this.state = InstanceStates.IDLE
         } catch(e) {
             reject(e)
@@ -154,7 +155,7 @@ module.exports = {
 * "invalid quality" -> Choose the next closest quality to the user's preference.
 -----------------------*/
 
-function onProcMsg(msg) {
+async function onProcMsg(msg) {
     msg = msg.toString()
 
     /* 
@@ -201,6 +202,11 @@ function onProcMsg(msg) {
     // failing to open anything.
     REGEX_STREAM_INVALID_QUALITY.lastIndex = 0
     if (REGEX_STREAM_INVALID_QUALITY.test(msg)) {
+        // first, close the existing stream instance
+        streamManager.closeStream(this.channelName)
+            .catch(console.error)
+
+        
         // match available qualities line
         // index 0 is the full match - contains both of the following groups
         // index 1 is group 1, always the string "Available streams: "
@@ -230,8 +236,6 @@ function onProcMsg(msg) {
             // return the resolution string (match array index 0) if a match is found,
             // otherwise use the number 0 for the resolution and framerate if no match is found.
 
-
-            // TODO: include this
             // This is to turn things like 'audio_only' into an integer that we can easily ignore later,
             // but lets us keep the length and indicies of the availableResolutions array the
             // same as availableStrs so they line up as expected (as we'll need to access data
@@ -287,6 +291,9 @@ function onProcMsg(msg) {
             //
             // We're conservative to avoid poor performance or over-stressing
             // user's machine when they don't want to.
+            
+            // skip indices of resolution 0
+            if (availableResolutions[i] === 0) continue
             if (
                 // open this quality if resolution is lower than preference
                 availableResolutions[i] < preferredResInt ||
@@ -297,10 +304,20 @@ function onProcMsg(msg) {
                 // the index of the current loop through availableResolutions will
                 // correspond to the correct quality string in availableStrs
                 let newQual = availableStrs[i].split(' ')[0]
-                streamManager.launchStream(this.channelName, this.channelURL, newQual)
+                streamManager.launchStream(this.channelName, newQual)
                     .catch(console.error)
                 return
             }
         }
+
+        // if we got here, no qualities could be used.
+        // default to "best".
+        //
+        // this is in a timeout, as otherwise the newly opened process closes itself immediately. not sure why yet. 
+        setTimeout(() => {
+            console.log('Could not find a suitable quality that is <= preferred. Defaulting to "best".')
+            streamManager.launchStream(this.channelName, 'best')
+                .catch(console.error)
+        }, 1000) // 1 second
     }
 }
