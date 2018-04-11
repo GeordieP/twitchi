@@ -38,12 +38,13 @@ nav
         align-items: center
         width: var(--size_navBar)
         height: @width
-        color: #777
+        color: lighten($clr_twitchPurple, 20%)
         text-decoration: none
         font-size: 1.6rem
-        transition: background 0.2s ease
+        transition: background 0.2s ease, color 0.2s ease
         &:hover
             background: lighten($clr_pageBg, 9%)
+            color: #eee
 
 section.content
     grid-area: content
