@@ -13,10 +13,23 @@ body
     overflow: hidden
 
 h1
-    font-size: 1.6rem
+    font-size: 2.2rem
 
 h2
-    font-size: 1.3rem
+    font-size: 1.8rem
+
+input, select, button, textarea
+    background: lighten($clr_pageBg, 4%)
+    border: none
+    padding: 9px 11px
+    margin: 5px
+    color: #eee
+    border-left: 2px solid transparent
+    outline: none
+
+    &:focus
+        border-color: $clr_lightPurple
+        background: lighten($clr_pageBg, 9%)
 
 main
     display: grid
@@ -38,12 +51,14 @@ nav
         align-items: center
         width: var(--size_navBar)
         height: @width
-        color: lighten($clr_twitchPurple, 20%)
+        color: $clr_lightPurple
         text-decoration: none
         font-size: 1.6rem
-        transition: background 0.2s ease, color 0.2s ease
+        transition: background 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out
+        border-left: 3px solid transparent
         &:hover
             background: lighten($clr_pageBg, 9%)
+            border-color: $clr_lightPurple
             color: #eee
 
 section.content

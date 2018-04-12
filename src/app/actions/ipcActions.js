@@ -90,4 +90,13 @@ export const listen = dispatch => {
             handleErr(e)
         }
     })
+
+    ipc.on('streamlink-open-url-res', (evt, res) => {
+        try {
+            const openedName = parseResponse(res).expect()
+            console.log('successfully opened', openedName)
+        } catch(e) {
+            handleErr(e)
+        }
+    })
 }

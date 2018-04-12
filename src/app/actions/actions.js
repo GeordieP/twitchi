@@ -20,11 +20,11 @@ export default {
     }),
 
     // STREAMLINK //
-    openStream: ({ channelName, channelURL }) => (state, actions) => {
+    openStream: ({ channelName, channelURL, quality }) => (state, actions) => {
         ipc.send('streamlink-open-url', {
             channelName,
             channelURL,
-            quality: state.prefs['preferred-stream-quality']
+            quality: quality || state.prefs['preferred-stream-quality']
         })
-    }
+    },
 }

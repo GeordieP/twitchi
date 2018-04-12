@@ -7,12 +7,14 @@ import actions from 'actions/actions'
 // components
 import Index from 'pages/index'
 import Preferences from 'pages/preferences'
+import LaunchStream from 'pages/launchStream'
 
 import * as ipcActions from 'actions/ipcActions'
 
 const router = Router({
     '/': Index,
-    '/preferences': Preferences
+    '/preferences': Preferences,
+    '/launchStream': LaunchStream,
 })
 
 // create app 
