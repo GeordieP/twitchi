@@ -1,18 +1,6 @@
 import { h } from 'hyperapp'
 import { Link } from '@geordiep/h_tlrouter'
-
-const qualityOptions = [
-    "best",
-    "1080p60",
-    "900p60",
-    "720p60",
-    "720p",
-    "480p",
-    "360p",
-    "160p",
-    "worst",
-    "audio_only"
-]
+import { QUALITY_OPTIONS } from 'util/constants'
 
 export default (state, actions) => {
     const onQualChange = e => actions.updatePreferredQuality(e.target.value)
@@ -36,7 +24,7 @@ export default (state, actions) => {
                     <h2>Stream Options</h2>
                     <select onchange={ onQualChange }>
                         {
-                            qualityOptions.map(q => (
+                            QUALITY_OPTIONS.map(q => (
                                 <option
                                 selected={ q === state.prefs['preferred-stream-quality'] }
                                 value={ q }>
