@@ -18,16 +18,16 @@ nav
         align-items: center
         width: var(--size_navBar)
         height: @width
-        color: $clr_lightPurple
+        color: #777
         text-decoration: none
-        font-size: 1.6rem
+        font-size: 1.2rem
         transition: background 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out
         border: 0px solid transparent
         border-width: 3px 0 0 0
         &:hover
-            background: lighten($clr_pageBg, 9%)
-            border-color: @color
             color: #eee
+            border-color: $clr_lightPurple
+            background: lighten($clr_pageBg, 9%)
 
 // navChildren and navEnd should have subtle left borders to separate them from other nav sections
 .navChildren, .navEnd
@@ -37,9 +37,10 @@ nav
 // navChildren buttons should have a different text & border color
 .navChildren
     a
-        color: invert($clr_lightPurple)
+        color: $clr_lightPurple
         &:hover
-            border-color: @color
+            color: lighten($clr_lightPurple, 40%)
+            border-color: $clr_lightPurple
 
 // BREAKPOINT: horiz layout -> vertical
 @media (min-width: $sz_breakpoint)
@@ -54,4 +55,5 @@ nav
     // hover border should now be on left
     nav
         a
+            font-size: 1.6rem
             border-width: 0 0 0 3px
