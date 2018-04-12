@@ -5,7 +5,11 @@ module.exports = {
 
     store: {
         prefs: {
-            empty: {}
+            empty: {},
+            populated: {
+                'user-access-token': 'example123abc',
+                'preferred-stream-quality': '720p60'
+            }
         },
 
         streams: {

@@ -78,6 +78,14 @@ function listen() {
         let result
         
         try {
+            if (channelName == null || channelName.length === 0) {
+                throw 'Could not open stream: Channel name was missing or empty.'
+            }
+
+            if (channelURL == null || channelURL.length === 0) {
+                throw 'Could not open stream: Channel URL was missing or empty.'
+            }
+            
             // create stream instance
             await streamManager.createStream(channelName, channelURL)
             // attempt to open instance with desired quality
