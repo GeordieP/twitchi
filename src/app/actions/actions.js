@@ -12,7 +12,23 @@ export default {
     getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
 
     // LOGS //
-    getAllLogs: () => ipc.send('streamlink-get-all-logs'),
+    logs: {
+        getAllLogs: () => ipc.send('streamlink-get-all-logs'),
+
+        setAllLogs: logLines => ({ logLines }),
+
+        updateLogsByName: ({ username, line }) => state => {
+            const newLines = state.logLines[username]
+                  ? [...state.logLines[username], line]
+                  : [line]
+
+            return {
+                logLines: {
+                    [username]: newLines
+                }
+            }
+        },
+    },
 
     // TWITCH //
     refreshToken: () => ipc.send('auth-refresh-token'),

@@ -11,6 +11,9 @@ const Result = require('@geordiep/result')
 
 let MAIN_WINDOW
 
+// app state; whether or not the frontend app is listening for log messages
+let state_listeningForLogs = false
+
 function ipcReplyJson(type, msg) { MAIN_WINDOW.webContents.send(type, JSON.stringify(msg)) }
 
 function listen() {
@@ -197,6 +200,18 @@ function listen() {
         let result = Result.newOk(currentVersion)
         ipcReplyJson('app-get-version-res', result)
     })
+
+    ipc.on('app-subscribe-logs', function(evt) {
+        state_listeningForLogs = true
+        // for now, no need to reply
+        // ipcreplyjson('app-subscribe-logs-res', result.newOk())
+    })
+
+    ipc.on('app-unsubscribe-logs', function(evt) {
+        state_listeningForLogs = false
+        // for now, no need to reply
+        // ipcreplyjson('app-unsubscribe-logs-res', result.newOk())
+    })
 }
 
 module.exports.getMainWindow = function() {
@@ -207,3 +222,6 @@ module.exports.start = function(mainWindow) {
     MAIN_WINDOW = mainWindow
     listen()
 }
+
+// access to log listening status from other modules
+module.exports.listeningForLogs = () => state_listeningForLogs

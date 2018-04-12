@@ -171,8 +171,13 @@ async function onProcMsg(msg) {
     }
     
     // send IPC message to frontend that we've got a new stdout message for this channel.
-    // send an object containing the time of the most recent message, and the new line itself
-    MAIN_WINDOW.webContents.send('streamlink-process-stdout-live-' + this.channelName, line)
+    // send an object containing the username and the new line itself
+    if (ipcServer.listeningForLogs()) {
+        MAIN_WINDOW.webContents.send('streamlink-process-stdout-line', {
+            username: this.channelName,
+            line
+        })
+    }
 
     /* 
      * STREAMLINK EVENTS

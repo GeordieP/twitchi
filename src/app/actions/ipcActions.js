@@ -6,6 +6,12 @@ import Result from '@geordiep/result'
 const parseResponse = res => Result.fromJson(JSON.parse(res))
 const handleErr = console.error
 
+// handler function for streamlink stdout log lines
+// declare as module global so exported functions can use it,
+// but define inside listen so it has access to dispatch.
+// we keep this as a separate function so we can reference it during listener removal
+let logLineListener
+
 // send initial IPC messages
 export const init = () => {
     ipc.send('prefs-get-all')
@@ -103,7 +109,7 @@ export const listen = dispatch => {
     ipc.on('streamlink-get-all-logs-res', (evt, res) => {
         try {
             const logs = parseResponse(res).expect()
-            dispatch.setState({ logs })
+            dispatch.logs.setAllLogs(logs)
         } catch(e) {
             handleErr(e)
         }
@@ -117,4 +123,31 @@ export const listen = dispatch => {
             handleErr(e)
         }
     })
+
+    // handler function for stdout lines coming from core
+    logLineListener = (evt, newLine) => {
+        try {
+            dispatch.logs.updateLogsByName(newLine)
+        } catch(e) {
+            handleErr(e)
+        }
+    }
+}
+
+// subscribe to new streamlink log messages coming from core
+export const logsSubscribe = () => {
+    // listen for incoming messages
+    ipc.on('streamlink-process-stdout-line', logLineListener)
+
+    // tell core we're listening
+    ipc.send('app-subscribe-logs')
+}
+
+// unsubscribe from streamlink log messages
+export const logsUnsubscribe = () => {
+    // stop listening for incoming messages
+    ipc.removeListener('streamlink-process-stdout-line', logLineListener)
+
+    // tell core we've stopped listening
+    ipc.send('app-unsubscribe-logs')
 }
