@@ -99,4 +99,22 @@ export const listen = dispatch => {
             handleErr(e)
         }
     })
+
+    ipc.on('streamlink-get-all-logs-res', (evt, res) => {
+        try {
+            const logs = parseResponse(res).expect()
+            dispatch.setState({ logs })
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
+    ipc.on('streamlink-get-open-streams-res', (evt, res) => {
+        try {
+            const openStreams = parseResponse(res).expect()
+            dispatch.setState({ openStreams })
+        } catch(e) {
+            handleErr(e)
+        }
+    })
 }

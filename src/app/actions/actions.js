@@ -8,6 +8,12 @@ export default {
     // update the state with whatever is passed.
     setState: s => s,
 
+    // MISC //
+    getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
+
+    // LOGS //
+    getAllLogs: () => ipc.send('streamlink-get-all-logs'),
+
     // TWITCH //
     refreshToken: () => ipc.send('auth-refresh-token'),
     revokeToken: () => ipc.send('auth-revoke-token'),

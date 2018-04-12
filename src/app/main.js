@@ -8,6 +8,7 @@ import actions from 'actions/actions'
 import Index from 'pages/index'
 import Preferences from 'pages/preferences'
 import LaunchStream from 'pages/launchStream'
+import Logs from 'pages/logs'
 
 import * as ipcActions from 'actions/ipcActions'
 
@@ -15,6 +16,7 @@ const router = Router({
     '/': Index,
     '/preferences': Preferences,
     '/launchStream': LaunchStream,
+    '/logs': Logs,
 })
 
 // create app 

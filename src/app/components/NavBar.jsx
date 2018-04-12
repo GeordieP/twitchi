@@ -18,6 +18,9 @@ export default (props, children) => (
         </div>
 
         <div className='navEnd'>
+            <Link to='/logs' title='Streamlink logs'>
+                <i className='fas fa-align-left'></i> 
+            </Link>
             <Link to='/preferences' title='Preferences'>
                 <i className='fas fa-cog'></i> 
             </Link>
