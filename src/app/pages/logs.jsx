@@ -1,24 +1,17 @@
 import { h } from 'hyperapp'
-import { QUALITY_OPTIONS } from 'util/constants'
 import { logsSubscribe, logsUnsubscribe } from 'actions/ipcActions'
 
 import NavBar from 'components/NavBar'
-
-const LogView = ({ channelName, logs }) => (
-    <div style={{ width: '100%', height: '100%' }}>
-      <p>{ channelName }</p>
-      <textarea style={{ width: '100%', height: '100%' }}>
-        { logs }
-      </textarea>
-    </div>
-)
+import LogView from 'components/LogView'
 
 export default (state, actions) => {
+    // on component mount, ask core for all logs
     actions.logs.getAllLogs()
     
     return (
         <main>
             <NavBar />
+
             <section
               className='content'
               oncreate={logsSubscribe}
