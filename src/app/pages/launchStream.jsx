@@ -2,6 +2,8 @@ import { h } from 'hyperapp'
 import { Link } from '@geordiep/h_tlrouter'
 import { QUALITY_OPTIONS } from 'util/constants'
 
+import NavBar from 'components/NavBar'
+
 export default (state, actions) => {
     const onOpenClick = () => {
         const channelName = document.getElementById('openStream_username').value
@@ -12,14 +14,7 @@ export default (state, actions) => {
     
     return (
         <main>
-            <nav>
-                <Link className='btn' to='/' title='Following List'>
-                    <i className='fas fa-th'></i> 
-                </Link>
-                <Link className='btn' to='/preferences' title='Preferences'>
-                    <i className='fas fa-cog'></i> 
-                </Link>
-            </nav>
+            <NavBar />
             <section className='content'>
                 <h1>Launch Stream</h1>
                 <h2>Open any stream by providing their username.</h2>

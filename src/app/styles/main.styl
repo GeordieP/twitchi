@@ -39,39 +39,14 @@ main
     grid-template-areas: \
         "nav" \
         "content"
-nav
-    grid-area: nav
-    display: flex
-    background: lighten($clr_pageBg, 4%)
-    box-shadow: 1px 0 15px rgba(0, 0, 0, 0.2)
-
-    .btn
-        display: flex
-        justify-content: center
-        align-items: center
-        width: var(--size_navBar)
-        height: @width
-        color: $clr_lightPurple
-        text-decoration: none
-        font-size: 1.6rem
-        transition: background 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out
-        border-left: 3px solid transparent
-        &:hover
-            background: lighten($clr_pageBg, 9%)
-            border-color: $clr_lightPurple
-            color: #eee
-
 section.content
     grid-area: content
     overflow: auto
 
-@media (min-width: 990px)
+@media (min-width: $sz_breakpoint)
     :root
         --size_navBar: 60px
     main
         grid-template-rows: none
         grid-template-columns: var(--size_navBar) 1fr
         grid-template-areas: "nav content"
-
-    nav
-        flex-direction: column

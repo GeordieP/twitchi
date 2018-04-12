@@ -1,17 +1,14 @@
 import { h } from 'hyperapp'
-import { Link } from '@geordiep/h_tlrouter'
 import { QUALITY_OPTIONS } from 'util/constants'
+
+import NavBar from 'components/NavBar'
 
 export default (state, actions) => {
     const onQualChange = e => actions.updatePreferredQuality(e.target.value)
 
     return (
         <main>
-            <nav>
-            <Link className='btn' to='/' title='Following List'>
-                <i className='fas fa-th'></i> 
-            </Link>
-            </nav>
+            <NavBar />
             <section className='content'>
                 <h1>Preferences</h1>
                 <div>

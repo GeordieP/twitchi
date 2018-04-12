@@ -1,23 +1,16 @@
 import { h } from 'hyperapp'
-import { Link } from '@geordiep/h_tlrouter'
 
+import NavBar from 'components/NavBar'
 import Stream from 'components/Stream'
 
 export default (state, actions) => (
     <main>
-        <nav>
-          <Link className='btn' to='/preferences' title='Preferences'>
-              <i className='fas fa-cog'></i> 
-          </Link>
+        <NavBar>
+            <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
+                <i className='fas fa-sync-alt'></i> 
+            </a>
+        </NavBar>
 
-          <a href='#' className='btn' title='Refresh List' onclick={ actions.refreshFollowList }>
-              <i className='fas fa-sync-alt'></i> 
-          </a>
-
-          <Link className='btn' to='/launchStream' title='Open stream by username'>
-              <i className="fas fa-external-link-alt"></i>
-          </Link>
-        </nav>
         <section className='content' id='streamsWrap'>
           {state.streams.length > 0 ? (
               <div id='streams'>

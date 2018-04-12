@@ -1,0 +1,57 @@
+nav
+    grid-area: nav
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    background: lighten($clr_pageBg, 4%)
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)
+
+    // areas inside navbar (.navBegin, .navChildren, .navEnd)
+    &>div
+        display: flex
+        flex-direction: row
+
+    // nav bar buttons are anchor tags
+    a
+        display: flex
+        justify-content: center
+        align-items: center
+        width: var(--size_navBar)
+        height: @width
+        color: $clr_lightPurple
+        text-decoration: none
+        font-size: 1.6rem
+        transition: background 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out
+        border: 0px solid transparent
+        border-width: 3px 0 0 0
+        &:hover
+            background: lighten($clr_pageBg, 9%)
+            border-color: @color
+            color: #eee
+
+// navChildren and navEnd should have subtle left borders to separate them from other nav sections
+.navChildren, .navEnd
+    border: 0px solid lighten($clr_pageBg, 6%)
+    border-width: 0 0 0 2px
+
+// navChildren buttons should have a different text & border color
+.navChildren
+    a
+        color: invert($clr_lightPurple)
+        &:hover
+            border-color: @color
+
+// BREAKPOINT: horiz layout -> vertical
+@media (min-width: $sz_breakpoint)
+    // column layout
+    nav, nav>div
+        flex-direction: column
+
+    // separator border should now be on top
+    .navChildren, .navEnd
+        border-width: 3px 0 0 0
+
+    // hover border should now be on left
+    nav
+        a
+            border-width: 0 0 0 3px
