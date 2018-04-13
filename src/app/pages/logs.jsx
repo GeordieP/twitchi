@@ -20,7 +20,11 @@ export default (state, actions) => {
             <h1>Logs</h1>
             {
                 Object.keys(state.logs.logLines).map(name => (
-                    <LogView channelName={name} logs={state.logs.logLines[name]} />
+                    <LogView
+                      channelName={name}
+                      logs={state.logs.logLines[name]}
+                      onCloseClick={actions.logs.removeLogsByName.bind(null, name)}
+                      />
                 ))
             }
             </section>

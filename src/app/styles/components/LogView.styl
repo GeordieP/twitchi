@@ -6,7 +6,11 @@
     height: 35vh
     display: flex
     flex-direction: column
+    h3, textarea
+        border-left: 2px solid $clr_twitchPurple
+
     h3
+        display: flex
         background: lighten($clr_pageBg, 3%)
         font-weight: bold
         padding: 10px
@@ -19,7 +23,3 @@
         &:active, &:focus
             background: lighten($clr_pageBg, 5%)
             border-left: 2px solid $clr_twitchPurple
-            
-
-    h3, textarea
-        border-left: 2px solid $clr_twitchPurple

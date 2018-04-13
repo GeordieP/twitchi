@@ -17,6 +17,13 @@ export default {
 
         setAllLogs: logLines => ({ logLines }),
 
+        removeLogsByName: username => state => {
+            ipc.send('streamlink-close-stream', username)
+            // const newLines = Object.assign({}, state.logLines)
+            // delete newLines[username]
+            // return newLines
+        },
+
         updateLogsByName: ({ username, line }) => state => {
             const newLines = state.logLines[username]
                   ? [...state.logLines[username], line]
