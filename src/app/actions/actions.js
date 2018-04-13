@@ -8,21 +8,11 @@ export default {
     // update the state with whatever is passed.
     setState: s => s,
 
-    // MISC //
-    getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
-
     // LOGS //
     logs: {
         getAllLogs: () => ipc.send('streamlink-get-all-logs'),
 
         setAllLogs: logLines => ({ logLines }),
-
-        removeLogsByName: username => state => {
-            ipc.send('streamlink-close-stream', username)
-            // const newLines = Object.assign({}, state.logLines)
-            // delete newLines[username]
-            // return newLines
-        },
 
         updateLogsByName: ({ username, line }) => state => {
             const newLines = state.logLines[username]
@@ -30,9 +20,9 @@ export default {
                   : [line]
 
             return {
-                logLines: {
+                logLines: Object.assign({}, state.logLines, {
                     [username]: newLines
-                }
+                })
             }
         },
     },
@@ -49,6 +39,13 @@ export default {
     }),
 
     // STREAMLINK //
+    getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
+
+    closeStream: username => oldState => {
+        ipc.send('streamlink-close-stream', username)
+        ipc.send('streamlink-get-open-streams', username)
+    },
+
     openStream: ({ channelName, channelURL, quality }) => (state, actions) => {
         ipc.send('streamlink-open-url', {
             channelName,
