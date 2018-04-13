@@ -9,7 +9,8 @@ const activeInstances = {}
 const deleteTimeouts = {}
 
 // timeout in minutes
-const INSTANCE_DELETE_TIMEOUT = 1000 * 60 * 5
+const INSTANCE_DELETE_TIMEOUT_MINUTES = 5
+const INSTANCE_DELETE_TIMEOUT = 1000 * 60 * INSTANCE_DELETE_TIMEOUT_MINUTES
 
 // create stream instance
 module.exports.createStream = (name, url) => new Promise((resolve, reject) => {
@@ -60,14 +61,26 @@ module.exports.openStream = (name, quality) => new Promise(async (resolve, rejec
 
 module.exports.closeStream = (name, delay = INSTANCE_DELETE_TIMEOUT) => new Promise(async (resolve, reject) => {
     try {
-        // close if instance exists and is open
-        // otherwise, do nothing (don't send an error)
-        if (activeInstances[name] != null &&
-            activeInstances[name].getState() === InstanceStates.OPEN) {
+
+        // fail silently if no instance exists;
+        // this function is called many times by StreamInstance event handlers, sometimes
+        // after the instance has already been removed and marked for GC
+        if (activeInstances[name] == null) {
+            resolve()
+            return
+        }
+
+        const instanceState = activeInstances[name].getState()
+
+        if (instanceState === InstanceStates.OPEN) {
             await activeInstances[name].close()
         }
 
-        await module.exports.deleteAfter(name, delay)
+        // do not attempt to delete an instance that's not open or idle
+        if (instanceState === InstanceStates.OPEN ||
+            instanceState === InstanceStates.IDLE) {
+            await module.exports.deleteAfter(name, delay)
+        }
 
         resolve()
     } catch(e) {
@@ -84,7 +97,7 @@ module.exports.deleteAfter = (name, delay = INSTANCE_DELETE_TIMEOUT) => new Prom
         activeInstances[name].setStateDeleteQueued()
 
         // if a timeout is already running, clear it so we can overwrite it with new one
-        if (deleteTimeouts[name] != null ) {
+        if (deleteTimeouts[name] != null) {
             clearTimeout(deleteTimeouts[name])
             delete deleteTimeouts[name]
         }
@@ -94,6 +107,11 @@ module.exports.deleteAfter = (name, delay = INSTANCE_DELETE_TIMEOUT) => new Prom
             await activeInstances[name].close()
             delete activeInstances[name]
         } else {
+            // notify any users watching the logs page that the instance will be cleaned up
+            activeInstances[name].logLine('\n[TWITCHI]: Stream is closing.\n')
+            activeInstances[name].logLine('[TWITCHI]: Stream log messages will be cleaned up in '+INSTANCE_DELETE_TIMEOUT_MINUTES+' minutes.\n')
+
+            // start delete timeout
             deleteTimeouts[name] = setTimeout(finalDelete.bind(null, name), delay)
         }
 
@@ -120,6 +138,8 @@ module.exports.cancelDeleteAfter = name => new Promise(async (resolve, reject) =
         clearTimeout(deleteTimeouts[name])
         delete deleteTimeouts[name]
         activeInstances[name].setStateIdle()
+        activeInstances[name].logLine('\n[TWITCHI]: Cleanup for stream '+name+' has been cancelled.\n')
+
         resolve()
     } catch(e) {
         reject(e)

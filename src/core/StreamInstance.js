@@ -48,6 +48,24 @@ function StreamInstance(name, url) {
     }
 }
 
+StreamInstance.prototype.logLine = function(line) {
+    this.logLines.push(line)
+
+    // over lines limit, trunc first line
+    if (this.logLines.length > MAX_LOG_LINES) {
+        this.logLines.shift()
+    }
+    
+    // send IPC message to frontend that we've got a new stdout message for this channel.
+    // send an object containing the username and the new line itself
+    if (ipcServer.listeningForLogs()) {
+        MAIN_WINDOW.webContents.send('streamlink-process-stdout-line', {
+            username: this.channelName,
+            line
+        })
+    }
+}
+
 StreamInstance.prototype.open = function(quality) {
     return new Promise(async (resolve, reject) => {
         // ignore request if stream is already open
@@ -158,26 +176,8 @@ module.exports = {
 async function onProcMsg(msg) {
     msg = msg.toString()
 
-    /* 
-     * STDOUT MESSAGE LOGGING
-     */
-
-    let line = '[' + this.channelName + '] ' + msg
-    this.logLines.push(line)
-
-    // over lines limit, trunc first line
-    if (this.logLines.length > MAX_LOG_LINES) {
-        this.logLines.shift()
-    }
-    
-    // send IPC message to frontend that we've got a new stdout message for this channel.
-    // send an object containing the username and the new line itself
-    if (ipcServer.listeningForLogs()) {
-        MAIN_WINDOW.webContents.send('streamlink-process-stdout-line', {
-            username: this.channelName,
-            line
-        })
-    }
+    // log the stdout line
+    this.logLine(msg)
 
     /* 
      * STREAMLINK EVENTS

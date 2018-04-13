@@ -105,8 +105,7 @@ function listen() {
         let result
 
         try {
-            // close stream with zero delay (no delete queue timeout)
-            await streamManager.closeStream(channelName, 0)
+            await streamManager.closeStream(channelName)
             result = Result.newOk(channelName)
         } catch(e) {
             result = Result.newError(e, 'ipcServer @ streamlink-close-stream')

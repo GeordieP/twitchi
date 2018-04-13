@@ -5,16 +5,16 @@ import NavBar from 'components/NavBar'
 import LogView from 'components/LogView'
 
 export default (state, actions) => {
-    // on component mount, ask core for all logs
-    actions.logs.getAllLogs()
-    
     return (
         <main>
             <NavBar />
 
             <section
               className='content'
-              oncreate={logsSubscribe}
+              oncreate={() => {
+                  actions.logs.getAllLogs()
+                  logsSubscribe()
+              }}
               ondestroy={logsUnsubscribe}
               key='logsContent'>
             <h1>Logs</h1>
