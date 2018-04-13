@@ -11,21 +11,22 @@
 
     h3
         display: flex
-        background: lighten($clr_pageBg, 3%)
         justify-content: space-between
         align-content: center
         align-items: center
+        background: lighten($clr_pageBg, 4%)
         font-weight: bold
         padding: 10px
         button
+            background: lighten($clr_pageBg, 8%)
             margin: 0
             padding: 5px
 
     textarea
-        background: lighten($clr_pageBg, 5%)
+        background: lighten($clr_pageBg, 8%)
         flex-grow: 1
         margin: 0
         resize: none
         &:active, &:focus
-            background: lighten($clr_pageBg, 5%)
+            background: lighten($clr_pageBg, 8%)
             border-left: 2px solid $clr_twitchPurple
