@@ -17,6 +17,11 @@ export default ({ channelName, logs, showCloseButton, onCloseClick }) => (
             )
         }
       </h3>
-      <textarea readonly onupdate={scrollLock}>{ logs }</textarea>
+        <textarea
+            readonly
+            oncreate={scrollLock}
+            onupdate={scrollLock}>
+            { logs }
+        </textarea>
     </div>
 )

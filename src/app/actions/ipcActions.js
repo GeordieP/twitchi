@@ -32,9 +32,7 @@ export const listen = dispatch => {
 
     ipc.on('prefs-set-one-res', (evt, res) => {
         try {
-            res = parseResponse(res)
-            if (res.isError()) throw res
-
+            parseResponse(res).expect()
             // set result was success, send request for all prefs
             // so we can update our state prefs object
             ipc.send('prefs-get-all')
@@ -45,8 +43,7 @@ export const listen = dispatch => {
 
     ipc.on('auth-refresh-token-res', (evt, res) => {
         try {
-            res = parseResponse(res)
-            if (res.isError()) throw res
+            parseResponse(res).expect()
 
             dispatch.refreshFollowList()
 
@@ -58,8 +55,7 @@ export const listen = dispatch => {
 
     ipc.on('auth-revoke-token-res', (evt, res) => {
         try {
-            res = parseResponse(res)
-            if (res.isError()) throw res
+            parseResponse(res).expect()
 
             dispatch.setState({ streams: [] })
 
