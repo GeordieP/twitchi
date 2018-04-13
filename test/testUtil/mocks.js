@@ -12,6 +12,31 @@ module.exports = {
             }
         },
 
+        logs: {
+            logLines: {
+                two_items: {
+                    testname1: [
+                        'first log line',
+                        'second log line',
+                        '[TWITCHI]: status message',
+                        'fourth log line',
+                    ],
+
+                    testname2: [
+                        '1st log line',
+                        '2nd log line',
+                        '[TWITCHI]: status message',
+                        '[TWITCHI]: 2nd status message',
+                    ],
+                }
+            }
+        },
+
+        openStreams: {
+            one_item: ['testname1'],
+            two_items: ['testname1', 'testname2']
+        },
+
         streams: {
             empty: [],
 

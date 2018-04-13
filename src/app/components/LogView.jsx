@@ -7,16 +7,16 @@ const scrollLock = el => {
 
 export default ({ channelName, logs, showCloseButton, onCloseClick }) => (
     <div className='logView'>
-      <h3>
+        <h3>
         { channelName }
         {
             showCloseButton ? (
-                <button onclick={onCloseClick}>Close Stream</button>
+                <button className='closeStreamBtn' onclick={onCloseClick}>Close Stream</button>
             ) : (
-                <button disabled>Cleanup scheduled</button>
+                <button className='cleanupScheduled' disabled>Cleanup scheduled</button>
             )
         }
-      </h3>
+        </h3>
         <textarea
             readonly
             oncreate={scrollLock}
