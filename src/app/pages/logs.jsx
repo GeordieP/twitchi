@@ -12,6 +12,7 @@ export default (state, actions) => {
             <section
               className='content'
               oncreate={() => {
+                  actions.getOpenStreams()
                   actions.logs.getAllLogs()
                   logsSubscribe()
               }}
@@ -23,7 +24,8 @@ export default (state, actions) => {
                     <LogView
                       channelName={name}
                       logs={state.logs.logLines[name]}
-                      onCloseClick={actions.logs.removeLogsByName.bind(null, name)}
+                      showCloseButton={state.openStreams.includes(name)}
+                      onCloseClick={actions.closeStream.bind(null, name)}
                       />
                 ))
             }

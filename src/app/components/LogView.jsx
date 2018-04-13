@@ -5,9 +5,18 @@ const scrollLock = el => {
     el.scrollTop = el.scrollHeight
 }
 
-export default ({ channelName, logs, onCloseClick }) => (
+export default ({ channelName, logs, showCloseButton, onCloseClick }) => (
     <div className='logView'>
-      <h3>{ channelName } <button onclick={onCloseClick}>Close Stream</button></h3>
+      <h3>
+        { channelName }
+        {
+            showCloseButton ? (
+                <button onclick={onCloseClick}>Close Stream</button>
+            ) : (
+                <button disabled>Cleanup scheduled</button>
+            )
+        }
+      </h3>
       <textarea readonly onupdate={scrollLock}>{ logs }</textarea>
     </div>
 )
