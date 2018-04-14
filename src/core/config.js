@@ -7,7 +7,8 @@ const currentVersion = require('./version').version
 // these are used if the expected config file is empty or does not exist
 const defaults = {
     'user-access-token': '',
-    'preferred-stream-quality': 'best'
+    'preferred-stream-quality': 'best',
+    'favorite-streams': [],
 }
 
 const config = new electronStore({

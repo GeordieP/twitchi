@@ -4,8 +4,15 @@
     align-content: flex-start
     align-items: flex-start
 
+#streamsInnerWrap
+    display: flex
+    flex-direction: column
+    >span>h2
+        margin-top: 35px
+        padding: 5px 0
+        border-bottom: 1px solid lighten($clr_pageBg, 10%)
 
-#streams
+.streamsView
     // sass variables (for calculations; using CSS calc() is not working in media query setups)
     $tileWidth = 320px
     $gridGap = 15px

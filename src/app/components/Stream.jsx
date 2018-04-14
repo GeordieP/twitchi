@@ -5,6 +5,7 @@ export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showConte
     const channelURL = stream.channel.url
     openStream = openStream.bind(null, { channelName, channelURL })
     openInBrowser = openInBrowser.bind(null, channelURL)
+    toggleFav = toggleFav.bind(null, channelName)
 
     const menuItems = [
         {

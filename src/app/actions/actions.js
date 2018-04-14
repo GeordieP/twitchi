@@ -11,6 +11,30 @@ export default {
     // MISC //
     openURLInBrowser: url => ipc.send('open-url-in-browser', url),
 
+    toggleStreamFavorite: name => state => {
+        const newFavs = state.prefs['favorite-streams'].slice() || []
+        const existingIndex = newFavs.indexOf(name)
+
+        if (existingIndex > -1) {
+            newFavs.splice(existingIndex, 1)
+        } else {
+            newFavs.push(name)
+        }
+
+        // update config file
+        ipc.send('prefs-set-one', {
+            key: 'favorite-streams',
+            value: newFavs
+        })
+
+        // update local state prefs
+        return {
+            prefs: Object.assign({}, state.prefs, {
+                'favorite-streams': newFavs 
+            })
+        }
+    },
+
     // LOGS //
     logs: {
         getAllLogs: () => ipc.send('streamlink-get-all-logs'),
