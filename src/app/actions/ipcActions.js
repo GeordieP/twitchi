@@ -120,6 +120,14 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('open-url-in-browser-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
     // handler function for stdout lines coming from core
     logLineListener = (evt, newLine) => {
         try {

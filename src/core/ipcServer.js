@@ -1,6 +1,9 @@
 'use strict'
 
-const ipc = require('electron').ipcMain
+const electron = require('electron')
+const { shell } = electron
+const ipc = electron.ipcMain
+
 const twitch = require('./twitch')
 const auth = require('./auth')
 const config = require ('./config')
@@ -192,14 +195,7 @@ function listen() {
         ipcReplyJson('prefs-set-one-res', result)
     })
 
-    // TODO:
-    // prefs-delete-one
-
-    ipc.on('app-get-version', function (evt) {
-        let result = Result.newOk(currentVersion)
-        ipcReplyJson('app-get-version-res', result)
-    })
-
+    /* LOGS */
     ipc.on('app-subscribe-logs', function(evt) {
         state_listeningForLogs = true
         // for now, no need to reply
@@ -210,6 +206,34 @@ function listen() {
         state_listeningForLogs = false
         // for now, no need to reply
         // ipcreplyjson('app-unsubscribe-logs-res', result.newOk())
+    })
+
+    /* MISC */
+    ipc.on('app-get-version', function (evt) {
+        let result = Result.newOk(currentVersion)
+        ipcReplyJson('app-get-version-res', result)
+    })
+
+    ipc.on('open-url-in-browser', async function(evt, url) {
+        let result
+
+        try {
+            if (url == null || url.length === 0) {
+                throw 'Could not open URL in browser: Passed URL was missing or empty'
+            }
+
+            const success = shell.openExternal(url)
+
+            if (success) {
+                result = Result.newOk()
+            } else {
+                throw 'Could not open URL in browser: shell.openExternal returned false (target application was not able to open URL)'
+            }
+        } catch(e) {
+            result = Result.newError(e, 'ipcServer @ open-url-in-browser')
+        }
+
+        ipcReplyJson('open-url-in-browser-res', result)
     })
 }
 

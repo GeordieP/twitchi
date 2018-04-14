@@ -8,6 +8,9 @@ export default {
     // update the state with whatever is passed.
     setState: s => s,
 
+    // MISC //
+    openURLInBrowser: url => ipc.send('open-url-in-browser', url),
+
     // LOGS //
     logs: {
         getAllLogs: () => ipc.send('streamlink-get-all-logs'),

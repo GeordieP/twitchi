@@ -12,23 +12,25 @@ export default () => (state, actions) => (
         </NavBar>
 
         <section className='content' id='streamsWrap'>
-          {state.streams.length > 0 ? (
-              <div id='streams'>
-              {
-                  state.streams.map(stream => (
-                      <Stream
-                          stream={ stream }
-                          key={ 'stream_'+stream }
-                          openStream={ actions.openStream }
-                          showContextMenu={ actions.contextMenu.show } />
-                  ))
-              }
-              </div>
-          ) : (
-          <div id='noLive'>
-              <p>No followed channels are currently live.</p>
-          </div>
-          )}
+            {state.streams.length > 0 ? (
+                <div id='streams'>
+                {
+                    state.streams.map(stream => (
+                        <Stream
+                            key={ 'stream_'+stream }
+                            stream={ stream }
+                            isFav={ false }
+                            openStream={ actions.openStream }
+                            openInBrowser={ actions.openURLInBrowser }
+                            showContextMenu={ actions.contextMenu.show } />
+                    ))
+                }
+                </div>
+            ) : (
+            <div id='noLive'>
+                <p>No followed channels are currently live.</p>
+            </div>
+            )}
         </section>
     </main>
 )

@@ -1,18 +1,26 @@
 import { h } from 'hyperapp'
 
-export default ({ stream, openStream, showContextMenu }) => {
+export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showContextMenu }) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
     openStream = openStream.bind(null, { channelName, channelURL })
+    openInBrowser = openInBrowser.bind(null, channelURL)
 
-    // TODO: move this somewhere else?
     const menuItems = [
         {
-            label: `Watch ${stream.channel.display_name}`,
+            label: 'Watch stream',
             handler: openStream
-        }
+        },
+        {
+            label: 'Open in browser',
+            handler: openInBrowser
+        },
+        {
+            label: isFav ? 'Remove from favorites' : 'Add to favorites',
+            handler: toggleFav
+        },
     ]
-    
+
     const showMenu = event => showContextMenu({ event, items: menuItems })
 
     return (
