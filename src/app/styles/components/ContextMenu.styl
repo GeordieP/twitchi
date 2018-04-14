@@ -1,0 +1,27 @@
+@require "./variables"
+
+.ctxMenuWrapper
+    position: absolute
+    width: 100vw
+    height: 100vh
+    top: 0
+    left: 0
+    background: rgba(255, 255, 0, 0.1)
+    z-index: 5
+
+.ctxMenuList
+    position: absolute
+    width: 150px
+    height: 200px
+    background: #422
+    z-index: 10
+    li
+        background: #242
+        width: 100%
+        padding: 10px 5px
+        margin: 0 0 5px 0
+        cursor: pointer
+        &:hover
+            background: lighten(#242, 10%)
+        &:active
+            background: darken(#242, 10%)

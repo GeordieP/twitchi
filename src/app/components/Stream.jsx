@@ -1,12 +1,22 @@
 import { h } from 'hyperapp'
 
-export default ({ stream, openStream }) => {
+export default ({ stream, openStream, showContextMenu }) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
     openStream = openStream.bind(null, { channelName, channelURL })
 
+    // TODO: move this somewhere else?
+    const menuItems = [
+        {
+            label: `Watch ${stream.channel.display_name}`,
+            handler: openStream
+        }
+    ]
+    
+    const showMenu = event => showContextMenu({ event, items: menuItems })
+
     return (
-        <div className='stream' onclick={ openStream }>
+        <div className='stream' onclick={ openStream } oncontextmenu={ showMenu }>
             <img src={ stream.preview.medium } />
             <div className='stream_info'>
                 <div className='stream_info_inner'>

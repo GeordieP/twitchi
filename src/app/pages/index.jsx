@@ -3,7 +3,7 @@ import { h } from 'hyperapp'
 import NavBar from 'components/NavBar'
 import Stream from 'components/Stream'
 
-export default (state, actions) => (
+export default () => (state, actions) => (
     <main>
         <NavBar>
             <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
@@ -19,7 +19,8 @@ export default (state, actions) => (
                       <Stream
                           stream={ stream }
                           key={ 'stream_'+stream }
-                          openStream={ actions.openStream } />
+                          openStream={ actions.openStream }
+                          showContextMenu={ actions.contextMenu.show } />
                   ))
               }
               </div>

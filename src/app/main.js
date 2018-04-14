@@ -10,10 +10,13 @@ import Preferences from 'pages/preferences'
 import LaunchStream from 'pages/launchStream'
 import Logs from 'pages/logs'
 
+// hoc for context menu
+import { WithContextMenu } from 'components/ContextMenu'
+
 import * as ipcActions from 'actions/ipcActions'
 
 const router = Router({
-    '/': Index,
+    '/': WithContextMenu(Index),
     '/preferences': Preferences,
     '/launchStream': LaunchStream,
     '/logs': Logs,

@@ -53,4 +53,16 @@ export default {
             quality: quality || state.prefs['preferred-stream-quality']
         })
     },
+
+    // CONTEXT MENU //
+    contextMenu: {
+        show: ({ event, items }) => ({
+            items,
+            position: { x: event.clientX, y: event.clientY },
+            visible: true,
+        }),
+        hide: () => ({
+            visible: false,
+        }),
+    }
 }

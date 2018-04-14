@@ -4,7 +4,7 @@ import { logsSubscribe, logsUnsubscribe } from 'actions/ipcActions'
 import NavBar from 'components/NavBar'
 import LogView from 'components/LogView'
 
-export default (state, actions) => {
+export default () => (state, actions) => {
     return (
         <main>
             <NavBar />

@@ -3,7 +3,7 @@ import { QUALITY_OPTIONS } from 'util/constants'
 
 import NavBar from 'components/NavBar'
 
-export default (state, actions) => {
+export default () => (state, actions) => {
     const onQualChange = e => actions.updatePreferredQuality(e.target.value)
 
     return (
