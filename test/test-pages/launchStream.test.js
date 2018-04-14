@@ -5,7 +5,9 @@ import actions from 'actions/actions'
 import state_base from 'state/state'
 import mocks from 'testUtil/mocks'
 
-import LaunchStream from 'pages/launchStream'
+import _LaunchStream from 'pages/launchStream'
+// lazy component
+const LaunchStream = _LaunchStream()
 
 describe('Launch Stream Page', () => {
     const state = Object.assign({}, state_base, {

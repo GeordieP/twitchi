@@ -5,7 +5,9 @@ import actions from 'actions/actions'
 import state_base from 'state/state'
 import mocks from 'testUtil/mocks'
 
-import logs from 'pages/logs'
+import _logs from 'pages/logs'
+// lazy component
+const logs = _logs()
 
 describe('Logs page', () => {
     const state = Object.assign({}, state_base, {

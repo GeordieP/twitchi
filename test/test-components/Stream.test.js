@@ -14,7 +14,10 @@ export default describe('Stream Component', () => {
         const el_streamRoot = Stream({
             // grab one stream item from mocks
             stream: testStream,
-            openStream: mocks.actions.NOOP
+            isFav: false,
+            openStream: mocks.actions.NOOP,
+            openInBrowser: mocks.actions.NOOP,
+            showContextMenu: mocks.actions.NOOP,
         })
 
         // ELEMENTS
@@ -60,7 +63,10 @@ export default describe('Stream Component', () => {
         const view = Stream({
             // grab one stream item from mocks
             stream: testStream,
-            openStream: mockClickHandler
+            isFav: false,
+            openStream: mockClickHandler,
+            openInBrowser: mocks.actions.NOOP,
+            showContextMenu: mocks.actions.NOOP,
         })
 
         // simulate click event

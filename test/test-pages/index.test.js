@@ -5,7 +5,9 @@ import actions from 'actions/actions'
 import state_base from 'state/state'
 import mocks from 'testUtil/mocks'
 
-import index from 'pages/index'
+import _index from 'pages/index'
+// lazy component
+const index = _index()
 
 describe('Index page', () => {
     describe('Stream list', () => {
