@@ -59,7 +59,7 @@ export default () => (state, actions) => {
     // everyone else
     const renderRegStreams = () => (
         <span>
-            <h2>Channels</h2>
+            <h2>Followed Channels</h2>
             <div className='streamsView'>
                 {
                     regularStreams.map(stream => (
