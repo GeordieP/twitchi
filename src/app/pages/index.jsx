@@ -86,7 +86,7 @@ export default ({ contextMenu }) => (state, actions) => {
             <main>
                 <NavBar>
                     <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
-                        <i className='fas fa-sync-alt'></i> 
+                      <i className={ 'fas fa-sync-alt ' + (state.refreshingFollowList ? 'refreshAnim' : '') }></i> 
                     </a>
                 </NavBar>
 

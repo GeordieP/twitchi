@@ -31,6 +31,14 @@
         @media (min-width: ($tileWidth * n + (n - 1) * $gridGap))
             --numCols: n
 
+@keyframes spinner
+    to
+        transform: rotate(360deg)
+
+nav .refreshAnim
+    color: invert($clr_twitchPurple)
+    animation: spinner 1.6s linear infinite
+    
 #noLive
     display: flex
     width: 100%

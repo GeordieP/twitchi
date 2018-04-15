@@ -237,6 +237,9 @@ function listen() {
     })
 }
 
+// allow other modules to send ipc messages
+module.exports.ipcSendJson = ipcReplyJson
+
 module.exports.getMainWindow = function() {
     return MAIN_WINDOW
 }

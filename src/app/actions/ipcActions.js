@@ -19,6 +19,15 @@ export const init = () => {
 }
 
 export const listen = dispatch => {
+    // handler function for stdout lines coming from core
+    logLineListener = (evt, newLine) => {
+        try {
+            dispatch.logs.updateLogsByName(newLine)
+        } catch(e) {
+            handleErr(e)
+        }
+    }
+
     // currently there's no app action for sending prefs-get-all
     // we only send it manually from this module (init and in some result handlers)
     ipc.on('prefs-get-all-res', (evt, res) => {
@@ -128,14 +137,14 @@ export const listen = dispatch => {
         }
     })
 
-    // handler function for stdout lines coming from core
-    logLineListener = (evt, newLine) => {
-        try {
-            dispatch.logs.updateLogsByName(newLine)
-        } catch(e) {
-            handleErr(e)
-        }
-    }
+    // events
+    ipc.on('event-twitch-follow-list-refresh-begin', evt => {
+        dispatch.setState({ refreshingFollowList: true })
+    })
+
+    ipc.on('event-twitch-follow-list-refresh-finish', evt => {
+        dispatch.setState({ refreshingFollowList: false })
+    })
 }
 
 // subscribe to new streamlink log messages coming from core
