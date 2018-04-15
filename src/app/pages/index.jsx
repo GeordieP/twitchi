@@ -78,32 +78,35 @@ export default ({ contextMenu }) => (state, actions) => {
     )
     
     return (
-        <main>
+        <div>
             {/* render children passed through props - used for rendering context menu component */}
             {/* contextMenu component handles its own show/hide status */}
             { contextMenu }
 
-            <NavBar>
-                <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
-                    <i className='fas fa-sync-alt'></i> 
-                </a>
-            </NavBar>
+            <main>
+                <NavBar>
+                    <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
+                        <i className='fas fa-sync-alt'></i> 
+                    </a>
+                </NavBar>
 
-            {state.streams.length > 0 ? (
-                    <section className='content' id='streamsWrap'>
-                        <div id='streamsInnerWrap'>
-                            { renderFavStreams() }
-                            { renderRegStreams() }
-                        </div>
-                    </section>
-                ) : (
-                    <section className='content' id='streamsWrap'>
-                        <div id='noLive'>
-                            <p>No followed channels are currently live.</p>
-                        </div>
-                    </section>
-                )
-            }
-        </main>
+                {state.streams.length > 0 ? (
+                        <section className='content' id='streamsWrap'>
+                            <div id='streamsInnerWrap'>
+                                { renderFavStreams() }
+                                { renderRegStreams() }
+                            </div>
+                        </section>
+                    ) : (
+                        <section className='content' id='streamsWrap'>
+                            <div id='noLive'>
+                                <p>No followed channels are currently live.</p>
+                            </div>
+                        </section>
+                    )
+                }
+
+            </main>
+        </div>
     )
 }
