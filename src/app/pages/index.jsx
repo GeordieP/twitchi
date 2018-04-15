@@ -31,7 +31,7 @@ const divideStreams = (allStreams, favStreamNames) => {
     }
 }
 
-export default () => (state, actions) => {
+export default ({ contextMenu }) => (state, actions) => {
     // divide streams array into multiple so we can display each individually
     const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'])
 
@@ -79,6 +79,10 @@ export default () => (state, actions) => {
     
     return (
         <main>
+            {/* render children passed through props - used for rendering context menu component */}
+            {/* contextMenu component handles its own show/hide status */}
+            { contextMenu }
+
             <NavBar>
                 <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
                     <i className='fas fa-sync-alt'></i> 

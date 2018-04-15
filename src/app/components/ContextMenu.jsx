@@ -24,7 +24,7 @@ const MenuList = ({ x = 0, y = 0, items, hide }) => {
 
 // Component to render the list itself, as well as the background element that covers the entire
 // page and provides the onclick target for hiding the menu.
-const ContextMenu = ({ state, actions }) => (
+const ContextMenu = () => ({ contextMenu: state }, { contextMenu: actions }) => (
     state.visible && (
         <div>
             <MenuList
@@ -42,13 +42,14 @@ const ContextMenu = ({ state, actions }) => (
     )
 )
 
-// higher-order component to add context menu support to a page
-// renders the passed component, as well as the context menu component (styled to be hidden by default)
-// passed component should be a lazy component (fn() => fn(state, actions) => h()),
-// as we don't pass anything down to C
-export const WithContextMenu = C => (state, actions) => (
-    <div>
-        <ContextMenu state={state.contextMenu} actions={actions.contextMenu}  />
-        <C />
-    </div>
+// higher-order component to add context menu support to a page or component.
+// passed page/component (arg C) must be a lazy component that accepts a 'contextMenu' prop:
+//
+// fn({ contextMenu }) => fn(state, actions) => h()
+//
+// page/component C must then return ContextMenu somewhere in its structure (location shouldn't matter,
+// ContextMenu is an absolutely-positioned element and should render correctly no matter where
+// it's mounted in the DOM.)
+export const WithContextMenu = C => (
+    <C contextMenu={ ContextMenu } />
 )
