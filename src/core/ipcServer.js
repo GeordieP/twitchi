@@ -79,6 +79,34 @@ function listen() {
         ipcReplyJson('twitch-get-follow-list-res', result)
     })
 
+    ipc.on('twitch-enable-follow-list-auto-refresh', function(evt) {
+        let result
+        
+        try {
+            config.set('auto-refresh-follow-list-enabled', true)
+            twitch.enableAutoRefresh()
+            result = Result.newOk()
+        } catch(e) {
+            result = Result.newError(e, 'ipcServer @ twitch-enable-follow-list-auto-refresh')
+        }
+
+        ipcReplyJson('twitch-enable-follow-list-auto-refresh-res', result)
+    })
+
+    ipc.on('twitch-disable-follow-list-auto-refresh', function(evt) {
+        let result
+        
+        try {
+            config.set('auto-refresh-follow-list-enabled', false)
+            twitch.disableAutoRefresh()
+            result = Result.newOk()
+        } catch(e) {
+            result = Result.newError(e, 'ipcServer @ twitch-disable-follow-list-auto-refresh')
+        }
+
+        ipcReplyJson('twitch-disable-follow-list-auto-refresh-res', result)
+    })
+
     /* STREAMLINK */
     ipc.on('streamlink-open-url', async function(evt, { channelName, channelURL, quality }) {
         let result

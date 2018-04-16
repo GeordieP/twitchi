@@ -58,6 +58,8 @@ export default {
     refreshToken: () => ipc.send('auth-refresh-token'),
     revokeToken: () => ipc.send('auth-revoke-token'),
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
+    enableFollowListAutoRefresh: () => ipc.send('twitch-enable-follow-list-auto-refresh'),
+    disableFollowListAutoRefresh: () => ipc.send('twitch-disable-follow-list-auto-refresh'),
 
     // PREFERENCES //
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {

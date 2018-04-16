@@ -93,6 +93,28 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('twitch-enable-follow-list-auto-refresh-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+
+            // successfully enabled auto refresh, update local prefs object
+            ipc.send('prefs-get-all')
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
+    ipc.on('twitch-disable-follow-list-auto-refresh-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+
+            // successfully disabled auto refresh, update local prefs object
+            ipc.send('prefs-get-all')
+        } catch(e) {
+            handleErr(e)
+        }
+    })
+
     ipc.on('app-get-version-res', (evt, res) => {
         try {
             const appVersion = parseResponse(res).expect()

@@ -8,6 +8,8 @@ const currentVersion = require('./version').version
 const defaults = {
     'user-access-token': '',
     'preferred-stream-quality': 'best',
+    'auto-refresh-follow-list-enabled': true,
+    'auto-refresh-follow-list-interval-minutes': 5,
     'favorite-streams': [],
 }
 

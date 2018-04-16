@@ -31,6 +31,34 @@ const divideStreams = (allStreams, favStreamNames) => {
     }
 }
 
+// HOC around NavBar, create a context menu for the refresh button
+const IndexNavbar = ({ refreshingFollowList, prefs, refreshFollowList, showContextMenu, disableFollowListAutoRefresh, enableFollowListAutoRefresh }) => {
+    const menuItems = [
+        {
+            label: 'Refresh now',
+            handler: refreshFollowList
+        },
+
+        prefs['auto-refresh-follow-list-enabled'] ? {
+            label: 'Disable auto-refresh',
+            handler: disableFollowListAutoRefresh
+        } : {
+            label: 'Enable auto-refresh',
+            handler: enableFollowListAutoRefresh
+        }
+    ]
+
+    const showMenu = event => showContextMenu({ event, items: menuItems })
+
+    return (
+        <NavBar>
+            <a href='#' title='Refresh List' onclick={ refreshFollowList } oncontextmenu={ showMenu }>
+                <i className={ 'fas fa-sync-alt ' + (refreshingFollowList ? 'refreshAnim' : '') }></i> 
+            </a>
+        </NavBar>
+    )
+}
+
 export default ({ contextMenu }) => (state, actions) => {
     // divide streams array into multiple so we can display each individually
     const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'])
@@ -76,7 +104,7 @@ export default ({ contextMenu }) => (state, actions) => {
             </div>
         </span>
     )
-    
+
     return (
         <div>
             {/* render children passed through props - used for rendering context menu component */}
@@ -84,11 +112,14 @@ export default ({ contextMenu }) => (state, actions) => {
             { contextMenu }
 
             <main>
-                <NavBar>
-                    <a href='#' title='Refresh List' onclick={ actions.refreshFollowList }>
-                      <i className={ 'fas fa-sync-alt ' + (state.refreshingFollowList ? 'refreshAnim' : '') }></i> 
-                    </a>
-                </NavBar>
+              <IndexNavbar
+                refreshingFollowList={state.refreshingFollowList}
+                prefs={state.prefs}
+                refreshFollowList={actions.refreshFollowList}
+                showContextMenu={actions.contextMenu.show}
+                disableFollowListAutoRefresh={actions.disableFollowListAutoRefresh}
+                enableFollowListAutoRefresh={actions.enableFollowListAutoRefresh}
+                />
 
                 {state.streams.length > 0 ? (
                         <section className='content' id='streamsWrap'>
