@@ -53,6 +53,15 @@ export default () => (state, actions) => {
                 </div>
                 <div>
                     <h2>Stream List</h2>
+                    <h3>Auto-refresh</h3>
+                    <label htmlFor='autoRefreshCheckbox'>Enable auto-refresh</label>
+                    <input
+                        type='checkbox'
+                        id='autoRefreshCheckbox'
+                        checked={ state.prefs['auto-refresh-follow-list-enabled'] }
+                        onchange={ state.prefs['auto-refresh-follow-list-enabled'] ? actions.disableFollowListAutoRefresh : actions.enableFollowListAutoRefresh }
+                        />
+
                     <h3>Auto-refresh duration</h3>
                     <p>Time in minutes before the list should auto-refresh</p>
                     <input
