@@ -71,6 +71,7 @@ function listen() {
 
         try {
             const followList = await twitch.getFollowList()
+            twitch.restartInterval()
             result = Result.newOk(followList)
         } catch(e) {
             result = Result.newError(e, 'ipcServer @ twitch-get-follow-list')
@@ -116,7 +117,7 @@ function listen() {
             }
 
             config.set('auto-refresh-follow-list-intvl-minutes', minutes)
-            twitch.updateAutoRefreshInterval()
+            twitch.restartInterval()
             result = Result.newOk()
         } catch(e) {
             result = Result.newError(e, 'ipcServer @ twitch-set-auto-refresh-follow-list-intvl-minutes')
