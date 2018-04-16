@@ -9,7 +9,7 @@ const defaults = {
     'user-access-token': '',
     'preferred-stream-quality': 'best',
     'auto-refresh-follow-list-enabled': true,
-    'auto-refresh-follow-list-interval-minutes': 5,
+    'auto-refresh-follow-list-intvl-minutes': 5,
     'favorite-streams': [],
 }
 

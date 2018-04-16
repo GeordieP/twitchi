@@ -60,6 +60,20 @@ export default {
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
     enableFollowListAutoRefresh: () => ipc.send('twitch-enable-follow-list-auto-refresh'),
     disableFollowListAutoRefresh: () => ipc.send('twitch-disable-follow-list-auto-refresh'),
+    setFollowListAutoRefreshInterval: minutes => state => {
+        // NOTE: this function assumes 'minutes' has been sanitized and
+        // validated before being passed!
+        
+        // update config file
+        ipc.send('twitch-set-auto-refresh-follow-list-intvl-minutes', minutes)
+
+        // update app state
+        return {
+            prefs: Object.assign({}, state.prefs, {
+                'auto-refresh-follow-list-intvl-minutes': minutes
+            })
+        }
+    },
 
     // PREFERENCES //
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {

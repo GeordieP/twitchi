@@ -6,6 +6,26 @@ import NavBar from 'components/NavBar'
 export default () => (state, actions) => {
     const onQualChange = e => actions.updatePreferredQuality(e.target.value)
 
+    const onChangeAutoRefreshDuration = e => {
+        let minutes = e.target.value
+
+        if (minutes == null || isNaN(minutes)) {
+            console.error('Time value must be a number no lower than 3.')
+            return
+        }
+
+        if (minutes.constructor !== Number) {
+            minutes = parseInt(minutes)
+        }
+
+        if (minutes < 3) {
+            console.error('Time value must be a number no lower than 3.')
+            return
+        }
+
+        actions.setFollowListAutoRefreshInterval(minutes)
+    }
+
     return (
         <main>
             <NavBar />
@@ -30,6 +50,17 @@ export default () => (state, actions) => {
                             ))
                         }
                     </select>
+                </div>
+                <div>
+                    <h2>Stream List</h2>
+                    <h3>Auto-refresh duration</h3>
+                    <p>Time in minutes before the list should auto-refresh</p>
+                    <input
+                        type='text'
+                        onchange={ onChangeAutoRefreshDuration }
+                        value={ state.prefs['auto-refresh-follow-list-intvl-minutes'] }
+                        placeholder='Auto-refresh timer (minutes)'
+                    />
                 </div>
             </section>
         </main>

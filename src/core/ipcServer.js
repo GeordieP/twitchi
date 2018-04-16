@@ -107,6 +107,24 @@ function listen() {
         ipcReplyJson('twitch-disable-follow-list-auto-refresh-res', result)
     })
 
+    ipc.on('twitch-set-auto-refresh-follow-list-intvl-minutes', function(evt, minutes){
+        let result
+
+        try {
+            if (minutes < 3) {
+                throw 'Provided interval is too short: Must be no less than 3 minutes.'
+            }
+
+            config.set('auto-refresh-follow-list-intvl-minutes', minutes)
+            twitch.updateAutoRefreshInterval()
+            result = Result.newOk()
+        } catch(e) {
+            result = Result.newError(e, 'ipcServer @ twitch-set-auto-refresh-follow-list-intvl-minutes')
+        }
+
+        ipcReplyJson('twitch-set-auto-refresh-follow-list-intvl-minutes-res', result)
+    })
+
     /* STREAMLINK */
     ipc.on('streamlink-open-url', async function(evt, { channelName, channelURL, quality }) {
         let result

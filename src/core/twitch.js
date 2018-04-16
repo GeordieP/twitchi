@@ -12,7 +12,7 @@ const followedStreamsURI = 'https://api.twitch.tv/kraken/streams/followed'
 const requestTokenArg = '?oauth_token='
 
 // auto-refresh interval
-const REFRESH_INTERVAL_TIME = 1000 * 60 * 2 // 2 minutes
+let REFRESH_INTERVAL_TIME_MINUTES = 5 // 5 minutes by default
 let refreshIntervalObj
 
 // call request() with twitch auth token in options.
@@ -48,12 +48,32 @@ const timedRefresh = async () => {
     ipcServer.ipcSendJson('twitch-get-follow-list-res', result)
 }
 
+module.exports.updateAutoRefreshInterval = () => {
+    // enableAutoRefresh gets the interval time value every time it gets called;
+    // just restart interval timer if it's already active.
+    // if it's not active, we dont need to do anything.
+    if (config.get('auto-refresh-follow-list-enabled') === true) {
+        module.exports.disableAutoRefresh()
+        module.exports.enableAutoRefresh()
+    }
+}
+
 module.exports.enableAutoRefresh = () => {
-    refreshIntervalObj = setInterval(timedRefresh, REFRESH_INTERVAL_TIME)
+    // NOTE: updateAutoRefreshInterval currently depends on us setting the refresh interval
+    // variable here every call. If the line below is removed from this function, add it (or
+    // similar functionality) to updateAutoRefreshInterval.
+    REFRESH_INTERVAL_TIME_MINUTES = config.get('auto-refresh-follow-list-intvl-minutes') || 5
+
+    // NOTE: must convert minutes value into milliseconds here! (MINUTES*1000*60)
+    refreshIntervalObj = setInterval(
+        timedRefresh,
+        REFRESH_INTERVAL_TIME_MINUTES * 1000 * 60
+    )
 }
 
 module.exports.disableAutoRefresh = () => {
     clearInterval(refreshIntervalObj)
+    refreshIntervalObj = null
 }
 
 // SETUP: enable auto refresh

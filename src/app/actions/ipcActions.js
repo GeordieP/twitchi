@@ -167,6 +167,14 @@ export const listen = dispatch => {
     ipc.on('event-twitch-follow-list-refresh-finish', evt => {
         dispatch.setState({ refreshingFollowList: false })
     })
+
+    ipc.on('twitch-set-auto-refresh-follow-list-intvl-minutes-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+        } catch(e) {
+            handleErr(e)
+        }
+    })
 }
 
 // subscribe to new streamlink log messages coming from core
