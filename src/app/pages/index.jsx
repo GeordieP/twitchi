@@ -32,14 +32,20 @@ const divideStreams = (allStreams, favStreamNames) => {
 }
 
 // HOC around NavBar, create a context menu for the refresh button
-const IndexNavbar = ({ refreshingFollowList, prefs, refreshFollowList, showContextMenu, disableFollowListAutoRefresh, enableFollowListAutoRefresh }) => {
+const IndexNavbar = ({
+    refreshingFollowList,
+    autoRefreshEnabled,
+    refreshFollowList,
+    showContextMenu,
+    disableFollowListAutoRefresh,
+    enableFollowListAutoRefresh}) => {
     const menuItems = [
         {
             label: 'Refresh now',
             handler: refreshFollowList
         },
 
-        prefs['auto-refresh-follow-list-enabled'] ? {
+        autoRefreshEnabled ? {
             label: 'Disable auto-refresh',
             handler: disableFollowListAutoRefresh
         } : {
@@ -52,8 +58,20 @@ const IndexNavbar = ({ refreshingFollowList, prefs, refreshFollowList, showConte
 
     return (
         <NavBar>
-            <a href='#' title='Refresh List' onclick={ refreshFollowList } oncontextmenu={ showMenu }>
-                <i className={ 'fas fa-sync-alt ' + (refreshingFollowList ? 'refreshAnim' : '') }></i> 
+            <a href='#'
+                title={
+                    'Refresh List ' +
+                    (autoRefreshEnabled ? '(Auto refresh is on)' : '(Auto refresh is disabled)')
+                }
+                className='refreshListBtn'
+                onclick={ refreshFollowList }
+                oncontextmenu={ showMenu }
+                >
+                <i className={
+                    'fas fa-sync-alt ' +
+                    (refreshingFollowList ? 'refreshing ' : '') +
+                    (autoRefreshEnabled ? 'autoRefreshEnabled ' : '')
+                }></i> 
             </a>
         </NavBar>
     )
@@ -114,7 +132,7 @@ export default ({ contextMenu }) => (state, actions) => {
             <main>
               <IndexNavbar
                 refreshingFollowList={state.refreshingFollowList}
-                prefs={state.prefs}
+                autoRefreshEnabled={state.prefs['auto-refresh-follow-list-enabled']}
                 refreshFollowList={actions.refreshFollowList}
                 showContextMenu={actions.contextMenu.show}
                 disableFollowListAutoRefresh={actions.disableFollowListAutoRefresh}

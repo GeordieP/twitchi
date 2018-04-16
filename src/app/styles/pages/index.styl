@@ -31,13 +31,22 @@
         @media (min-width: ($tileWidth * n + (n - 1) * $gridGap))
             --numCols: n
 
+// NAV BAR ITEMS //
+
+// border around refresh icon
+nav .autoRefreshEnabled
+    padding: 5px
+    border-radius: 100px
+    border: 2px solid darken($clr_twitchPurple, 30%)
+
+// change color and rotate when refreshing
+nav .refreshing
+    color: invert($clr_twitchPurple)
+    border-color: @color
+    animation: spinner 1.6s linear infinite
 @keyframes spinner
     to
         transform: rotate(360deg)
-
-nav .refreshAnim
-    color: invert($clr_twitchPurple)
-    animation: spinner 1.6s linear infinite
     
 #noLive
     display: flex
