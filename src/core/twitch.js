@@ -21,7 +21,7 @@ let LIVE_CHANNEL_NAMES_CACHE = []
 
 // keep track of whether or not this is the first refresh.
 // if it is, we don't show a 'live streams' toast notification.
-let isFirstRefresh = false
+let isFirstRefresh = true
 
 // call request() with twitch auth token in options.
 // Returns a promise. Resolves with response data, rejects with error.
