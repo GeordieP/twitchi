@@ -1,14 +1,15 @@
 'use strict'
 
 const electron = require('electron')
-const { shell } = electron
+const { shell, Notification } = electron
 const ipc = electron.ipcMain
 
 const twitch = require('./twitch')
 const auth = require('./auth')
-const config = require ('./config')
+const config = require('./config')
 const streamManager = require('./streamManager')
 const currentVersion = require('./version').version || '0.0.0'
+const notifManager = require('./notifManager')
 
 const Result = require('@geordiep/result')
 
@@ -293,6 +294,7 @@ module.exports.getMainWindow = function() {
 
 module.exports.start = function(mainWindow) {
     MAIN_WINDOW = mainWindow
+    notifManager.init(mainWindow)
     listen()
 }
 

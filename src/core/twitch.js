@@ -6,6 +6,7 @@ const Result = require('@geordiep/result')
 
 const ipcServer = require('./ipcServer')
 const config = require('./config')
+const notifManager = require('./notifManager')
 
 // JSON Request URLs
 const followedStreamsURI = 'https://api.twitch.tv/kraken/streams/followed'
@@ -14,6 +15,13 @@ const requestTokenArg = '?oauth_token='
 // auto-refresh interval
 let REFRESH_INTERVAL_TIME_MINUTES = 5 // 5 minutes by default
 let refreshIntervalObj
+
+// hold list of names that were live during last check
+let LIVE_CHANNEL_NAMES_CACHE = []
+
+// keep track of whether or not this is the first refresh.
+// if it is, we don't show a 'live streams' toast notification.
+let isFirstRefresh = false
 
 // call request() with twitch auth token in options.
 // Returns a promise. Resolves with response data, rejects with error.
@@ -27,9 +35,35 @@ module.exports.getFollowList = () => new Promise(async function(resolve, reject)
     try {
         ipcServer.ipcSendJson('event-twitch-follow-list-refresh-begin')
         let token = await auth.getTokenExistingOrNew()
-        let data = await authedJSONRequest(followedStreamsURI, token)
+        let streams = await authedJSONRequest(followedStreamsURI, token)
         ipcServer.ipcSendJson('event-twitch-follow-list-refresh-finish')
-        resolve(data)
+        resolve(streams)
+
+        // on first refresh, don't send a notification, and update isFirstRefresh value
+        if (isFirstRefresh) {
+            isFirstRefresh = false
+        } else {
+            // if no streams are live, clear cache and ignore rest of logic below
+            if (streams['_total'].length === 0) {
+                LIVE_CHANNEL_NAMES_CACHE = []
+                return
+            }
+
+            let newStreams
+            if (LIVE_CHANNEL_NAMES_CACHE.length === 0) {
+                // don't do diff if there are no names in the cache
+                newStreams = streams.streams
+            } else {
+                // diff new streams and old streams
+                // filter full streams list down to just the names that aren't in the cache from the previous refresh
+                newStreams = streams.streams.filter(s => !LIVE_CHANNEL_NAMES_CACHE.includes(s.channel.name))
+            }
+
+            notifManager.showLiveStreamsNotif(newStreams)
+        }
+
+        // update the live names cache
+        LIVE_CHANNEL_NAMES_CACHE = streams.streams.map(s => s.channel.name)
     } catch(e) {
         reject(e)
     }
