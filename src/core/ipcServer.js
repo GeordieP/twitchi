@@ -1,7 +1,7 @@
 'use strict'
 
 const electron = require('electron')
-const { shell, Notification } = electron
+const { shell } = electron
 const ipc = electron.ipcMain
 
 const twitch = require('./twitch')
