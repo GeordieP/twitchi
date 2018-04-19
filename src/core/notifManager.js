@@ -4,6 +4,7 @@ const config = require('./config')
 
 // path works in prod mode (serves from /build/resources/twitchi.png) and
 // in development mode (app serves from root, img from /resources/twitchi.png)
+// NOTE: not using this for now, as most notification systems already show the app's icon by default
 const TWITCHI_ICON_PATH = './resources/twitchi.png'
 
 // maximum number of names to print in a live streams notification
@@ -98,5 +99,9 @@ module.exports.showLiveStreamsNotif = async streams => {
         buildBody(fav, rest)
     ])
 
-    new Notification({ title, body, icon: TWITCHI_ICON_PATH }).show()
+    new Notification({
+        title,
+        body,
+        // icon: TWITCHI_ICON_PATH,
+    }).show()
 }
