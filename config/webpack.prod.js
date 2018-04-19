@@ -34,7 +34,13 @@ module.exports = merge(baseConfig, {
             {
                 from: path.resolve('./src/core'),
                 to: './core'
-            }
+            },
+
+            // resources
+            {
+                from: path.resolve('./resources/twitchi.png'),
+                to: './resources'
+            },
         ]),
 
         // clean up (remove) the output directory before we start writing to it

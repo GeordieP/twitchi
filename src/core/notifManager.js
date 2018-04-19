@@ -2,6 +2,13 @@ const { Notification } = require('electron')
 
 const config = require('./config')
 
+// path works in prod mode (serves from /build/resources/twitchi.png) and
+// in development mode (app serves from root, img from /resources/twitchi.png)
+const TWITCHI_ICON_PATH = './resources/twitchi.png'
+
+// maximum number of names to print in a live streams notification
+const MAX_NUM_NAMES = 5
+
 let MAIN_WINDOW
 
 module.exports.init = mainWindow => {
@@ -18,32 +25,26 @@ const buildTitle = (fav, rest) => new Promise((resolve, reject) => {
         resolve(`${rest[0].channel.display_name} is live playing ${rest[0].channel.game}`)
         return
     }
-    
-    // bun
-    const begin = 'Twitchi:'
-    const end = 'went live'
 
-    // burger
     let favLine = ''
     let restLine = ''
 
     if (fav.length > 0) {
-        // if more than one fav, pluralize
-        favLine = (fav.length === 1)
-            ? `${fav.length} favorite `
-            : `${fav.length} favorites `
+        const pluralize = (fav.length > 1) ? 's' : ''
+        favLine = `${fav.length} favorite${pluralize} `
     }
 
     // if there are some streams that aren't favs
     if (rest.length > 0) {
+        const pluralize = (rest.length > 1) ? 's' : ''
         // if there are streams in favs AND rest, show 'and' & 'other' around the number.
         // otherwise just show the number.
         restLine = (fav.length > 0)
-            ? `and ${rest.length} other `
-            : `${rest.length} `
+            ? `and ${rest.length} other stream${pluralize} `
+            : `${rest.length} stream${pluralize} `
     }
     
-    resolve(`${begin} ${favLine}${restLine}${end}`)
+    resolve(`${favLine}${restLine}went live`)
 })
 
 const buildBody = (fav, rest) => new Promise((resolve, reject) => {
@@ -56,12 +57,25 @@ const buildBody = (fav, rest) => new Promise((resolve, reject) => {
         return
     }
 
-    let favString = fav.map(s => s.channel.name).join(', ')
-    let restString = rest.map(s => s.channel.name).join(', ')
-    let separator = ''
-    if (fav.length > 0 && rest.length > 0) separator = ', '
+    // merge the object back together from the two separated arrays
+    // so it's sorted with the favorites at the beginning
+    let allNames = [
+        ...fav.map(s => s.channel.display_name),
+        ...rest.map(s => s.channel.display_name),
+    ]
+    
+    // truncate names down to the limit,
+    // and keep track of the number we truncate in order to print later
+    let countDiff = 0
+    if (allNames.length > MAX_NUM_NAMES) {
+        countDiff = allNames.length - MAX_NUM_NAMES
+        allNames.splice(MAX_NUM_NAMES)
+    }
 
-    resolve(`${favString}${separator}${restString}`)
+    const allNamesString = allNames.join(', ')
+    const restString = (countDiff > 0) ? `, and ${countDiff} more` : ''
+
+    resolve(`${allNamesString}${restString}`)
 })
 
 module.exports.showLiveStreamsNotif = async streams => {
@@ -84,5 +98,5 @@ module.exports.showLiveStreamsNotif = async streams => {
         buildBody(fav, rest)
     ])
 
-    new Notification({ title, body }).show()
+    new Notification({ title, body, icon: TWITCHI_ICON_PATH }).show()
 }
