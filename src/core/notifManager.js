@@ -81,6 +81,8 @@ const buildBody = (fav, rest) => new Promise((resolve, reject) => {
 
 module.exports.showLiveStreamsNotif = async streams => {
     if (streams.length === 0) return
+    if (config.get('live-notification-enabled') === false) return
+
     const allFav = config.get('favorite-streams')
 
     // split all streams into list of fav and rest

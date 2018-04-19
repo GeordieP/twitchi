@@ -10,6 +10,7 @@ const defaults = {
     'preferred-stream-quality': 'best',
     'auto-refresh-follow-list-enabled': true,
     'auto-refresh-follow-list-intvl-minutes': 5,
+    'live-notification-enabled': true,
     'favorite-streams': [],
 }
 

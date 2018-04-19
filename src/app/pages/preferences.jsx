@@ -71,6 +71,18 @@ export default () => (state, actions) => {
                         placeholder='Auto-refresh timer (minutes)'
                     />
                 </div>
+
+                <div>
+                    <h2>Notifications</h2>
+                    <h3>Live Notification</h3>
+                    <label htmlFor='liveNotifCheckbox'>Show a notification when streams go live</label>
+                    <input
+                        type='checkbox'
+                        id='liveNotifCheckbox'
+                        checked={ state.prefs['live-notification-enabled'] }
+                        onchange={ state.prefs['live-notification-enabled'] ? actions.disableLiveNotif : actions.enableLiveNotif }
+                        />
+                </div>
             </section>
         </main>
     )
