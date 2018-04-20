@@ -14,7 +14,8 @@ describe('Index page', () => {
         it('displays a message when live list is empty', () => {
             // build a state object that has an empty stream list
             const state = Object.assign({}, state_base, {
-                streams: mocks.store.streams.empty
+                streams: mocks.store.streams.empty,
+                prefs: mocks.store.prefs.empty,
             })
 
             const el_noLiveContainer = ElFinder(index(state, actions))
@@ -42,12 +43,15 @@ describe('Index page', () => {
         it('renders 1 Stream component when 1 stream is live', () => {
             // build a state object that has 1 item in its streams list
             const state = Object.assign({}, state_base, {
-                streams: mocks.store.streams.one_item
+                streams: mocks.store.streams.one_item,
+                prefs: mocks.store.prefs.empty,
             })
 
             const el_streamsContainer = ElFinder(index(state, actions))
                 .firstChild.byId('streamsWrap')
-                .firstChild.byId('streams')
+                .firstChild.byId('streamsInnerWrap')
+                .firstChild.byType('span')
+                .firstChild.byClass('streamsView')
 
             expect(el_streamsContainer.children.length)
                 .toEqual(1)
@@ -56,12 +60,15 @@ describe('Index page', () => {
         it('renders 2 Stream components when 2 streams are live', () => {
             // build a state object that has 2 items in its streams list
             const state = Object.assign({}, state_base, {
-                streams: mocks.store.streams.two_items
+                streams: mocks.store.streams.two_items,
+                prefs: mocks.store.prefs.empty,
             })
 
             const el_streamsContainer = ElFinder(index(state, actions))
                 .firstChild.byId('streamsWrap')
-                .firstChild.byId('streams')
+                .firstChild.byId('streamsInnerWrap')
+                .firstChild.byType('span')
+                .firstChild.byClass('streamsView')
 
             expect(el_streamsContainer.children.length)
                 .toEqual(2)

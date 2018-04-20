@@ -17,6 +17,7 @@ export default describe('Stream Component', () => {
             isFav: false,
             openStream: mocks.actions.NOOP,
             openInBrowser: mocks.actions.NOOP,
+            toggleFav: mocks.actions.NOOP,
             showContextMenu: mocks.actions.NOOP,
         })
 
@@ -66,6 +67,7 @@ export default describe('Stream Component', () => {
             isFav: false,
             openStream: mockClickHandler,
             openInBrowser: mocks.actions.NOOP,
+            toggleFav: mocks.actions.NOOP,
             showContextMenu: mocks.actions.NOOP,
         })
 
