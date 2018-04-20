@@ -29,6 +29,7 @@ export default () => (state, actions) => {
     return (
         <main>
             <NavBar />
+
             <section className='content'>
                 <h1>Preferences</h1>
                 <div>

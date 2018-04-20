@@ -10,23 +10,24 @@ export default () => (state, actions) => {
             <NavBar />
 
             <section
-              className='content'
-              oncreate={() => {
-                  actions.getOpenStreams()
-                  actions.logs.getAllLogs()
-                  logsSubscribe()
-              }}
-              ondestroy={logsUnsubscribe}
-              key='logsContent'>
+                key='logsContent'
+                className='content'
+                ondestroy={logsUnsubscribe}
+                oncreate={() => {
+                    actions.getOpenStreams()
+                    actions.logs.getAllLogs()
+                    logsSubscribe()
+                }}
+              >
             <h1>Logs</h1>
             {
                 Object.keys(state.logs.logLines).map(name => (
                     <LogView
-                      channelName={name}
-                      logs={state.logs.logLines[name]}
-                      showCloseButton={state.openStreams.includes(name)}
-                      onCloseClick={actions.closeStream.bind(null, name)}
-                      />
+                        channelName={name}
+                        logs={state.logs.logLines[name]}
+                        showCloseButton={state.openStreams.includes(name)}
+                        onCloseClick={actions.closeStream.bind(null, name)}
+                    />
                 ))
             }
             </section>

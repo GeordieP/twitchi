@@ -77,7 +77,7 @@ const IndexNavbar = ({
     )
 }
 
-export default ({ contextMenu }) => (state, actions) => {
+export default () => (state, actions) => {
     // divide streams array into multiple so we can display each individually
     const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'])
 
@@ -124,38 +124,31 @@ export default ({ contextMenu }) => (state, actions) => {
     )
 
     return (
-        <div>
-            {/* render children passed through props - used for rendering context menu component */}
-            {/* contextMenu component handles its own show/hide status */}
-            { contextMenu }
-
-            <main>
-              <IndexNavbar
+        <main>
+            <IndexNavbar
                 refreshingFollowList={state.refreshingFollowList}
                 autoRefreshEnabled={state.prefs['auto-refresh-follow-list-enabled']}
                 refreshFollowList={actions.refreshFollowList}
                 showContextMenu={actions.contextMenu.show}
                 disableFollowListAutoRefresh={actions.disableFollowListAutoRefresh}
                 enableFollowListAutoRefresh={actions.enableFollowListAutoRefresh}
-                />
+            />
 
-                {state.streams.length > 0 ? (
-                        <section className='content' id='streamsWrap'>
-                            <div id='streamsInnerWrap'>
-                                { renderFavStreams() }
-                                { renderRegStreams() }
-                            </div>
-                        </section>
-                    ) : (
-                        <section className='content' id='streamsWrap'>
-                            <div id='noLive'>
-                                <p>No followed channels are currently live.</p>
-                            </div>
-                        </section>
-                    )
-                }
-
-            </main>
-        </div>
+            {state.streams.length > 0 ? (
+                    <section className='content' id='streamsWrap'>
+                        <div id='streamsInnerWrap'>
+                            { renderFavStreams() }
+                            { renderRegStreams() }
+                        </div>
+                    </section>
+                ) : (
+                    <section className='content' id='streamsWrap'>
+                        <div id='noLive'>
+                            <p>No followed channels are currently live.</p>
+                        </div>
+                    </section>
+                )
+            }
+        </main>
     )
 }

@@ -1,5 +1,4 @@
 import { h } from 'hyperapp'
-import { Link } from '@geordiep/h_tlrouter'
 import { QUALITY_OPTIONS } from 'util/constants'
 
 import NavBar from 'components/NavBar'
@@ -15,6 +14,7 @@ export default () => (state, actions) => {
     return (
         <main>
             <NavBar />
+
             <section className='content'>
                 <h1>Launch Stream</h1>
                 <h2>Open any stream by providing their username.</h2>
