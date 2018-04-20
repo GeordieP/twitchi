@@ -13,8 +13,8 @@ import Logs from 'pages/logs'
 
 // global components:
 // persistent, app-wide components that handle their own visibility
-import ContextMenu from 'components/ContextMenu'
-import Toaster from 'components/Toaster'
+import ContextMenu from 'components/global/ContextMenu'
+import Toaster from 'components/global/Toaster'
 
 const view = (state, actions) => (
     <div>

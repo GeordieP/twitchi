@@ -1,6 +1,6 @@
 import { location } from '@hyperapp/router'
-import { stateSlice as contextMenu } from 'components/ContextMenu'
-import { stateSlice as toaster } from 'components/Toaster'
+import { stateSlice as contextMenu } from 'components/global/ContextMenu'
+import { stateSlice as toaster } from 'components/global/Toaster'
 
 export default {
     // global component slices //
