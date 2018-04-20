@@ -1,4 +1,5 @@
 import { h } from 'hyperapp'
+import { Enter, Exit, Move } from '@hyperapp/transitions'
 
 // value of each type also represents a css class
 // see styles/components/toaster.styl for details
@@ -30,9 +31,10 @@ const TEMP_defaultToasts = [
     },
     {
         id: Date.now() + 6,
-        title: 'error toast',
+        title: 'Error toast',
         type: ToastTypes.ERROR,
-        body: 'content of the toast notification'
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc varius eros vel lacinia venenatis. Suspendisse commodo id massa eget congue.'
+
     },
 ]
 
@@ -53,7 +55,6 @@ export const actionsSlice = {
         // type: Toaster.ToastTypes
         // body: String
         toasts.push(newToast)
-        console.log('pushing toast', newToast)
         return { toasts }
     },
 
@@ -75,10 +76,14 @@ export const actionsSlice = {
 }
 
 const Toast = ({ id, title, type, body, close }) => (
-    <div key={ id } className={'toast ' + type} onclick={ close }>
-        <h1>{ title }</h1>
-        <p>{ body }</p>
-    </div>
+    <Move easing='ease-out'>
+        <Enter css={{ transform: 'translate(0, 25vh)' }}>
+            <div key={ id } className={'toast ' + type} onclick={ close }>
+                <h1>{ title }</h1>
+                <p>{ body }</p>
+            </div>
+        </Enter>
+    </Move>
 )
 
 export default () => ({ toaster: state }, { toaster: actions }) => (

@@ -134,6 +134,10 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@hyperapp/router/-/router-0.7.0.tgz#99fde37696d07949514c3519db1fe6785a053d2d"
 
+"@hyperapp/transitions@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@hyperapp/transitions/-/transitions-1.0.2.tgz#dc3093ce71cecca118c1248ca82e75065bfa5e4c"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"

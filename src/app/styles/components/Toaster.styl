@@ -1,8 +1,10 @@
-$toastSpacing = 15px
+$toastSpacing = 10px
 
 .toaster
     position: absolute
-    bottom: $toastSpacing
+    display: flex
+    flex-direction: column
+    bottom: $toastSpacing*2
     right: @bottom
     z-index: 1
 
@@ -11,13 +13,18 @@ $toastSpacing = 15px
     width: 250px
     padding: 10px
     background: lighten($clr_pageBg, 9%)
-    border-left: 4px solid transparent
+    border-left: 3px solid transparent
+    cursor: pointer
+    border-radius: 2px
+    box-shadow: 0 0 25px #000
+    &:hover
+        background: lighten($clr_pageBg, 14%)
 
     h1
         color: #bbb
         font-size: 1.1rem
+        margin-bottom: 4px
         font-weight: bold
-
 
 // Toast Types
 // Style each toast based on its type
