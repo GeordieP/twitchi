@@ -1,8 +1,12 @@
 'use strict'
 
 const { BrowserWindow } = require('electron')
-const config = require('./config')
 const request = require('request-promise-native')
+const Result = require('@geordiep/result')
+
+const config = require('./config')
+const ipcServer = require('./ipcServer')
+
 
 // import API info from separate file
 // this module simply exports an object containing the following keys:
@@ -66,6 +70,8 @@ module.exports.saveToken = token => new Promise((resolve, reject) => {
         }
 
         config.set('user-access-token', token)
+
+        ipcServer.ipcSendJson('auth-refresh-token-res', Result.newOk())
 
         // include saved token in response
         resolve(token)

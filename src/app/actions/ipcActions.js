@@ -1,10 +1,11 @@
 import { ipcRenderer as ipc } from 'electron'
 import Result from '@geordiep/result'
 
+import { ToastTypes } from 'components/global/Toaster'
+
 // parseResponse: parse from JSON, then turn back into Result object
 // (adds back Result methods that were lost in JSON string)
 const parseResponse = res => Result.fromJson(JSON.parse(res))
-const handleErr = console.error
 
 // handler function for streamlink stdout log lines
 // declare as module global so exported functions can use it,
@@ -19,14 +20,32 @@ export const init = () => {
 }
 
 export const listen = dispatch => {
+    // show the user a toast notification, and log the error to the console
+    const handleErr = (title, e) => {
+        // handle as Result object or Error object
+        const body = (e.constructor === Result)
+            ? `${e.origin}: ${e.value}`
+            : e
+
+        console.error(body)
+
+        dispatch.toaster.showToast({
+            title,
+            type: ToastTypes.ERROR,
+            body
+        })
+    }
+
     // handler function for stdout lines coming from core
     logLineListener = (evt, newLine) => {
         try {
             dispatch.logs.updateLogsByName(newLine)
         } catch(e) {
-            handleErr(e)
+            console.error(e)
         }
     }
+
+    // ipc listeners //
 
     // currently there's no app action for sending prefs-get-all
     // we only send it manually from this module (init and in some result handlers)
@@ -35,7 +54,7 @@ export const listen = dispatch => {
             const prefs = parseResponse(res).expect()
             dispatch.setState({ prefs })
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when loading preferences', e)
         }
     })
 
@@ -46,7 +65,7 @@ export const listen = dispatch => {
             // so we can update our state prefs object
             ipc.send('prefs-get-all')
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when saving preferences', e)
         }
     })
 
@@ -54,11 +73,14 @@ export const listen = dispatch => {
         try {
             parseResponse(res).expect()
 
-            dispatch.refreshFollowList()
+            dispatch.toaster.showToast({
+                title: 'Login successful',
+                type: ToastTypes.SUCCESS
+            })
 
-            console.log('token refreshed successfully')
+            dispatch.refreshFollowList()
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when logging in', e)
         }
     })
 
@@ -66,11 +88,14 @@ export const listen = dispatch => {
         try {
             parseResponse(res).expect()
 
-            dispatch.setState({ streams: [] })
+            dispatch.toaster.showToast({
+                title: 'Logout successful',
+                type: ToastTypes.SUCCESS
+            })
 
-            console.log('successfully logged out')
+            dispatch.setState({ streams: [] })
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when logging out', e)
         }
     })
 
@@ -89,7 +114,7 @@ export const listen = dispatch => {
 
             dispatch.setState({ streams })
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred during follow list refresh', e)
         }
     })
 
@@ -100,7 +125,7 @@ export const listen = dispatch => {
             // successfully enabled auto refresh, update local prefs object
             ipc.send('prefs-get-all')
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when enabling auto refresh', e)
         }
     })
 
@@ -111,7 +136,7 @@ export const listen = dispatch => {
             // successfully disabled auto refresh, update local prefs object
             ipc.send('prefs-get-all')
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when disabling auto refresh', e)
         }
     })
 
@@ -127,9 +152,16 @@ export const listen = dispatch => {
     ipc.on('streamlink-open-url-res', (evt, res) => {
         try {
             const openedName = parseResponse(res).expect()
-            // console.log('successfully opened', openedName)
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when opening the stream', e)
+        }
+    })
+
+    ipc.on('streamlink-close-stream-res', (evt, res) => {
+        try {
+            const openedName = parseResponse(res).expect()
+        } catch(e) {
+            handleErr('An error occurred when closing the stream', e)
         }
     })
 
@@ -138,7 +170,7 @@ export const listen = dispatch => {
             const logs = parseResponse(res).expect()
             dispatch.logs.setAllLogs(logs)
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when loading streamlink logs', e)
         }
     })
 
@@ -147,7 +179,7 @@ export const listen = dispatch => {
             const openStreams = parseResponse(res).expect()
             dispatch.setState({ openStreams })
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when retrieving open streams', e)
         }
     })
 
@@ -155,7 +187,15 @@ export const listen = dispatch => {
         try {
             parseResponse(res).expect()
         } catch(e) {
-            handleErr(e)
+            handleErr('An error occurred when opening the page in your browser', e)
+        }
+    })
+
+    ipc.on('twitch-set-auto-refresh-follow-list-intvl-minutes-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+        } catch(e) {
+            handleErr('An error occurred when setting the auto refresh interval', e)
         }
     })
 
@@ -166,14 +206,6 @@ export const listen = dispatch => {
 
     ipc.on('event-twitch-follow-list-refresh-finish', evt => {
         dispatch.setState({ refreshingFollowList: false })
-    })
-
-    ipc.on('twitch-set-auto-refresh-follow-list-intvl-minutes-res', (evt, res) => {
-        try {
-            parseResponse(res).expect()
-        } catch(e) {
-            handleErr(e)
-        }
     })
 }
 

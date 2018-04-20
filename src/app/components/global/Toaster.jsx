@@ -1,43 +1,6 @@
 import { h } from 'hyperapp'
 import { Enter, Exit, Move } from '@hyperapp/transitions'
 
-// value of each type also represents a css class
-// see styles/components/toaster.styl for details
-export const ToastTypes = Object.freeze({
-    INFO: 'TOAST_INFO',
-    SUCCESS: 'TOAST_SUCCESS',
-    WARNING: 'TOAST_WARNING',
-    ERROR: 'TOAST_ERROR'
-})
-
-const TEMP_defaultToasts = [
-    {
-        id: Date.now(),
-        title: 'info toast',
-        type: ToastTypes.INFO,
-        body: 'content of the toast notification'
-    },
-    {
-        id: Date.now() + 2,
-        title: 'success toast',
-        type: ToastTypes.SUCCESS,
-        body: 'content of the toast notification'
-    },
-    {
-        id: Date.now() + 4,
-        title: 'warning toast',
-        type: ToastTypes.WARNING,
-        body: 'content of the toast notification'
-    },
-    {
-        id: Date.now() + 6,
-        title: 'Error toast',
-        type: ToastTypes.ERROR,
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc varius eros vel lacinia venenatis. Suspendisse commodo id massa eget congue.'
-
-    },
-]
-
 export const stateSlice = {
     toasts: []
 }
@@ -74,6 +37,15 @@ export const actionsSlice = {
         return { toasts }
     }
 }
+
+// value of each type also represents a css class
+// see styles/components/toaster.styl for details
+export const ToastTypes = Object.freeze({
+    INFO: 'TOAST_INFO',
+    SUCCESS: 'TOAST_SUCCESS',
+    WARNING: 'TOAST_WARNING',
+    ERROR: 'TOAST_ERROR'
+})
 
 const Toast = ({ id, title, type, body, close }) => (
     <Move easing='ease-out'>
