@@ -18,7 +18,7 @@ let MAIN_WINDOW
 // app state; whether or not the frontend app is listening for log messages
 let state_listeningForLogs = false
 
-function ipcReplyJson(type, msg) { MAIN_WINDOW.webContents.send(type, JSON.stringify(msg)) }
+function ipcSend(type, msg) { MAIN_WINDOW.webContents.send(type, msg) }
 
 function listen() {
     if (!MAIN_WINDOW) {
@@ -34,10 +34,10 @@ function listen() {
             const token = await auth.getTokenExistingOrNew()
             result = Result.newOk(token)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ auth-get-token')
+            result = Result.newError(e.toString(), 'ipcServer @ auth-get-token')
         }
         
-        ipcReplyJson('auth-get-token-res', result)
+        ipcSend('auth-get-token-res', result)
     })
 
     ipc.on('auth-refresh-token', async function(evt) {
@@ -47,10 +47,10 @@ function listen() {
             const token = await auth.refreshToken()
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ auth-refresh-token')
+            result = Result.newError(e.toString(), 'ipcServer @ auth-refresh-token')
         }
         
-        ipcReplyJson('auth-refresh-token-res', result)
+        ipcSend('auth-refresh-token-res', result)
     })
 
     ipc.on('auth-revoke-token', async function(evt) {
@@ -60,10 +60,10 @@ function listen() {
             const token = await auth.revokeToken()
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ auth-revoke-token')
+            result = Result.newError(e.toString(), 'ipcServer @ auth-revoke-token')
         }
         
-        ipcReplyJson('auth-revoke-token-res', result)
+        ipcSend('auth-revoke-token-res', result)
     })
 
     /* TWITCH */
@@ -75,10 +75,10 @@ function listen() {
             twitch.restartInterval()
             result = Result.newOk(followList)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ twitch-get-follow-list')
+            result = Result.newError(e.toString(), 'ipcServer @ twitch-get-follow-list')
         }
 
-        ipcReplyJson('twitch-get-follow-list-res', result)
+        ipcSend('twitch-get-follow-list-res', result)
     })
 
     ipc.on('twitch-enable-follow-list-auto-refresh', function(evt) {
@@ -89,10 +89,10 @@ function listen() {
             twitch.enableAutoRefresh()
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ twitch-enable-follow-list-auto-refresh')
+            result = Result.newError(e.toString(), 'ipcServer @ twitch-enable-follow-list-auto-refresh')
         }
 
-        ipcReplyJson('twitch-enable-follow-list-auto-refresh-res', result)
+        ipcSend('twitch-enable-follow-list-auto-refresh-res', result)
     })
 
     ipc.on('twitch-disable-follow-list-auto-refresh', function(evt) {
@@ -103,10 +103,10 @@ function listen() {
             twitch.disableAutoRefresh()
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ twitch-disable-follow-list-auto-refresh')
+            result = Result.newError(e.toString(), 'ipcServer @ twitch-disable-follow-list-auto-refresh')
         }
 
-        ipcReplyJson('twitch-disable-follow-list-auto-refresh-res', result)
+        ipcSend('twitch-disable-follow-list-auto-refresh-res', result)
     })
 
     ipc.on('twitch-set-auto-refresh-follow-list-intvl-minutes', function(evt, minutes){
@@ -114,17 +114,17 @@ function listen() {
 
         try {
             if (minutes < 3) {
-                throw 'Provided interval is too short: Must be no less than 3 minutes.'
+                throw new Error('Provided interval is too short: Must be no less than 3 minutes.')
             }
 
             config.set('auto-refresh-follow-list-intvl-minutes', minutes)
             twitch.restartInterval()
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ twitch-set-auto-refresh-follow-list-intvl-minutes')
+            result = Result.newError(e.toString(), 'ipcServer @ twitch-set-auto-refresh-follow-list-intvl-minutes')
         }
 
-        ipcReplyJson('twitch-set-auto-refresh-follow-list-intvl-minutes-res', result)
+        ipcSend('twitch-set-auto-refresh-follow-list-intvl-minutes-res', result)
     })
 
     /* STREAMLINK */
@@ -133,11 +133,11 @@ function listen() {
         
         try {
             if (channelName == null || channelName.length === 0) {
-                throw 'Could not open stream: Channel name was missing or empty.'
+                throw new Error('Could not open stream: Channel name was missing or empty.')
             }
 
             if (channelURL == null || channelURL.length === 0) {
-                throw 'Could not open stream: Channel URL was missing or empty.'
+                throw new Error('Could not open stream: Channel URL was missing or empty.')
             }
             
             // create stream instance
@@ -146,10 +146,10 @@ function listen() {
             await streamManager.openStream(channelName, quality)
             result = Result.newOk(channelName)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ streamlink-open-url')
+            result = Result.newError(e.toString(), 'ipcServer @ streamlink-open-url')
         }
 
-        ipcReplyJson('streamlink-open-url-res', result)
+        ipcSend('streamlink-open-url-res', result)
     })
 
     ipc.on('streamlink-close-stream', async function(evt, channelName) {
@@ -159,10 +159,10 @@ function listen() {
             await streamManager.closeStream(channelName)
             result = Result.newOk(channelName)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ streamlink-close-stream')
+            result = Result.newError(e.toString(), 'ipcServer @ streamlink-close-stream')
         }
 
-        ipcReplyJson('streamlink-close-stream-res', result)
+        ipcSend('streamlink-close-stream-res', result)
     })
 
     ipc.on('streamlink-get-all-logs', async function(evt) {
@@ -172,10 +172,10 @@ function listen() {
             const logs = await streamManager.getAllLogs()
             result = Result.newOk(logs)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ streamlink-get-all-logs')
+            result = Result.newError(e.toString(), 'ipcServer @ streamlink-get-all-logs')
         }
 
-        ipcReplyJson('streamlink-get-all-logs-res', result)
+        ipcSend('streamlink-get-all-logs-res', result)
     })
 
     ipc.on('streamlink-get-open-streams', async function(evt) {
@@ -185,10 +185,10 @@ function listen() {
             const openStreams = await streamManager.getOpenStreams()
             result = Result.newOk(openStreams)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ streamlink-get-open-streams')
+            result = Result.newError(e.toString(), 'ipcServer @ streamlink-get-open-streams')
         }
 
-        ipcReplyJson('streamlink-get-open-streams-res', result)
+        ipcSend('streamlink-get-open-streams-res', result)
     })
 
     /* PREFERENCES */
@@ -205,7 +205,7 @@ function listen() {
             result = Result.newOk(prefs)
         }
 
-        ipcReplyJson('prefs-get-all-res', result)
+        ipcSend('prefs-get-all-res', result)
     })
 
     ipc.on('prefs-get-one', function(evt, key) {
@@ -216,15 +216,15 @@ function listen() {
 
             // check for null or undefined
             if (pref == null) {
-                throw 'Could not get property '+key+' from preferences'
+                throw new Error('Could not get property '+key+' from preferences')
             }
 
             result = Result.newOk(pref)
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ prefs-get-one')
+            result = Result.newError(e.toString(), 'ipcServer @ prefs-get-one')
         }
 
-        ipcReplyJson('prefs-get-one-res', result)
+        ipcSend('prefs-get-one-res', result)
     })
 
     ipc.on('prefs-set-one', function (evt, { key, value }) {
@@ -232,15 +232,15 @@ function listen() {
 
         try {
             if (key == null) {
-                throw 'Could not set preferences property: No key was provided (got '+key+')'
+                throw new Error('Could not set preferences property: No key was provided (got '+key+')')
             }
             config.set(key, value)
             result = Result.newOk()
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ prefs-set-one')
+            result = Result.newError(e.toString(), 'ipcServer @ prefs-set-one')
         }
 
-        ipcReplyJson('prefs-set-one-res', result)
+        ipcSend('prefs-set-one-res', result)
     })
 
     /* LOGS */
@@ -259,7 +259,7 @@ function listen() {
     /* MISC */
     ipc.on('app-get-version', function (evt) {
         let result = Result.newOk(currentVersion)
-        ipcReplyJson('app-get-version-res', result)
+        ipcSend('app-get-version-res', result)
     })
 
     ipc.on('open-url-in-browser', async function(evt, url) {
@@ -267,7 +267,7 @@ function listen() {
 
         try {
             if (url == null || url.length === 0) {
-                throw 'Could not open URL in browser: Passed URL was missing or empty'
+                throw new Error('Could not open URL in browser: Passed URL was missing or empty')
             }
 
             const success = shell.openExternal(url)
@@ -275,18 +275,18 @@ function listen() {
             if (success) {
                 result = Result.newOk()
             } else {
-                throw 'Could not open URL in browser: shell.openExternal returned false (target application was not able to open URL)'
+                throw new Error('Could not open URL in browser: shell.openExternal returned false (target application was not able to open URL)')
             }
         } catch(e) {
-            result = Result.newError(e, 'ipcServer @ open-url-in-browser')
+            result = Result.newError(e.toString(), 'ipcServer @ open-url-in-browser')
         }
 
-        ipcReplyJson('open-url-in-browser-res', result)
+        ipcSend('open-url-in-browser-res', result)
     })
 }
 
 // allow other modules to send ipc messages
-module.exports.ipcSendJson = ipcReplyJson
+module.exports.ipcSend = ipcSend
 
 module.exports.getMainWindow = function() {
     return MAIN_WINDOW

@@ -32,11 +32,11 @@ const authedJSONRequest = (uri, accessToken) => request({
 })
 
 module.exports.getFollowList = () => new Promise(async function(resolve, reject) {
+    ipcServer.ipcSend('event-twitch-follow-list-refresh-begin')
+
     try {
-        ipcServer.ipcSendJson('event-twitch-follow-list-refresh-begin')
         let token = await auth.getTokenExistingOrNew()
         let streams = await authedJSONRequest(followedStreamsURI, token)
-        ipcServer.ipcSendJson('event-twitch-follow-list-refresh-finish')
         resolve(streams)
 
         // on first refresh, don't send a notification, and update isFirstRefresh value
@@ -67,6 +67,8 @@ module.exports.getFollowList = () => new Promise(async function(resolve, reject)
     } catch(e) {
         reject(e)
     }
+
+    ipcServer.ipcSend('event-twitch-follow-list-refresh-finish')
 })
 
 const timedRefresh = async () => {
@@ -79,7 +81,7 @@ const timedRefresh = async () => {
         result = Result.newError(e, 'ipcServer @ twitch-get-follow-list')
     }
 
-    ipcServer.ipcSendJson('twitch-get-follow-list-res', result)
+    ipcServer.ipcSend('twitch-get-follow-list-res', result)
 }
 
 module.exports.enableAutoRefresh = () => {

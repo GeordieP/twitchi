@@ -8,7 +8,6 @@ const streamManager = require('./streamManager')
 const ipcServer = require('./ipcServer')
 
 // reference to main window - currently gets set during StreamInstance construction
-let MAIN_WINDOW
 // match 'error: No playable streams found on this URL: twitch.tv/INVALID_USERNAME_HERE'
 const REGEX_NO_STREAM_FOUND = /No playable/g
 // match 'error: The specified stream(s) 'QUALITY_OPTION' could not be found.'
@@ -40,12 +39,6 @@ function StreamInstance(name, url) {
     this.channelName = name
     this.channelURL = url
     this.logLines = []
-
-    // TODO: it's not ideal to do this here, can we move it somewhere else?
-    // if it's done during module instantiation, it's too early; ipcServer hasn't set up its MAIN_WINDOW variable yet
-    if (!MAIN_WINDOW) {
-        MAIN_WINDOW = ipcServer.getMainWindow()
-    }
 }
 
 StreamInstance.prototype.logLine = function(line) {
@@ -59,7 +52,7 @@ StreamInstance.prototype.logLine = function(line) {
     // send IPC message to frontend that we've got a new stdout message for this channel.
     // send an object containing the username and the new line itself
     if (ipcServer.listeningForLogs()) {
-        MAIN_WINDOW.webContents.send('streamlink-process-stdout-line', {
+        ipcServer.ipcSend('streamlink-process-stdout-line', {
             username: this.channelName,
             line
         })

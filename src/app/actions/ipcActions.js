@@ -3,9 +3,9 @@ import Result from '@geordiep/result'
 
 import { ToastTypes } from 'components/global/Toaster'
 
-// parseResponse: parse from JSON, then turn back into Result object
-// (adds back Result methods that were lost in JSON string)
-const parseResponse = res => Result.fromJson(JSON.parse(res))
+// parseResponse: turn object recvd from core IPC back into proper Result object
+// (adds back Result methods that were lost in transmission)
+const parseResponse = res => Result.fromJson(res)
 
 // handler function for streamlink stdout log lines
 // declare as module global so exported functions can use it,
