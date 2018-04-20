@@ -11,21 +11,25 @@ export const ToastTypes = Object.freeze({
 
 const TEMP_defaultToasts = [
     {
+        id: Date.now(),
         title: 'info toast',
         type: ToastTypes.INFO,
         body: 'content of the toast notification'
     },
     {
+        id: Date.now() + 2,
         title: 'success toast',
         type: ToastTypes.SUCCESS,
         body: 'content of the toast notification'
     },
     {
+        id: Date.now() + 4,
         title: 'warning toast',
         type: ToastTypes.WARNING,
         body: 'content of the toast notification'
     },
     {
+        id: Date.now() + 6,
         title: 'error toast',
         type: ToastTypes.ERROR,
         body: 'content of the toast notification'
@@ -33,15 +37,45 @@ const TEMP_defaultToasts = [
 ]
 
 export const stateSlice = {
-    toasts: [ ...TEMP_defaultToasts ]
+    toasts: []
 }
 
 export const actionsSlice = {
-    
+    showToast: newToast => (state, actions) => {
+        const toasts = state.toasts.slice()
+
+        // give this toast an ID and a close action timeout function
+        newToast.id = Date.now()
+        newToast.timeout = setTimeout(actions.hideToast.bind(null, newToast.id), 7000)
+
+        // newToast should be of shape { title, type, body }, where types are:
+        // title: String
+        // type: Toaster.ToastTypes
+        // body: String
+        toasts.push(newToast)
+        console.log('pushing toast', newToast)
+        return { toasts }
+    },
+
+    hideToast: id => state => {
+        const toasts = state.toasts.slice()
+
+        // for speed
+        for (let i = 0; i < toasts.length; i++) {
+            if (toasts[i].id !== id) continue
+
+            clearTimeout(toasts[i].timeout)
+
+            toasts.splice(i, 1)
+            break
+        }
+
+        return { toasts }
+    }
 }
 
-const Toast = ({ title, type, body }) => (
-    <div className={'toast ' + type}>
+const Toast = ({ id, title, type, body, close }) => (
+    <div key={ id } className={'toast ' + type} onclick={ close }>
         <h1>{ title }</h1>
         <p>{ body }</p>
     </div>
@@ -50,7 +84,14 @@ const Toast = ({ title, type, body }) => (
 export default () => ({ toaster: state }, { toaster: actions }) => (
     state.toasts.length > 0 && (
         <div className='toaster'>
-            { state.toasts.map(t => <Toast {...t} />) }
+            {
+                state.toasts.map(t => (
+                    <Toast
+                        {...t}
+                        close={ actions.hideToast.bind(null, t.id) }
+                    />
+                ))
+            }
         </div>
     )
 )
