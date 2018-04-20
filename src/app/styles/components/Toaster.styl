@@ -1,0 +1,39 @@
+$toastSpacing = 15px
+
+.toaster
+    position: absolute
+    bottom: $toastSpacing
+    right: @bottom
+    z-index: 1
+
+.toast
+    margin: $toastSpacing 0 0 0
+    width: 250px
+    padding: 10px
+    background: lighten($clr_pageBg, 9%)
+    border-left: 4px solid transparent
+
+    h1
+        color: #bbb
+        font-size: 1.1rem
+        font-weight: bold
+
+
+// Toast Types
+// Style each toast based on its type
+// each of these classes appended to toast corresponds to a value in
+// the Toaster.ToastTypes object.
+// The type value is appended directly to the class name of each toast, so the classes
+// here must be kept the same as the ones listed in Toaster.ToastTypes (in Toaster.jsx)
+
+.toast.TOAST_INFO
+    border-color: $clr_twitchPurple
+
+.toast.TOAST_SUCCESS
+    border-color: #491
+
+.toast.TOAST_WARNING
+    border-color: #990
+
+.toast.TOAST_ERROR
+    border-color: #922

@@ -1,5 +1,6 @@
 import { location } from '@hyperapp/router'
 import { actionsSlice as contextMenu } from 'components/ContextMenu'
+import { actionsSlice as toaster } from 'components/Toaster'
 
 // in test mode, set ipc to a placeholder object that throws an error when called.
 // we can't use electron modules in our current test setup.
@@ -11,6 +12,7 @@ export default {
     // global component slices // 
     location: location.actions, // router
     contextMenu,
+    toaster,
 
     // misc //
 
@@ -86,16 +88,6 @@ export default {
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {
         key: 'preferred-stream-quality',
         value: quality
-    }),
-
-    disableLiveNotif: () => ipc.send('prefs-set-one', {
-        key: 'live-notification-enabled',
-        value: false
-    }),
-
-    enableLiveNotif: () => ipc.send('prefs-set-one', {
-        key: 'live-notification-enabled',
-        value: true
     }),
 
     // streamlink //
