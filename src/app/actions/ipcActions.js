@@ -24,7 +24,7 @@ export const listen = dispatch => {
     const handleErr = (title, e) => {
         // handle as Result object or Error object
         const body = (e.constructor === Result)
-            ? `${e.origin}: ${e.value}`
+            ? `${e.value} (${e.origin})`
             : e
 
         console.error(body)
@@ -151,9 +151,22 @@ export const listen = dispatch => {
 
     ipc.on('streamlink-open-url-res', (evt, res) => {
         try {
-            const openedName = parseResponse(res).expect()
+            parseResponse(res).expect()
         } catch(e) {
             handleErr('An error occurred when opening the stream', e)
+        }
+    })
+
+    ipc.on('streamlink-event', (evt, res) => {
+        try {
+            const eventMsg = parseResponse(res).expect()
+            
+            dispatch.toaster.showToast({
+                title: eventMsg,
+                type: ToastTypes.INFO
+            })
+        } catch(e) {
+            handleErr('StreamLink Error', e)
         }
     })
 

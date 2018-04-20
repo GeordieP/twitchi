@@ -1,6 +1,7 @@
 'use strict'
 
 const spawn = require('child_process').spawn
+const Result = require('@geordiep/result')
 
 const auth = require('./auth')
 const config = require('./config')
@@ -10,6 +11,8 @@ const ipcServer = require('./ipcServer')
 // reference to main window - currently gets set during StreamInstance construction
 // match 'error: No playable streams found on this URL: twitch.tv/INVALID_USERNAME_HERE'
 const REGEX_NO_STREAM_FOUND = /No playable/g
+// match 'error: Unable to find channel: [INVALID_USERNAME_HERE]
+const REGEX_NO_CHANNEL = /Unable to find channel/g
 // match 'error: The specified stream(s) 'QUALITY_OPTION' could not be found.'
 const REGEX_STREAM_INVALID_QUALITY = /error: The specified stream\(s\)/g
 // match available stream qualities line, capture list of qualities in second group
@@ -179,15 +182,52 @@ async function onProcMsg(msg) {
     // Handle Streamlink Events: No stream found, stream ended
 
     REGEX_NO_STREAM_FOUND.lastIndex = 0
+    REGEX_NO_CHANNEL.lastIndex = 0
     REGEX_STREAM_ENDED.lastIndex = 0
 
-    if (REGEX_NO_STREAM_FOUND.test(msg) ||
-        REGEX_STREAM_ENDED.test(msg)) {
+    if (REGEX_NO_STREAM_FOUND.test(msg)) {
+        ipcServer.ipcSend(
+            'streamlink-event',
+            Result.newError(
+                `${msg}`,
+                '@ StreamInstance stdout'
+            )
+        )
+
+        streamManager.closeStream(this.channelName)
+            .catch(console.error)
+        return
+        
+    }
+
+    if (REGEX_NO_CHANNEL.test(msg)) {
+        ipcServer.ipcSend(
+            'streamlink-event',
+            Result.newError(
+                `${msg}`,
+                '@ StreamInstance stdout'
+            )
+        )
+
         streamManager.closeStream(this.channelName)
             .catch(console.error)
         return
     }
-    
+
+    if (REGEX_STREAM_ENDED.test(msg)) {
+        // send streamlink event on stream end event.
+        // disabled for now; don't want a toast notification every
+        // time a player is closed.
+        //
+        // ipcServer.ipcSend(
+        //     'streamlink-event',
+        //     Result.newOk(`Stream ${this.channelName} closed`)
+        // )
+
+        streamManager.closeStream(this.channelName)
+            .catch(console.error)
+        return
+    }
 
     // Handle Streamlink Event: Invalid quality
 
