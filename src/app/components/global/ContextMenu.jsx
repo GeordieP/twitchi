@@ -21,7 +21,7 @@ export const actionsSlice = {
 
 // List component
 // render each given item, and bind each item's onclick to its passed handler function
-const MenuList = ({ x = 0, y = 0, items, hide }) => {
+const MenuList = ({ position, items, hide }) => {
     // when an item is clicked, call its handler and hide the menu
     const click = item => {
         item.handler()
@@ -29,7 +29,7 @@ const MenuList = ({ x = 0, y = 0, items, hide }) => {
     }
 
     return (
-        <ul className='ctxMenuList' style={{ left: `${x}px`, top: `${y}px` }}>
+        <ul className='ctxMenuList' style={{ left: `${position.x}px`, top: `${position.y}px` }}>
             {
                 items.map(i => (
                     <li onclick={click.bind(null, i)}>
@@ -47,9 +47,7 @@ export default () => ({ contextMenu: state }, { contextMenu: actions }) => (
     state.visible && (
         <div>
             <MenuList
-                x={state.position.x}
-                y={state.position.y}
-                items={state.items}
+                {...state}
                 hide={actions.hide} />
             <div
               className='ctxMenuWrapper'
