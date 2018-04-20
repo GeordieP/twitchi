@@ -1,3 +1,6 @@
+import { location } from '@hyperapp/router'
+import { actionsSlice as contextMenu } from 'components/ContextMenu'
+
 // in test mode, set ipc to a placeholder object that throws an error when called.
 // we can't use electron modules in our current test setup.
 const ipc = process.env.NODE_ENV !== 'test'
@@ -5,10 +8,14 @@ const ipc = process.env.NODE_ENV !== 'test'
       : { send: _ => { throw new Error('RUNNING IN TEST ENV; DO NOT USE IPC.SEND') } }
 
 export default {
+    // global component slices // 
+    location: location.actions, // router
+    contextMenu,
+
+    // misc //
+
     // update the state with whatever is passed.
     setState: s => s,
-
-    // MISC //
     openURLInBrowser: url => ipc.send('open-url-in-browser', url),
 
     toggleStreamFavorite: name => state => {
@@ -35,7 +42,7 @@ export default {
         }
     },
 
-    // LOGS //
+    // logs //
     logs: {
         getAllLogs: () => ipc.send('streamlink-get-all-logs'),
 
@@ -54,7 +61,7 @@ export default {
         },
     },
 
-    // TWITCH //
+    // twitch //
     refreshToken: () => ipc.send('auth-refresh-token'),
     revokeToken: () => ipc.send('auth-revoke-token'),
     refreshFollowList: () => ipc.send('twitch-get-follow-list'),
@@ -75,13 +82,13 @@ export default {
         }
     },
 
-    // PREFERENCES //
+    // preferences //
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {
         key: 'preferred-stream-quality',
         value: quality
     }),
 
-    // STREAMLINK //
+    // streamlink //
     getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
 
     closeStream: username => oldState => {
@@ -96,16 +103,4 @@ export default {
             quality: quality || state.prefs['preferred-stream-quality']
         })
     },
-
-    // CONTEXT MENU //
-    contextMenu: {
-        show: ({ event, items }) => ({
-            items,
-            position: { x: event.clientX, y: event.clientY },
-            visible: true,
-        }),
-        hide: () => ({
-            visible: false,
-        }),
-    }
 }

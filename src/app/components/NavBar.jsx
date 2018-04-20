@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { Link } from '@geordiep/h_tlrouter'
+import { Link } from '@hyperapp/router'
 
 export default (props, children) => (
     <nav>

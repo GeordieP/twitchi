@@ -1,8 +1,9 @@
 import { app, h } from 'hyperapp'
-import { Router, withTlRouter } from '@geordiep/h_tlrouter'
+import { Route, Switch, location } from '@hyperapp/router'
 
 import defaultState from 'state/state'
 import actions from 'actions/actions'
+import * as ipcActions from 'actions/ipcActions'
 
 // components
 import Index from 'pages/index'
@@ -10,25 +11,35 @@ import Preferences from 'pages/preferences'
 import LaunchStream from 'pages/launchStream'
 import Logs from 'pages/logs'
 
-// hoc for context menu
-import { WithContextMenu } from 'components/ContextMenu'
+// global components:
+// persistent, app-wide components that handle their own visibility
+import ContextMenu from 'components/ContextMenu'
 
-import * as ipcActions from 'actions/ipcActions'
+const view = (state, actions) => (
+    <div>
+        {/* GLOBAL COMPONENTS */}
+        <ContextMenu />
 
-const router = Router({
-    '/': WithContextMenu(Index),
-    '/preferences': Preferences,
-    '/launchStream': LaunchStream,
-    '/logs': Logs,
-})
+        {/* ROUTER */}
+        <Switch>
+            <Route path='/' render={ Index } />
+            <Route path='/preferences' render={ Preferences } />
+            <Route path='/launchStream' render={ LaunchStream } />
+            <Route path='/logs' render={ Logs } />
+            <Route render={ Index } />
+        </Switch>
+    </div>
+)
 
-// create app 
-const dispatch = withTlRouter(app)(
+const dispatch = app(
     defaultState,
     actions,
-    router,
+    view,
     document.body
 )
+
+// hyperapp router unsubscribe
+const unsubscribe = location.subscribe(dispatch.location)
 
 // set up IPC listeners; map IPC message handlers to app actions
 ipcActions.listen(dispatch)
