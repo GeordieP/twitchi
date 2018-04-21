@@ -3,22 +3,28 @@ import { h } from 'hyperapp'
 export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showContextMenu }) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
-    openStream = openStream.bind(null, { channelName, channelURL })
-    openInBrowser = openInBrowser.bind(null, channelURL)
-    toggleFav = toggleFav.bind(null, channelName)
+
+    // handlers
+    const launchStream = openStream.bind(null, { channelName, channelURL })
+    const openGameDirectory = openInBrowser.bind(null, `https://www.twitch.tv/directory/game/${stream.channel.game}`)
+    const openChannel = openInBrowser.bind(null, channelURL)
 
     const menuItems = [
         {
             label: 'Watch stream',
-            handler: openStream
+            handler: launchStream
         },
         {
-            label: 'Open in browser',
-            handler: openInBrowser
+            label: 'Open channel',
+            handler: openChannel
+        },
+        {
+            label: 'Open game directory',
+            handler: openGameDirectory
         },
         {
             label: isFav ? 'Remove from favorites' : 'Add to favorites',
-            handler: toggleFav
+            handler: toggleFav.bind(null, channelName)
         },
     ]
 
