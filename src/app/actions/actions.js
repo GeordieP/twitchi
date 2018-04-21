@@ -104,5 +104,8 @@ export default {
             channelURL,
             quality: quality || state.prefs['preferred-stream-quality']
         })
+
+        // refresh open streams array
+        actions.getOpenStreams()
     },
 }

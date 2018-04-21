@@ -170,6 +170,11 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('streamlink-stream-closed', (evt, channelName) => {
+        // when a stream is closed, update our open streams array
+        dispatch.getOpenStreams()
+    })
+
     ipc.on('streamlink-close-stream-res', (evt, res) => {
         try {
             const openedName = parseResponse(res).expect()

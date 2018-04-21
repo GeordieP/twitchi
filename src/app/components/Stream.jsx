@@ -1,6 +1,14 @@
 import { h } from 'hyperapp'
 
-export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showContextMenu }) => {
+export default ({
+    stream,
+    isFav,
+    isOpen,
+    openStream,
+    closeStream,
+    openInBrowser,
+    toggleFav,
+    showContextMenu }) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
 
@@ -11,8 +19,8 @@ export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showConte
 
     const menuItems = [
         {
-            label: 'Watch stream',
-            handler: launchStream
+            label: isOpen ? 'Close Stream' : 'Watch stream',
+            handler: isOpen ? closeStream.bind(null, channelName) : launchStream
         },
         {
             label: 'Open channel',
@@ -31,7 +39,7 @@ export default ({ stream, isFav, openStream, openInBrowser, toggleFav, showConte
     const showMenu = event => showContextMenu({ event, items: menuItems })
 
     return (
-        <div className='stream' onclick={ openStream } oncontextmenu={ showMenu }>
+        <div className='stream' onclick={ launchStream } oncontextmenu={ showMenu }>
             <img src={ stream.preview.medium } />
             <div className='stream_info'>
                 <div className='stream_info_inner'>

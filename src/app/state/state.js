@@ -12,6 +12,7 @@ export default {
     appVersion: 'x.x.x',
     prefs: {},
     streams: [],
+    openStreams: [],
     logs: {
         logLines: {},
     },

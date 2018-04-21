@@ -81,39 +81,19 @@ export default () => (state, actions) => {
     // divide streams array into multiple so we can display each individually
     const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'])
 
-    // favorite streams section
-    const renderFavStreams = () => favStreams.length > 0 && (
+    const renderStreams = (headerText, streams, isFav) => streams.length > 0 && (
         <span>
-            <h2>Favorites</h2>
-            <div className='streamsView favorites'>
-            {
-                favStreams.map(stream => (
-                    <Stream
-                        key={ 'stream_'+stream }
-                        stream={ stream }
-                        isFav={ true }
-                        openStream={ actions.openStream }
-                        openInBrowser={ actions.openURLInBrowser }
-                        toggleFav={ actions.toggleStreamFavorite }
-                        showContextMenu={ actions.contextMenu.show } />
-                ))
-            }
-            </div>
-        </span>
-    )
-
-    // everyone else
-    const renderRegStreams = () => (
-        <span>
-            <h2>Followed Channels</h2>
+          <h2>{ headerText }</h2>
             <div className='streamsView'>
                 {
-                    regularStreams.map(stream => (
+                    streams.map(stream => (
                         <Stream
                             key={ 'stream_'+stream }
                             stream={ stream }
-                            isFav={ false }
+                            isFav={ isFav }
+                            isOpen={ state.openStreams.includes(stream.channel.name) }
                             openStream={ actions.openStream }
+                            closeStream={ actions.closeStream } 
                             openInBrowser={ actions.openURLInBrowser }
                             toggleFav={ actions.toggleStreamFavorite }
                             showContextMenu={ actions.contextMenu.show } />
@@ -137,8 +117,8 @@ export default () => (state, actions) => {
             {state.streams.length > 0 ? (
                     <section className='content' id='streamsWrap'>
                         <div id='streamsInnerWrap'>
-                            { renderFavStreams() }
-                            { renderRegStreams() }
+                            { renderStreams('Favorite Channels', favStreams, true) }
+                            { renderStreams('Followed Channels', regularStreams, false) }
                         </div>
                     </section>
                 ) : (

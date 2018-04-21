@@ -224,6 +224,8 @@ async function onProcMsg(msg) {
         //     Result.newOk(`Stream ${this.channelName} closed`)
         // )
 
+        ipcServer.ipcSend('streamlink-stream-closed', this.channelName)
+
         streamManager.closeStream(this.channelName)
             .catch(console.error)
         return
