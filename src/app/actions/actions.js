@@ -1,6 +1,7 @@
 import { location } from '@hyperapp/router'
 import { actionsSlice as contextMenu } from 'components/global/ContextMenu'
 import { actionsSlice as toaster } from 'components/global/Toaster'
+import { actionsSlice as modal } from 'components/global/Modal'
 
 // in test mode, set ipc to a placeholder object that throws an error when called.
 // we can't use electron modules in our current test setup.
@@ -13,6 +14,7 @@ export default {
     location: location.actions, // router
     contextMenu,
     toaster,
+    modal,
 
     // misc //
 
