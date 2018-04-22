@@ -15,12 +15,14 @@ import Logs from 'pages/logs'
 // persistent, app-wide components that handle their own visibility
 import ContextMenu from 'components/global/ContextMenu'
 import Toaster from 'components/global/Toaster'
+import Modal from 'components/global/Modal'
 
 const view = (state, actions) => (
     <div>
         {/* GLOBAL COMPONENTS */}
         <ContextMenu />
         <Toaster />
+        <Modal />
 
         {/* ROUTER */}
         <Switch>
