@@ -1,0 +1,49 @@
+#modalContainer {
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: @width
+    display: flex
+    background: rgba(0, 0, 0, 0.3)
+    justify-content: center
+    align-content: center
+    align-items: center
+    z-index: 1
+}
+
+#modal {
+    background: lighten($clr_pageBg, 4%)
+    border-radius: 5px
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.2)
+    max-height: 60%
+    max-width: 70%
+    display: flex
+    flex-direction: column
+    padding: 16px
+}
+
+#modalCloseBtn {
+    color: $clr_twitchPurple
+    border-radius: 2px
+    cursor: pointer
+    padding: 0 5px
+    font-size: 1.4rem
+
+    &:before {
+        content: 'x'
+    }
+
+    &:hover {
+        color: $clr_lightPurple
+    }
+}
+
+#modalHeader {
+    display: flex
+    justify-content: space-between
+}
+
+#modalContent {
+    margin-top: 16px
+}

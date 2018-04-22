@@ -1,15 +1,45 @@
 import { h } from 'hyperapp'
+import { QUALITY_OPTIONS } from 'util/constants'
+
+const QualityModal = ({
+    channelName, channelURL, preferredQuality, openStream, closeModal
+}) => {
+    let quality = preferredQuality
+    const onchange = e => quality = e.target.value
+
+    const onOpen = () => {
+        openStream({
+            channelName,
+            channelURL,
+            quality
+        })
+        closeModal()
+    }
+
+    return (
+        <div className='vflex'>
+            <select id='qualityModalSelect' onchange={ onchange }>
+                {
+                    QUALITY_OPTIONS.map(q => (
+                        <option
+                            selected={ q === preferredQuality }
+                            value={ q }>
+                            { q }
+                        </option>
+                    ))
+                }
+            </select>
+            <button onclick={ onOpen }>Open { channelName }</button>
+        </div>
+    )
+}
 
 export default ({
-    stream,
-    isFav,
-    isOpen,
-    openStream,
-    closeStream,
-    openInBrowser,
-    toggleFav,
-    unfollowChannel,
-    showContextMenu }) => {
+    stream, isFav, isOpen, openStream,
+    closeStream, openInBrowser, toggleFav,
+    unfollowChannel, showContextMenu,
+    showModal, closeModal, preferredQuality
+}) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
 
@@ -22,6 +52,21 @@ export default ({
         {
             label: isOpen ? 'Close Stream' : 'Watch stream',
             handler: isOpen ? closeStream.bind(null, channelName) : launchStream
+        },
+        {
+            label: 'Watch stream with quality...',
+            handler: showModal.bind(null, {
+                header: 'Choose quality',
+                content: (
+                    <QualityModal
+                    channelName={stream.channel.display_name}
+                    channelURL={channelURL}
+                    preferredQuality={preferredQuality}
+                    openStream={ openStream }
+                    closeModal={ closeModal }
+                    />
+                )
+            })
         },
         {
             label: isFav ? 'Remove from favorites' : 'Add to favorites',
