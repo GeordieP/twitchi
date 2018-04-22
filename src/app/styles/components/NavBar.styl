@@ -1,4 +1,4 @@
-nav
+nav {
     grid-area: nav
     display: flex
     flex-direction: row
@@ -7,12 +7,13 @@ nav
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)
 
     // areas inside navbar (.navBegin, .navChildren, .navEnd)
-    &>div
+    &>div {
         display: flex
         flex-direction: row
+    }
 
     // nav bar buttons are anchor tags
-    a
+    a {
         display: flex
         justify-content: center
         align-items: center
@@ -24,36 +25,46 @@ nav
         transition: background 0.2s ease-out, color 0.2s ease-out, border 0.2s ease-out
         border: 0px solid transparent
         border-width: 3px 0 0 0
-        &:hover
+
+        &:hover {
             color: #eee
             border-color: $clr_lightPurple
             background: lighten($clr_pageBg, 9%)
+        }
+    }
+}
 
 // navChildren and navEnd should have subtle left borders to separate them from other nav sections
-.navChildren, .navEnd
+.navChildren, .navEnd {
     border: 0px solid lighten($clr_pageBg, 6%)
     border-width: 0 0 0 2px
+}
 
 // navChildren buttons should have a different text & border color
-.navChildren
-    a
-        color: $clr_lightPurple
-        &:hover
-            color: lighten($clr_lightPurple, 40%)
-            border-color: $clr_lightPurple
+.navChildren a {
+    color: $clr_lightPurple
+
+    &:hover {
+        color: lighten($clr_lightPurple, 40%)
+        border-color: $clr_lightPurple
+    }
+}
 
 // BREAKPOINT: horiz layout -> vertical
-@media (min-width: $sz_breakpoint)
+@media (min-width: $sz_breakpoint) {
     // column layout
-    nav, nav>div
+    nav, nav>div {
         flex-direction: column
+    }
 
     // separator border should now be on top
-    .navChildren, .navEnd
+    .navChildren, .navEnd {
         border-width: 3px 0 0 0
+    }
 
     // hover border should now be on left
-    nav
-        a
-            font-size: 1.6rem
-            border-width: 0 0 0 3px
+    nav a {
+        font-size: 1.6rem
+        border-width: 0 0 0 3px
+    }
+}

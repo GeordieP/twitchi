@@ -3,28 +3,34 @@
 @require "./components/*"
 @require "./pages/*"
 
-html
+html {
     font-size: 10pt
+}
 
-body
+body {
     font-family: sans-serif
     background: $clr_pageBg
     color: #888
     overflow: hidden
+}
 
-h1
+h1 {
     font-size: 2.2rem
+}
 
-h2
+h2 {
     font-size: 1.8rem
+}
 
-h3
+h3 {
     font-size: 1.4rem
+}
 
-h4
+h4 {
     font-size: 1.2rem
+}
 
-input, select, button, textarea
+input, select, button, textarea {
     background: lighten($clr_pageBg, 4%)
     border: none
     padding: 9px 11px
@@ -33,14 +39,17 @@ input, select, button, textarea
     border-left: 2px solid transparent
     outline: none
 
-    &:focus
+    &:focus {
         border-color: $clr_lightPurple
         background: lighten($clr_pageBg, 9%)
+    }
+}
 
-button
+button {
     border-left: 2px solid $clr_twitchPurple
+}
 
-main
+main {
     display: grid
     height: 100vh
     width: 100vw
@@ -48,14 +57,21 @@ main
     grid-template-areas: \
         "nav" \
         "content"
-section.content
+}
+
+section.content {
     grid-area: content
     overflow: auto
+}
 
-@media (min-width: $sz_breakpoint)
-    :root
+@media (min-width: $sz_breakpoint) {
+    :root {
         --size_navBar: 60px
-    main
+    }
+
+    main {
         grid-template-rows: none
         grid-template-columns: var(--size_navBar) 1fr
         grid-template-areas: "nav content"
+    }
+}

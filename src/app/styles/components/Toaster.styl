@@ -1,14 +1,15 @@
 $toastSpacing = 10px
 
-.toaster
+.toaster {
     position: absolute
     display: flex
     flex-direction: column
     bottom: $toastSpacing*2
     right: @bottom
     z-index: 1
+}
 
-.toast
+.toast {
     margin: $toastSpacing 0 0 0
     width: 250px
     padding: 10px
@@ -17,14 +18,18 @@ $toastSpacing = 10px
     cursor: pointer
     border-radius: 2px
     box-shadow: 0 0 25px #000
-    &:hover
-        background: lighten($clr_pageBg, 14%)
 
-    h1
+    &:hover {
+        background: lighten($clr_pageBg, 14%)
+    }
+
+    h1 {
         color: #bbb
         font-size: 1.1rem
         margin-bottom: 4px
         font-weight: bold
+    }
+}
 
 // Toast Types
 // Style each toast based on its type
@@ -33,14 +38,18 @@ $toastSpacing = 10px
 // The type value is appended directly to the class name of each toast, so the classes
 // here must be kept the same as the ones listed in Toaster.ToastTypes (in Toaster.jsx)
 
-.toast.TOAST_INFO
+.toast.TOAST_INFO {
     border-color: $clr_twitchPurple
+}
 
-.toast.TOAST_SUCCESS
+.toast.TOAST_SUCCESS {
     border-color: #491
+}
 
-.toast.TOAST_WARNING
+.toast.TOAST_WARNING {
     border-color: #990
+}
 
-.toast.TOAST_ERROR
+.toast.TOAST_ERROR {
     border-color: #922
+}

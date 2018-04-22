@@ -1,15 +1,17 @@
 @require "./variables"
 
-.logView
+.logView {
     margin-bottom: 40px
     padding: 15px
     height: 35vh
     display: flex
     flex-direction: column
-    h3, textarea
-        border-left: 2px solid $clr_twitchPurple
 
-    h3
+    h3, textarea {
+        border-left: 2px solid $clr_twitchPurple
+    }
+
+    h3 {
         display: flex
         justify-content: space-between
         align-content: center
@@ -17,19 +19,28 @@
         background: lighten($clr_pageBg, 4%)
         font-weight: bold
         padding: 10px
-        button
+
+        button {
             background: lighten($clr_pageBg, 8%)
             margin: 0
             padding: 5px
-            &:disabled
+
+            &:disabled {
                 color: #686868
                 border-color: transparent
+            }
+        }
+    }
 
-    textarea
+    textarea {
         background: lighten($clr_pageBg, 8%)
         flex-grow: 1
         margin: 0
         resize: none
-        &:active, &:focus
+
+        &:active, &:focus {
             background: lighten($clr_pageBg, 8%)
             border-left: 2px solid $clr_twitchPurple
+        }
+    }
+}
