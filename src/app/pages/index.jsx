@@ -97,7 +97,10 @@ export default () => (state, actions) => {
                             openInBrowser={ actions.openURLInBrowser }
                             toggleFav={ actions.toggleStreamFavorite }
                             unfollowChannel={ actions.unfollowChannel }
-                            showContextMenu={ actions.contextMenu.show } />
+                            showContextMenu={ actions.contextMenu.show }
+                            showModal={ actions.modal.show }
+                            closeModal={ actions.modal.hide }
+                            preferredQuality={state.prefs['preferred-stream-quality']} />
                     ))
                 }
             </div>
