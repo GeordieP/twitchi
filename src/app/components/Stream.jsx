@@ -8,6 +8,7 @@ export default ({
     closeStream,
     openInBrowser,
     toggleFav,
+    unfollowChannel,
     showContextMenu }) => {
     const channelName = stream.channel.name
     const channelURL = stream.channel.url
@@ -23,6 +24,10 @@ export default ({
             handler: isOpen ? closeStream.bind(null, channelName) : launchStream
         },
         {
+            label: isFav ? 'Remove from favorites' : 'Add to favorites',
+            handler: toggleFav.bind(null, channelName)
+        },
+        {
             label: 'Open channel',
             handler: openChannel
         },
@@ -31,9 +36,9 @@ export default ({
             handler: openGameDirectory
         },
         {
-            label: isFav ? 'Remove from favorites' : 'Add to favorites',
-            handler: toggleFav.bind(null, channelName)
-        },
+            label: 'Unfollow channel',
+            handler: unfollowChannel.bind(null, stream.channel._id)
+        }
     ]
 
     const showMenu = event => showContextMenu({ event, items: menuItems })

@@ -8,9 +8,16 @@ const ipcServer = require('./ipcServer')
 const config = require('./config')
 const notifManager = require('./notifManager')
 
+// import API info from separate file
+// see the import in auth.js for more info
+const { clientID } = require('./twitchApiInfo')
+
 // JSON Request URLs
 const followedStreamsURI = 'https://api.twitch.tv/kraken/streams/followed'
-const requestTokenArg = '?oauth_token='
+const getUserURL = 'https://api.twitch.tv/kraken/user'
+const createUnfollowStreamURL = (myUserID, unfollowChanID) => (
+    `https://api.twitch.tv/kraken/users/${myUserID}/follows/channels/${unfollowChanID}`
+)
 
 // auto-refresh interval
 let REFRESH_INTERVAL_TIME_MINUTES = 5 // 5 minutes by default
@@ -27,9 +34,28 @@ let isFirstRefresh = true
 // Returns a promise. Resolves with response data, rejects with error.
 const authedJSONRequest = (uri, accessToken) => request({
     uri,
-    json: true,
-    qs: { oauth_token: accessToken },
+    headers: {
+        'Accept': 'application/vnd.twitchtv.v5+json',
+        'Client-ID': clientID,
+        'Authorization': 'OAuth ' + accessToken
+    },
+    json: true
 })
+
+module.exports.updateStoredUserID = () => new Promise(async function(resolve, reject) {
+    let token = await auth.getTokenExistingOrNew()
+    let user = await authedJSONRequest(getUserURL, token)
+
+    try {
+        config.set('user-id', user._id)
+    } catch(e) {
+        reject(e)
+    }
+})
+
+module.exports.clearStoredUserID = () => {
+    config.set('user-id', '')
+}
 
 module.exports.getFollowList = () => new Promise(async function(resolve, reject) {
     ipcServer.ipcSend('event-twitch-follow-list-refresh-begin')
@@ -110,6 +136,35 @@ module.exports.restartInterval = () => {
         module.exports.enableAutoRefresh()
     }
 }
+
+module.exports.unfollowChannel = unfollowChanID => new Promise(async (resolve, reject) => {
+    try {
+        const userID = config.get('user-id')
+
+        console.log('using user id', userID)
+
+        if (userID == null || userID.length === 0) {
+            throw 'Could not unfollow channel: Logged in user ID was missing or empty'
+        }
+
+        let token = await auth.getTokenExistingOrNew()
+        const url = createUnfollowStreamURL(userID, unfollowChanID)
+
+        await request.delete({
+            url,
+            headers: {
+                'Accept': 'application/vnd.twitchtv.v5+json',
+                'Client-ID': clientID,
+                'Authorization': 'OAuth ' + token
+            },
+            json: true
+        })
+
+        resolve()
+    } catch(e) {
+        reject(e)
+    }
+})
 
 // SETUP: enable auto refresh
 // begin auto refresh interval if preferences auto refresh setting is enabled

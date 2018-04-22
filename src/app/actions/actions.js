@@ -83,6 +83,23 @@ export default {
             })
         }
     },
+    unfollowChannel: channelID => state => {
+        ipc.send('twitch-unfollow-channel', channelID)
+
+        // remove the unfollowed channel from current state
+        let removeIndex
+        let newStreams = state.streams.slice()
+        for (let i = 0; i < newStreams.length; i++) {
+            if (newStreams[i].channel._id === channelID) {
+                removeIndex = i
+                break
+            }
+        }
+
+        newStreams.splice(removeIndex, 1)
+
+        return { streams: newStreams }
+    },
 
     // preferences //
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {

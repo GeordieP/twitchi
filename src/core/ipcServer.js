@@ -32,6 +32,7 @@ function listen() {
 
         try {
             const token = await auth.getTokenExistingOrNew()
+            await twitch.updateStoredUserID()
             result = Result.newOk(token)
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-get-token')
@@ -45,6 +46,7 @@ function listen() {
 
         try {
             const token = await auth.refreshToken()
+            await twitch.updateStoredUserID()
             result = Result.newOk()
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-refresh-token')
@@ -57,7 +59,8 @@ function listen() {
         let result
 
         try {
-            const token = await auth.revokeToken()
+            await auth.revokeToken()
+            twitch.clearStoredUserID()
             result = Result.newOk()
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-revoke-token')
@@ -125,6 +128,25 @@ function listen() {
         }
 
         ipcSend('twitch-set-auto-refresh-follow-list-intvl-minutes-res', result)
+    })
+
+    ipc.on('twitch-unfollow-channel', async function(evt, channelID) {
+        let result
+
+        try {
+            if (channelID == null || channelID === 0) {
+                throw new Error('Could not unfollow channel: Channel ID was missing or empty.')
+            }
+
+            await twitch.unfollowChannel(channelID)
+
+            result = Result.newOk()
+        } catch(e) {
+            console.error(e)
+            result = Result.newError(e.toString(), 'ipcServer @ twitch-unfollow-channel')
+        }
+
+        ipcSend('twitch-unfollow-channel', result)
     })
 
     /* STREAMLINK */

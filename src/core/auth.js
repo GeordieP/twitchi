@@ -22,11 +22,11 @@ const REGEX_ERROR = /error=([^&]+)(?:.error_description=([^&]+))*/
 const REGEX_ARG_SEPARATOR = /\+/g
 
 const authURL = [
-    'https://api.twitch.tv/kraken/oauth2/authorize',
+    'https://id.twitch.tv/oauth2/authorize',
     '?client_id=' + clientID,
     '&redirect_uri=' + redirectURI,
     '&response_type=token',
-    '&scope=user_read'
+    '&scope=user_read user_follows_edit'
 ].join('')
 
 const getRevokeURI = token => ([

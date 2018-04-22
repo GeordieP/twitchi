@@ -7,6 +7,7 @@ const currentVersion = require('./version').version
 // these are used if the expected config file is empty or does not exist
 const defaults = {
     'user-access-token': '',
+    'user-id': '',
     'preferred-stream-quality': 'best',
     'auto-refresh-follow-list-enabled': true,
     'auto-refresh-follow-list-intvl-minutes': 5,

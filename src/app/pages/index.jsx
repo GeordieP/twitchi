@@ -96,6 +96,7 @@ export default () => (state, actions) => {
                             closeStream={ actions.closeStream } 
                             openInBrowser={ actions.openURLInBrowser }
                             toggleFav={ actions.toggleStreamFavorite }
+                            unfollowChannel={ actions.unfollowChannel }
                             showContextMenu={ actions.contextMenu.show } />
                     ))
                 }
