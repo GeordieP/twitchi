@@ -26,20 +26,6 @@ export default () => (state, actions) => {
         actions.setFollowListAutoRefreshInterval(minutes)
     }
 
-    const modalContent = () => (
-        <div>
-            <h1>Hello modal!</h1>
-            <p>Modal content here</p>
-        </div>
-    )
-
-    const showModal = () => {
-        actions.modal.show({
-            header: (<h1>Test Modal !!!</h1>),
-            content: modalContent
-        })
-    }
-
     return (
         <main>
             <NavBar />
@@ -67,9 +53,6 @@ export default () => (state, actions) => {
                     </select>
                 </div>
                 <div>
-                    <button onclick={showModal}>Show Modal</button>
-                    <button onclick={actions.modal.hide}>Hide Modal</button>
-
                     <h2>Stream List</h2>
                     <h3>Auto-refresh</h3>
                     <label htmlFor='autoRefreshCheckbox'>Enable auto-refresh</label>

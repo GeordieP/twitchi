@@ -1,24 +1,43 @@
 import { h } from 'hyperapp'
 import { Enter, Exit, Move } from '@hyperapp/transitions'
 
+const TOAST_DISMISS_DURATION_SECONDS = 1000 * 7
+
 export const stateSlice = {
     toasts: []
 }
 
 export const actionsSlice = {
-    showToast: newToast => (state, actions) => {
-        const toasts = state.toasts.slice()
-
-        // give this toast an ID and a close action timeout function
-        newToast.id = Date.now()
-        newToast.timeout = setTimeout(actions.hideToast.bind(null, newToast.id), 7000)
-
-        // newToast should be of shape { title, type, body }, where types are:
+    showToast: toastData => (state, actions) => {
+        // toastData should be of shape { title, type, body }, where types are:
         // title: String
         // type: Toaster.ToastTypes
         // body: String
+
+        const toasts = state.toasts.slice()
+        const newToast = new Toast(toastData, actions.hideToast)
         toasts.push(newToast)
+        newToast.startTimeout()
+
         return { toasts }
+    },
+
+    stopToastTimeout: id => state => {
+        const toasts = state.toasts.slice()
+        for (let i = 0; i < toasts.length; i++) {
+            if (toasts[i].id !== id) continue
+            toasts[i].stopTimeout()
+            break
+        }
+    },
+
+    startToastTimeout: id => state => {
+        const toasts = state.toasts.slice()
+        for (let i = 0; i < toasts.length; i++) {
+            if (toasts[i].id !== id) continue
+            toasts[i].startTimeout()
+            break
+        }
     },
 
     hideToast: id => state => {
@@ -28,7 +47,7 @@ export const actionsSlice = {
         for (let i = 0; i < toasts.length; i++) {
             if (toasts[i].id !== id) continue
 
-            clearTimeout(toasts[i].timeout)
+            toasts[i].stopTimeout()
 
             toasts.splice(i, 1)
             break
@@ -47,10 +66,33 @@ export const ToastTypes = Object.freeze({
     ERROR: 'TOAST_ERROR'
 })
 
-const Toast = ({ id, title, type, body, close }) => (
+// Toast class.
+// takes toastData object, and hide toast action (needs to be wired; should
+// be passed from inside an app action).
+// we store instances of the Toast function rather than plain objects so we
+// can call methods to start and stop the deletion timeout on toast hover
+const Toast = function({ title, body, type }, a_hideToast) {
+    this.id = Date.now()
+    this.title = title
+    this.body = body
+    this.type = type
+
+    this.timeoutFn = a_hideToast.bind(null, this.id)
+
+    this.startTimeout = () => {
+        this.timeout = setTimeout(this.timeoutFn, TOAST_DISMISS_DURATION_SECONDS)     
+    }
+
+    this.stopTimeout = () => {
+        clearTimeout(this.timeout)
+        this.timeout = null
+    }
+}
+
+const ToastComponent = ({ id, title, type, body, close, mouseover, mouseout }) => (
     <Move easing='ease-out'>
         <Enter css={{ transform: 'translate(0, 25vh)' }}>
-            <div key={ id } className={'toast ' + type} onclick={ close }>
+            <div key={ id } className={'toast ' + type} onclick={ close } onmouseover={ mouseover } onmouseout={ mouseout }>
                 <h1>{ title }</h1>
                 <p>{ body }</p>
             </div>
@@ -63,9 +105,11 @@ export default () => ({ toaster: state }, { toaster: actions }) => (
         <div className='toaster'>
             {
                 state.toasts.map(t => (
-                    <Toast
+                    <ToastComponent
                         {...t}
                         close={ actions.hideToast.bind(null, t.id) }
+                        mouseover={ actions.stopToastTimeout.bind(null, t.id) }
+                        mouseout={ actions.startToastTimeout.bind(null, t.id) }
                     />
                 ))
             }
