@@ -109,6 +109,17 @@ export default {
         value: quality
     }),
 
+    // notifications
+    disableLiveNotif: () => ipc.send('prefs-set-one', {
+        key: 'live-notification-enabled',
+        value: false
+    }),
+
+    enableLiveNotif: () => ipc.send('prefs-set-one', {
+        key: 'live-notification-enabled',
+        value: true
+    }),
+
     // streamlink //
     getOpenStreams: () => ipc.send('streamlink-get-open-streams'),
 
