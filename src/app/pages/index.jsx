@@ -5,7 +5,7 @@ import Stream from 'components/Stream'
 
 // split the full streams array into several arrays, each to be shown in a
 // separate section on the streams list page.
-const divideStreams = (allStreams, favStreamNames) => {
+const divideStreams = (allStreams, favStreamNames, openStreamNames) => {
     let favStreams = []
     let regularStreams = []
 
@@ -18,10 +18,20 @@ const divideStreams = (allStreams, favStreamNames) => {
     }
 
     for (let i = 0; i < allStreams.length; i++) {
-        if (favStreamNames.includes(allStreams[i].channel.name)) {
-            favStreams.push(allStreams[i])
+        const currentName = allStreams[i].channel.name
+
+        if (favStreamNames.includes(currentName)) {
+            if (openStreamNames.includes(currentName)) {
+                favStreams.unshift(allStreams[i])
+            } else {
+                favStreams.push(allStreams[i])
+            }
         } else {
-            regularStreams.push(allStreams[i])
+            if (openStreamNames.includes(currentName)) {
+                regularStreams.unshift(allStreams[i])
+            } else {
+                regularStreams.push(allStreams[i])
+            }
         }
     }
 
@@ -79,7 +89,7 @@ const IndexNavbar = ({
 
 export default () => (state, actions) => {
     // divide streams array into multiple so we can display each individually
-    const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'])
+    const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'], state.openStreams)
 
     const renderStreams = (headerText, streams, isFav) => streams.length > 0 && (
         <span>

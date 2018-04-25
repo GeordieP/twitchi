@@ -95,6 +95,7 @@ export default ({
                 <div className='stream_info_inner'>
                     <div className='stream_channelInfo'>
                         <h1 id={channelName + '_displayName'}>
+                            { isOpen ? (<i className='fas fa-play-circle stream-is-live'></i>) : null }
                             {stream.channel.display_name}
                         </h1>
 
