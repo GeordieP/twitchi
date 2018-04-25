@@ -96,9 +96,9 @@ export default () => (state, actions) => {
           <h2>{ headerText }</h2>
             <div className='streamsView'>
                 {
-                    streams.map(stream => (
+                    streams.map((stream, index) => (
                         <Stream
-                            key={ 'stream_'+stream }
+                            enterDelay={ 50 + (15 * index) }
                             stream={ stream }
                             isFav={ isFav }
                             isOpen={ state.openStreams.includes(stream.channel.name) }

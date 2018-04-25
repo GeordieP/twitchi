@@ -1,6 +1,8 @@
 import { h } from 'hyperapp'
 import { QUALITY_OPTIONS } from 'util/constants'
 
+import { Enter } from '@hyperapp/transitions'
+
 const QualityModal = ({
     channelName, channelURL, preferredQuality, openStream, closeModal
 }) => {
@@ -35,7 +37,7 @@ const QualityModal = ({
 }
 
 export default ({
-    stream, isFav, isOpen, openStream,
+    enterDelay, stream, isFav, isOpen, openStream,
     closeStream, openInBrowser, toggleFav,
     unfollowChannel, showContextMenu,
     showModal, closeModal, preferredQuality
@@ -89,31 +91,36 @@ export default ({
     const showMenu = event => showContextMenu({ event, items: menuItems })
 
     return (
-        <div className='stream' onclick={ launchStream } oncontextmenu={ showMenu }>
-            <img src={ stream.preview.medium } />
-            <div className='stream_info'>
-                <div className='stream_info_inner'>
-                    <div className='stream_channelInfo'>
-                        <h1 id={channelName + '_displayName'}>
-                            { isOpen ? (<i className='fas fa-play-circle stream-is-live'></i>) : null }
-                            {stream.channel.display_name}
-                        </h1>
+        <Enter easing='ease-out' css={{ opacity: '0' }} time={180} delay={enterDelay}>
+            <div className='stream' onclick={ launchStream } oncontextmenu={ showMenu }>
 
-                        <h3 id={channelName + '_viewers'}>
-                            <strong>{ stream.viewers }</strong>
+                <Enter easing='ease-out' css={{ opacity: '0' }} time={180} delay={enterDelay}>
+                    <img src={ stream.preview.medium } />
+                </Enter>
+                <div className='stream_info'>
+                    <div className='stream_info_inner'>
+                        <div className='stream_channelInfo'>
+                            <h1 id={channelName + '_displayName'}>
+                                { isOpen ? (<i className='fas fa-play-circle stream-is-live'></i>) : null }
+                                {stream.channel.display_name}
+                            </h1>
+
+                            <h3 id={channelName + '_viewers'}>
+                                <strong>{ stream.viewers }</strong>
+                            </h3>
+                        </div>
+
+                        <h2 id={channelName + '_game'}>
+                            {stream.game}
+                        </h2>
+
+                        <h3 id={channelName + '_title'}>
+                            {stream.channel.status}
                         </h3>
                     </div>
-
-                    <h2 id={channelName + '_game'}>
-                        {stream.game}
-                    </h2>
-
-                    <h3 id={channelName + '_title'}>
-                        {stream.channel.status}
-                    </h3>
                 </div>
             </div>
-        </div>
+        </Enter>
     )
 }
 
