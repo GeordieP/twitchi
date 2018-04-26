@@ -1,7 +1,7 @@
 import { h } from 'hyperapp'
 
 import NavBar from 'components/NavBar'
-import Stream from 'components/Stream'
+import StreamList from 'components/StreamList'
 
 // split the full streams array into several arrays, each to be shown in a
 // separate section on the streams list page.
@@ -91,32 +91,6 @@ export default () => (state, actions) => {
     // divide streams array into multiple so we can display each individually
     const { favStreams, regularStreams } = divideStreams(state.streams, state.prefs['favorite-streams'], state.openStreams)
 
-    const renderStreams = (headerText, streams, isFav) => streams.length > 0 && (
-        <span>
-          <h2>{ headerText }</h2>
-            <div className='streamsView'>
-                {
-                    streams.map((stream, index) => (
-                        <Stream
-                            enterDelay={ 50 + (15 * index) }
-                            stream={ stream }
-                            isFav={ isFav }
-                            isOpen={ state.openStreams.includes(stream.channel.name) }
-                            openStream={ actions.openStream }
-                            closeStream={ actions.closeStream } 
-                            openInBrowser={ actions.openURLInBrowser }
-                            toggleFav={ actions.toggleStreamFavorite }
-                            unfollowChannel={ actions.unfollowChannel }
-                            showContextMenu={ actions.contextMenu.show }
-                            showModal={ actions.modal.show }
-                            closeModal={ actions.modal.hide }
-                            preferredQuality={state.prefs['preferred-stream-quality']} />
-                    ))
-                }
-            </div>
-        </span>
-    )
-
     return (
         <main>
             <IndexNavbar
@@ -131,8 +105,23 @@ export default () => (state, actions) => {
             {state.streams.length > 0 ? (
                     <section className='content' id='streamsWrap'>
                         <div id='streamsInnerWrap'>
-                            { renderStreams('Favorite Channels', favStreams, true) }
-                            { renderStreams('Followed Channels', regularStreams, false) }
+                            {
+                                favStreams.length > 0 && (
+                                    <span>
+                                        <h2>Favorite Channels</h2>,
+                                        <StreamList streams={ favStreams } />
+                                    </span>
+                                )
+                            }
+
+                            {
+                                regularStreams.length > 0 && (
+                                    <span>
+                                        <h2>Followed Channels</h2>,
+                                        <StreamList streams={ regularStreams } />
+                                    </span>
+                                )
+                            }
                         </div>
                     </section>
                 ) : (
