@@ -1,10 +1,12 @@
-// custom properties
-:root {
-    --size_navBar: 40px
-}
-
 // stylus variables
+$sz_vertNavBar = 60px  // navbar in vertical (side bar) mode
+$sz_horizNavBar = 40px // navbar in horizontal (top bar) mode
 $sz_breakpoint = 990px
 $clr_pageBg = #181818
 $clr_twitchPurple = #6441A4
 $clr_lightPurple = lighten($clr_twitchPurple, 20%)
+
+// custom properties
+:root {
+    --size_navBar: $sz_horizNavBar
+}

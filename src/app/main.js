@@ -18,7 +18,7 @@ import Toaster from 'components/global/Toaster'
 import Modal from 'components/global/Modal'
 
 const view = (state, actions) => (
-    <div>
+    <div id="allWrap">
         {/* GLOBAL COMPONENTS */}
         <ContextMenu />
         <Toaster />

@@ -32,7 +32,7 @@
     for n in (2..6) {
         // calculate breakpoint widths based on n desired columns and grid item/grid gap settings
         // (tile width * desired col count) + (number of grid gaps * grid gap size)
-        @media (min-width: ($tileWidth * n + (n - 1) * $gridGap)) {
+        @media (min-width: ($tileWidth * n + (n - 1) * $gridGap) + $sz_vertNavBar) {
             --numCols: n
         }
     }
