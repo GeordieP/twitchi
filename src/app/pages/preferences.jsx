@@ -98,18 +98,18 @@ export default () => (state, actions) => {
                         </ul>
                     </div>
 
-                    <h2>Account</h2>
+                    <h2>Account <span style={{ color: '#555' }}>| { state.prefs['user-name'] || 'not signed in' }</span></h2>
                     <div className='pageSection'>
                         <ul>
                             <li>
                                 <h3>Change Account</h3>
-                                <p>Log into a different Twitch account</p>
+                                <p>Sign into a different Twitch account</p>
                                 <button onclick={ actions.refreshToken }>Change Account</button>
                             </li>
 
                             <li>
-                                <h3>Log Out</h3>
-                                <p>Log out of the current Twitch account</p>
+                                <h3>Sign Out</h3>
+                                <p>Sign out of the current Twitch account</p>
                                 <button onclick={ actions.revokeToken }>Log Out</button>
                             </li>
                         </ul>

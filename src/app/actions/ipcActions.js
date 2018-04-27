@@ -78,6 +78,8 @@ export const listen = dispatch => {
                 type: ToastTypes.SUCCESS
             })
 
+            ipc.send('prefs-get-all')
+
             dispatch.refreshFollowList()
         } catch(e) {
             handleErr('An error occurred when logging in', e)
@@ -92,6 +94,8 @@ export const listen = dispatch => {
                 title: 'Logout successful',
                 type: ToastTypes.SUCCESS
             })
+
+            ipc.send('prefs-get-all')
 
             dispatch.setState({ streams: [] })
         } catch(e) {

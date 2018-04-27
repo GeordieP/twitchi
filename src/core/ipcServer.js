@@ -32,7 +32,7 @@ function listen() {
 
         try {
             const token = await auth.getTokenExistingOrNew()
-            await twitch.updateStoredUserID()
+            await twitch.updateStoredUserInfo()
             result = Result.newOk(token)
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-get-token')
@@ -46,7 +46,7 @@ function listen() {
 
         try {
             const token = await auth.refreshToken()
-            await twitch.updateStoredUserID()
+            await twitch.updateStoredUserInfo()
             result = Result.newOk()
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-refresh-token')
@@ -60,7 +60,7 @@ function listen() {
 
         try {
             await auth.revokeToken()
-            twitch.clearStoredUserID()
+            twitch.clearStoredUserInfo()
             result = Result.newOk()
         } catch(e) {
             result = Result.newError(e.toString(), 'ipcServer @ auth-revoke-token')

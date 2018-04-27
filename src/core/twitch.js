@@ -42,19 +42,21 @@ const authedJSONRequest = (uri, accessToken) => request({
     json: true
 })
 
-module.exports.updateStoredUserID = () => new Promise(async function(resolve, reject) {
+module.exports.updateStoredUserInfo = () => new Promise(async function(resolve, reject) {
     let token = await auth.getTokenExistingOrNew()
     let user = await authedJSONRequest(getUserURL, token)
 
     try {
         config.set('user-id', user._id)
+        config.set('user-name', user.display_name)
     } catch(e) {
         reject(e)
     }
 })
 
-module.exports.clearStoredUserID = () => {
+module.exports.clearStoredUserInfo = () => {
     config.set('user-id', '')
+    config.set('user-name', user.display_name)
 }
 
 module.exports.getFollowList = () => new Promise(async function(resolve, reject) {
