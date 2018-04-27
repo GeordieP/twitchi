@@ -2,7 +2,6 @@
 
 .logView {
     margin-bottom: 40px
-    padding: 15px
     height: 35vh
     display: flex
     flex-direction: column
@@ -11,36 +10,48 @@
         border-left: 2px solid $clr_twitchPurple
     }
 
-    h3 {
+    h2 {
         display: flex
         justify-content: space-between
         align-content: center
         align-items: center
-        background: lighten($clr_pageBg, 4%)
-        font-weight: bold
-        padding: 10px
-
-        button {
-            background: lighten($clr_pageBg, 8%)
-            margin: 0
-            padding: 5px
-
-            &:disabled {
-                color: #686868
-                border-color: transparent
-            }
-        }
+        box-shadow: 0 2px 15px $clr_pageBg
+        z-index: 1 // required for box shadow to work
     }
 
+    // old style for name headers
+    // h3 {
+    //     display: flex
+    //     justify-content: space-between
+    //     align-content: center
+    //     align-items: center
+    //     background: lighten($clr_pageBg, 4%)
+    //     font-weight: bold
+    //     padding: 10px
+    //     margin: 0px !important
+
+    //     button {
+    //         background: lighten($clr_pageBg, 8%)
+    //         margin: 0
+    //         padding: 5px
+
+    //         &:disabled {
+    //             color: #686868
+    //             border-color: transparent
+    //         }
+    //     }
+    // }
+
     textarea {
-        background: lighten($clr_pageBg, 8%)
+        // background: lighten($clr_pageBg, 8%)
+        background: $clr_pageBg
+        border: none
         flex-grow: 1
-        margin: 0
+        margin: 0px
         resize: none
 
-        &:active, &:focus {
-            background: lighten($clr_pageBg, 8%)
-            border-left: 2px solid $clr_twitchPurple
+        &:hover, &:active, &:focus {
+            background: $clr_pageBg
         }
     }
 }

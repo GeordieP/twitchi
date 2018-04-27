@@ -8,10 +8,11 @@ html {
 }
 
 body {
-    font-family: sans-serif
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
     background: $clr_pageBg
     color: #888
     overflow: hidden
+    letter-spacing: -0.03rem
 }
 
 #allWrap {
@@ -21,18 +22,26 @@ body {
 
 h1 {
     font-size: 2.2rem
+    font-weight: bold
+    color: lighten($clr_lightPurple, 20%)
+    letter-spacing: -0.09rem
 }
 
 h2 {
     font-size: 1.8rem
+    color: $clr_header
+    padding-bottom: 5px
+    border-bottom: 2px solid darken($clr_twitchPurple, 30%)
 }
 
 h3 {
     font-size: 1.4rem
+    color: darken($clr_header, 25%)
 }
 
 h4 {
     font-size: 1.2rem
+    color: darken($clr_header, 15%)
 }
 
 .vflex {
@@ -41,22 +50,38 @@ h4 {
 }
 
 input, select, button, textarea {
-    background: lighten($clr_pageBg, 4%)
+    background: lighten($clr_pageBg, 12%)
     border: none
     padding: 9px 11px
-    margin: 5px
+    margin: 5px 0
     color: #eee
     border-left: 2px solid transparent
     outline: none
+
+    &:hover {
+        background: lighten($clr_pageBg, 16%)
+        border-color: $clr_lightPurple
+    }
 
     &:focus {
         border-color: $clr_lightPurple
         background: lighten($clr_pageBg, 9%)
     }
+
+    border-left: 2px solid $clr_twitchPurple
 }
 
-button {
-    border-left: 2px solid $clr_twitchPurple
+button:disabled {
+    color: #686868
+    border-color: transparent
+}
+
+select {
+    padding: 8px 11px
+}
+
+input[type="checkbox"] {
+    margin-right: 8px
 }
 
 main {
@@ -71,7 +96,36 @@ main {
 
 section.content {
     grid-area: content
+    display: flex
     overflow: auto
+    justify-content: center
+}
+
+.page {
+    width: 100%
+    max-width: 1100px
+    padding: 30px
+    display: flex
+    flex-direction: column
+
+    h3 {
+        margin-bottom: 5px
+    }
+}
+
+.pageSection {
+    margin-bottom: 40px
+    padding: 10px 0
+
+    >ul>li {
+        margin-bottom: 10px
+        padding-bottom: 10px
+        border-bottom: 1px solid lighten($clr_pageBg, 10%)
+        &:last-child {
+            margin-bottom: 0
+            border-bottom: none
+        }
+    }
 }
 
 @media (min-width: $sz_breakpoint) {
@@ -83,5 +137,9 @@ section.content {
         grid-template-rows: none
         grid-template-columns: var(--size_navBar) 1fr
         grid-template-areas: "nav content"
+    }
+
+    .page {
+        width: 80%
     }
 }

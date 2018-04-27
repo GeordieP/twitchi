@@ -16,27 +16,41 @@ export default () => (state, actions) => {
             <NavBar />
 
             <section className='content'>
-                <h1>Launch Stream</h1>
-                <h2>Open any stream by providing their username.</h2>
-                <div>
-                    <h3>Username</h3>
-                    <input type='text' id='openStream_username' placeholder='Username to open' />
+                <div className='page'>
 
-                    <h3>Stream Quality Preference</h3>
-                    <p>Applies to this stream only. Does not affect the global quality setting on the options page.</p>
-                    <select id='openStream_quality'>
-                        {
-                            QUALITY_OPTIONS.map(q => (
-                                <option
-                                selected={ q === state.prefs['preferred-stream-quality'] }
-                                value={ q }>
-                                    { q }
-                                </option>
-                            ))
-                        }
-                    </select>
+                <h1 style={{ marginBottom: '10px' }}>Open a Stream</h1>
+                <h3 style={{ marginBottom: '30px' }}>Use Streamlink to watch a stream that's not on your following list.</h3>
 
-                    <button id='openStream_openBtn' onclick={ onOpenClick }>Open</button>
+                <h2>Setup</h2>
+                    <div className='pageSection'>
+                        <ul>
+                            <li>
+
+                                <h3>Stream Quality</h3>
+                                <p>Only applies to this instance. Does not affect global setting in options page.</p>
+                                <select id='openStream_quality'>
+                                    {
+                                        QUALITY_OPTIONS.map(q => (
+                                            <option
+                                            selected={ q === state.prefs['preferred-stream-quality'] }
+                                            value={ q }>
+                                                { q }
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+
+                                <br />
+                                <br />
+
+                                <h3>Username</h3>
+                                <p>Twitch username of stream to open</p>
+                                <input type='text' id='openStream_username' placeholder='Twitch channel name' />
+                                <br />
+                                <button id='openStream_openBtn' onclick={ onOpenClick }>Watch this stream</button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </section>
         </main>

@@ -31,7 +31,7 @@ const QualityModal = ({ channelName, channelURL, preferredQuality, openStream, c
                     ))
                 }
             </select>
-            <button onclick={ onOpen }>Open { channelName }</button>
+            <button onclick={ onOpen }>Watch { channelName }</button>
         </div>
     )
 }

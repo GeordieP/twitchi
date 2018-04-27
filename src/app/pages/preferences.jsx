@@ -31,58 +31,89 @@ export default () => (state, actions) => {
             <NavBar />
 
             <section className='content'>
-                <h1>Preferences</h1>
-                <div>
-                    <h2>Account</h2>
-                    <button onclick={ actions.refreshToken }>Change Account</button>
-                    <button onclick={ actions.revokeToken }>Log Out</button>
-                </div>
+                <div className='page'>
+                    <h1 style={{ marginBottom: '30px' }}>Preferences</h1>
 
-                <div>
                     <h2>Stream Options</h2>
-                    <select onchange={ onQualChange }>
-                        {
-                            QUALITY_OPTIONS.map(q => (
-                                <option
-                                selected={ q === state.prefs['preferred-stream-quality'] }
-                                value={ q }>
-                                    { q }
-                                </option>
-                            ))
-                        }
-                    </select>
-                </div>
-                <div>
+                    <div className='pageSection'>
+                        <ul>
+                            <li>
+                                <h3>Live Notification</h3>
+                                <p>Show a system notification when streams you follow go live.</p>
+                                <input
+                                    type='checkbox'
+                                    id='liveNotifCheckbox'
+                                    checked={ state.prefs['live-notification-enabled'] }
+                                    onchange={ state.prefs['live-notification-enabled'] ? actions.disableLiveNotif : actions.enableLiveNotif }
+                                />
+                                <label htmlFor='liveNotifCheckbox'>Enable live notifications</label>
+                            </li>
+
+                            <li>
+                                <h3>Preferred Stream Quality</h3>
+                                <p>Quality to (attempt) to use when opening a stream with Streamlink.</p>
+                                <p>If the preferred quality is not available, the next lowest option will be used (eventually falling back to 'best').</p>
+                                <select onchange={ onQualChange }>
+                                    {
+                                        QUALITY_OPTIONS.map(q => (
+                                            <option
+                                                selected={ q === state.prefs['preferred-stream-quality'] }
+                                                value={ q }
+                                              >
+                                                { q }
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+
                     <h2>Stream List</h2>
-                    <h3>Auto-refresh</h3>
-                    <label htmlFor='autoRefreshCheckbox'>Enable auto-refresh</label>
-                    <input
-                        type='checkbox'
-                        id='autoRefreshCheckbox'
-                        checked={ state.prefs['auto-refresh-follow-list-enabled'] }
-                        onchange={ state.prefs['auto-refresh-follow-list-enabled'] ? actions.disableFollowListAutoRefresh : actions.enableFollowListAutoRefresh }
-                        />
+                    <div className='pageSection'>
+                        <ul>
+                            <li>
+                                <h3>Auto-refresh</h3>
+                                <p>Enable or disable automatic refreshing of the main following list.</p>
+                                <input
+                                    type='checkbox'
+                                    id='autoRefreshCheckbox'
+                                    checked={ state.prefs['auto-refresh-follow-list-enabled'] }
+                                    onchange={ state.prefs['auto-refresh-follow-list-enabled'] ? actions.disableFollowListAutoRefresh : actions.enableFollowListAutoRefresh }
+                                    />
+                                <label htmlFor='autoRefreshCheckbox'>Enable auto-refresh</label>
+                            </li>
 
-                    <h3>Auto-refresh duration</h3>
-                    <p>Time in minutes before the list should auto-refresh</p>
-                    <input
-                        type='text'
-                        onchange={ onChangeAutoRefreshDuration }
-                        value={ state.prefs['auto-refresh-follow-list-intvl-minutes'] }
-                        placeholder='Auto-refresh timer (minutes)'
-                    />
-                </div>
+                            <li>
+                                <h3>Auto-refresh duration</h3>
+                                <p>Time in minutes before the list should auto-refresh. Minimum value is 3.</p>
+                                <input
+                                    type='number'
+                                    min='3'
+                                    onchange={ onChangeAutoRefreshDuration }
+                                    value={ state.prefs['auto-refresh-follow-list-intvl-minutes'] }
+                                    placeholder='Auto-refresh timer (minutes)'
+                                />
+                            </li>
+                        </ul>
+                    </div>
 
-                <div>
-                    <h2>Notifications</h2>
-                    <h3>Live Notification</h3>
-                    <label htmlFor='liveNotifCheckbox'>Show a notification when streams go live</label>
-                    <input
-                        type='checkbox'
-                        id='liveNotifCheckbox'
-                        checked={ state.prefs['live-notification-enabled'] }
-                        onchange={ state.prefs['live-notification-enabled'] ? actions.disableLiveNotif : actions.enableLiveNotif }
-                    />
+                    <h2>Account</h2>
+                    <div className='pageSection'>
+                        <ul>
+                            <li>
+                                <h3>Change Account</h3>
+                                <p>Log into a different Twitch account</p>
+                                <button onclick={ actions.refreshToken }>Change Account</button>
+                            </li>
+
+                            <li>
+                                <h3>Log Out</h3>
+                                <p>Log out of the current Twitch account</p>
+                                <button onclick={ actions.revokeToken }>Log Out</button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </section>
         </main>
