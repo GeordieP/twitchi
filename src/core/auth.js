@@ -9,10 +9,18 @@ const ipcServer = require('./ipcServer')
 
 // import API info from separate file
 // this module simply exports an object containing the following keys:
-// clientID: "client id here",
-// redirectURI: "oauth redirect URI here"
-// this information can be grabbed from the twitch developers dashboard.
-const { clientID, redirectURI } = require('./twitchApiInfo')
+//// clientID: "client id here",
+//// redirectURI: "oauth redirect URI here"
+// the file is not tracked in the git repository; you'll have to create your own, using your own client ID and redirect URI.
+// The information can be found in your twitch developer dashboard.
+let clientID, redirectURI
+try {
+    const data = require('./twitchApiInfo')
+    clientID = data.clientID
+    redirectURI = data.redirectURI 
+} catch(e) {
+    throw new Error('Could not load API info module. Please check that src/core/twitchApiInfo.js exists, and if not, consult src/core/auth.js for instructions on creating it.')
+}
 
 // match and capture access token from redirected URL string
 const REGEX_ACCESS_TOKEN = /#access_token=([^&]+)/
