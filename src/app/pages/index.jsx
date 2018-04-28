@@ -98,7 +98,7 @@ export default () => (state, actions) => {
                             {
                                 favStreams.length > 0 && (
                                     <span>
-                                        <h2>Favorites</h2>
+                                        <h2 className='hStretch'>Favorites <span>{ favStreams.length }</span></h2>
                                         <StreamList streams={ favStreams } />
                                     </span>
                                 )
@@ -107,9 +107,15 @@ export default () => (state, actions) => {
                             {
                                 regularStreams.length > 0 && (
                                     <span>
-                                        <h2>Followed</h2>
+                                        <h2 className='hStretch'>Followed <span>{ regularStreams.length }</span></h2>
                                         <StreamList streams={ regularStreams } />
                                     </span>
+                                )
+                            }
+
+                            {
+                                state.followListNumExtraPages > 0 && (
+                                    <button style={{ width: '320px' }} onclick={ actions.followListLoadNextPage }>Load More</button>
                                 )
                             }
                         </div>

@@ -47,6 +47,11 @@ h2 {
     color: $clr_header
     padding-bottom: 5px
     border-bottom: 2px solid darken($clr_twitchPurple, 30%)
+
+    span {
+        color: lighten($clr_pageBg, 14%)
+        font-size: 1rem
+    }
 }
 
 h3 {
@@ -62,6 +67,11 @@ h4 {
 .vflex {
     display: flex
     flex-direction: column
+}
+
+.hStretch {
+    display: flex
+    justify-content: space-between
 }
 
 input, select, button, textarea {

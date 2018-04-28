@@ -138,4 +138,9 @@ export default {
         // refresh open streams array
         actions.getOpenStreams()
     },
+
+    // follow list pagination
+    followListLoadNextPage: () => state => {
+        ipc.send('twitch-get-follow-list', state.followListCurrentPageNum + 1)
+    }
 }
