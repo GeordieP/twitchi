@@ -141,7 +141,7 @@ function listen() {
         ipcSend('twitch-set-auto-refresh-follow-list-intvl-minutes-res', result)
     })
 
-    ipc.on('twitch-unfollow-channel', async function(evt, channelID) {
+    ipc.on('twitch-unfollow-channel', async function(evt, { channelID, displayName }) {
         let result
 
         try {
@@ -151,7 +151,7 @@ function listen() {
 
             await twitch.unfollowChannel(channelID)
 
-            result = Result.newOk()
+            result = Result.newOk(displayName)
         } catch(e) {
             console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ twitch-unfollow-channel')

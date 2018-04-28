@@ -80,7 +80,13 @@ export default ({ streams }) => (state, actions) => {
 
             {
                 label: 'Unfollow channel',
-                handler: actions.unfollowChannel.bind(null, stream.channel._id)
+                handler: actions.unfollowChannel.bind(
+                    null,
+                    {
+                        channelID: stream.channel._id,
+                        displayName: stream.channel.display_name
+                    }
+                )
             }
         ]
     }

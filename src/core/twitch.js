@@ -206,8 +206,6 @@ module.exports.unfollowChannel = unfollowChanID => new Promise(async (resolve, r
     try {
         const userID = config.get('user-id')
 
-        console.log('using user id', userID)
-
         if (userID == null || userID.length === 0) {
             throw 'Could not unfollow channel: Logged in user ID was missing or empty'
         }

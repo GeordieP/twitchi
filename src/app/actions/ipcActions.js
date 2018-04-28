@@ -238,6 +238,19 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('twitch-unfollow-channel-res', (evt, res) => {
+        try {
+            const channelDisplayName = parseResponse(res).expect()
+
+            dispatch.toaster.showToast({
+                title: 'Successfully unfollowed ' + channelDisplayName,
+                type: ToastTypes.SUCCESS
+            })
+        } catch(e) {
+            handleErr('An error occurred when attempting to unfollow stream', e)
+        }
+    })
+
     // events
     ipc.on('event-twitch-follow-list-refresh-begin', evt => {
         dispatch.setState({ refreshingFollowList: true })

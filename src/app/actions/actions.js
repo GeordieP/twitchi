@@ -85,8 +85,8 @@ export default {
             })
         }
     },
-    unfollowChannel: channelID => state => {
-        ipc.send('twitch-unfollow-channel', channelID)
+    unfollowChannel: ({ channelID, displayName }) => state => {
+        ipc.send('twitch-unfollow-channel', { channelID, displayName })
 
         // remove the unfollowed channel from current state
         let removeIndex
