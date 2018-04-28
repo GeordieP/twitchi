@@ -35,6 +35,7 @@ function listen() {
             await twitch.updateStoredUserInfo()
             result = Result.newOk(token)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ auth-get-token')
         }
         
@@ -49,6 +50,7 @@ function listen() {
             await twitch.updateStoredUserInfo()
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ auth-refresh-token')
         }
         
@@ -63,6 +65,7 @@ function listen() {
             twitch.clearStoredUserInfo()
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ auth-revoke-token')
         }
         
@@ -70,14 +73,19 @@ function listen() {
     })
 
     /* TWITCH */
-    ipc.on('twitch-get-follow-list', async function(evt) {
+    ipc.on('twitch-get-follow-list', async function(evt, pageIndex) {
         let result
 
         try {
-            const followList = await twitch.getFollowList()
+            // default to 0 pageIndex (0 = first page)
+            if (pageIndex == null || pageIndex < 0) pageIndex = 0
+
+            const followList = await twitch.getFollowList(pageIndex)
             twitch.restartInterval()
+
             result = Result.newOk(followList)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ twitch-get-follow-list')
         }
 
@@ -92,6 +100,7 @@ function listen() {
             twitch.enableAutoRefresh()
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ twitch-enable-follow-list-auto-refresh')
         }
 
@@ -106,6 +115,7 @@ function listen() {
             twitch.disableAutoRefresh()
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ twitch-disable-follow-list-auto-refresh')
         }
 
@@ -124,6 +134,7 @@ function listen() {
             twitch.restartInterval()
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ twitch-set-auto-refresh-follow-list-intvl-minutes')
         }
 
@@ -146,7 +157,7 @@ function listen() {
             result = Result.newError(e.toString(), 'ipcServer @ twitch-unfollow-channel')
         }
 
-        ipcSend('twitch-unfollow-channel', result)
+        ipcSend('twitch-unfollow-channel-res', result)
     })
 
     /* STREAMLINK */
@@ -168,6 +179,7 @@ function listen() {
             await streamManager.openStream(channelName, quality)
             result = Result.newOk(channelName)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ streamlink-open-url')
         }
 
@@ -181,6 +193,7 @@ function listen() {
             await streamManager.closeStream(channelName)
             result = Result.newOk(channelName)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ streamlink-close-stream')
         }
 
@@ -194,6 +207,7 @@ function listen() {
             const logs = await streamManager.getAllLogs()
             result = Result.newOk(logs)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ streamlink-get-all-logs')
         }
 
@@ -207,6 +221,7 @@ function listen() {
             const openStreams = await streamManager.getOpenStreams()
             result = Result.newOk(openStreams)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ streamlink-get-open-streams')
         }
 
@@ -243,6 +258,7 @@ function listen() {
 
             result = Result.newOk(pref)
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ prefs-get-one')
         }
 
@@ -259,6 +275,7 @@ function listen() {
             config.set(key, value)
             result = Result.newOk()
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ prefs-set-one')
         }
 
@@ -300,6 +317,7 @@ function listen() {
                 throw new Error('Could not open URL in browser: shell.openExternal returned false (target application was not able to open URL)')
             }
         } catch(e) {
+            console.error(e)
             result = Result.newError(e.toString(), 'ipcServer @ open-url-in-browser')
         }
 

@@ -10,13 +10,17 @@ export default {
     toaster,
     modal,
 
+    // misc slices
+    logs: {
+        logLines: {},
+    },
+
     // misc //
     appVersion: 'x.x.x',
     prefs: {},
     streams: [],
     openStreams: [],
-    logs: {
-        logLines: {},
-    },
     refreshingFollowList: false,
+    followListCurrentPageNum: 0,
+    followListNumExtraPages: 0
 }

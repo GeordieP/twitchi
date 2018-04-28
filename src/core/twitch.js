@@ -13,11 +13,21 @@ const notifManager = require('./notifManager')
 const { clientID } = require('./twitchApiInfo')
 
 // JSON Request URLs
-const followedStreamsURI = 'https://api.twitch.tv/kraken/streams/followed'
 const getUserURL = 'https://api.twitch.tv/kraken/user'
 const createUnfollowStreamURL = (myUserID, unfollowChanID) => (
     `https://api.twitch.tv/kraken/users/${myUserID}/follows/channels/${unfollowChanID}`
 )
+
+const createFollowedStreamsUrl = (limit = FOLLOW_LIST_LIMIT, offset = 0) => [
+    'https://api.twitch.tv/kraken/streams/followed',
+    '?limit=' + limit,
+    '&offset='+ offset
+].join('')
+
+// follow list item limit;
+// the number of streams twitch will give us in each follow list request
+// twitch's default is 25
+const FOLLOW_LIST_LIMIT = 25
 
 // auto-refresh interval
 let REFRESH_INTERVAL_TIME_MINUTES = 5 // 5 minutes by default
@@ -59,13 +69,66 @@ module.exports.clearStoredUserInfo = () => {
     config.set('user-name', user.display_name)
 }
 
-module.exports.getFollowList = () => new Promise(async function(resolve, reject) {
+module.exports.getFollowList = (pageIndex = 0) => new Promise(async function(resolve, reject) {
     ipcServer.ipcSend('event-twitch-follow-list-refresh-begin')
 
     try {
         let token = await auth.getTokenExistingOrNew()
-        let streams = await authedJSONRequest(followedStreamsURI, token)
-        resolve(streams)
+
+        // request first page of streams regardless of our page index
+        let streamsPageZero = await authedJSONRequest(createFollowedStreamsUrl(), token)
+        let allStreams
+
+        // pagination info
+        // total number of live channels in follow list
+        const totalStreams = streamsPageZero._total
+        // number of streams we've fetched so far
+        const curNumStreams = streamsPageZero.streams.length
+        // number of available pages (including first page, which we've already fetched)
+        const totalPages = Math.ceil((totalStreams - curNumStreams) / FOLLOW_LIST_LIMIT)
+
+        // if there are more pages to fetch, do so before resolving streams
+        if (pageIndex === 0) {
+            // no remaining pages to fetch, just resolve the list we got from the first request
+            allStreams = streamsPageZero.streams
+        } else {
+            // loop from 1 to end; skip the first page, as we already have it stored and don't need to fetch it again.
+            // NOTE: doing this (above comment) may cause an issue where a stream shows up twice in the list;
+            // (if a stream gets bumped to the next page in-between the first request and a 'load more' request)
+            // it's rare enough that we won't care for now (fewer net requests is a bigger win), but if people start
+            // encountering this issue enough, we'll do all requests every time or have smarter stream list concatenation after all requests are done.
+            let urls = new Array(pageIndex)
+            for (let i = 1; i <= pageIndex; i++) {
+                // create a request URL where the limit = our limit constant,
+                // and offset = index of the first stream on the page
+                // (page number * number of streams per page)
+                urls[i-1] = createFollowedStreamsUrl(
+                    FOLLOW_LIST_LIMIT,
+                    i * FOLLOW_LIST_LIMIT
+                )
+            }
+
+            // send a request to each page URL, wait for all to respond before building the full streams list
+            const allPages = await Promise.all(urls.map(url => authedJSONRequest(url, token)))
+
+            // all requests done, reduce the result to turn [{streams: [{},]},] into newStreams: [{},]
+            const newStreams = allPages.reduce((accum, curr) => accum.concat(curr.streams), [])
+
+            // create full streams array out of existing first page and all new pages
+            allStreams = streamsPageZero.streams.concat(newStreams)
+        }
+
+        // update the frontend with the current pagination status
+        // the keys here are expected by the app frontend
+        ipcServer.ipcSend('twitch-update-follow-list-details-res', Result.newOk({
+            followListCurrentPageNum: pageIndex,
+            followListNumExtraPages: totalPages - pageIndex
+        }))
+
+        // we're done building a stream list, resolve it to caller
+        resolve(allStreams)
+
+        // NOTIFICATION HANDLING
 
         // on first refresh, don't send a notification, and update isFirstRefresh value
         if (isFirstRefresh) {

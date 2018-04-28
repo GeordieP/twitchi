@@ -105,7 +105,7 @@ export const listen = dispatch => {
 
     ipc.on('twitch-get-follow-list-res', (evt, res) => {
         try {
-            const { streams } = parseResponse(res).expect()
+            const streams = parseResponse(res).expect()
 
             // append current time to end of each medium 'preview' url.
             // this has no effect on loading the image, but will ensure that
@@ -218,6 +218,23 @@ export const listen = dispatch => {
             parseResponse(res).expect()
         } catch(e) {
             handleErr('An error occurred when setting the auto refresh interval', e)
+        }
+    })
+
+
+    // NOTE: currently we never send an ipc 'request' with the same name here,
+    // but we still append '-res' to the end of this event, just in case we ever
+    // add a request for it as well - the names can stay consistent.
+    ipc.on('twitch-update-follow-list-details-res', (evt, res) => {
+        try {
+            const followListData = parseResponse(res).expect()
+
+            // update keys in store; these are expected to exist inside followListData
+            // // followListCurrentPageNum
+            // // followListNumExtraPages
+            dispatch.setState(followListData)
+        } catch(e) {
+            handleErr('An error occurred when setting follow list pagination details', e)
         }
     })
 
