@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const pkg = require('../package.json')
 const VersNumWriterPlugin = require('./VersNumWriterPlugin')
+const Stylish = require('webpack-stylish');
 
 module.exports = {
     entry: [
@@ -43,8 +44,13 @@ module.exports = {
         new VersNumWriterPlugin({
             output: path.resolve('./src/core'),
             vers: pkg.version
-        })
+        }),
+        new Stylish()
     ],
+
+    // NOTE: stats none is so we can use webpack-stylish.
+    // NOTE: this option is also set inside webpack.dev.js > devServer
+    stats: 'none',
     
     module: {
         rules: [

@@ -6,10 +6,14 @@ module.exports = merge(baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')
-        })
+        }),
     ],
 
     devServer: {
-        historyApiFallback: true
+        historyApiFallback: true,
+
+        // NOTE: stats none is so we can use webpack-stylish.
+        // NOTE: this option is also set inside webpack.base.js
+        stats: 'none',
     }
 })
