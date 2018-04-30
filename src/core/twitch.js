@@ -135,7 +135,7 @@ module.exports.getFollowList = (pageIndex = 0) => new Promise(async function(res
             isFirstRefresh = false
         } else {
             // if no streams are live, clear cache and ignore rest of logic below
-            if (streams['_total'].length === 0) {
+            if (allStreams.length === 0) {
                 LIVE_CHANNEL_NAMES_CACHE = []
                 return
             }
@@ -143,18 +143,18 @@ module.exports.getFollowList = (pageIndex = 0) => new Promise(async function(res
             let newStreams
             if (LIVE_CHANNEL_NAMES_CACHE.length === 0) {
                 // don't do diff if there are no names in the cache
-                newStreams = streams.streams
+                newStreams = allStreams
             } else {
                 // diff new streams and old streams
                 // filter full streams list down to just the names that aren't in the cache from the previous refresh
-                newStreams = streams.streams.filter(s => !LIVE_CHANNEL_NAMES_CACHE.includes(s.channel.name))
+                newStreams = allStreams.filter(s => !LIVE_CHANNEL_NAMES_CACHE.includes(s.channel.name))
             }
 
             notifManager.showLiveStreamsNotif(newStreams)
         }
 
         // update the live names cache
-        LIVE_CHANNEL_NAMES_CACHE = streams.streams.map(s => s.channel.name)
+        LIVE_CHANNEL_NAMES_CACHE = allStreams.map(s => s.channel.name)
     } catch(e) {
         reject(e)
     }
