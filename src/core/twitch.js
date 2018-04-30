@@ -66,7 +66,7 @@ module.exports.updateStoredUserInfo = () => new Promise(async function(resolve, 
 
 module.exports.clearStoredUserInfo = () => {
     config.set('user-id', '')
-    config.set('user-name', user.display_name)
+    config.set('user-name', '')
 }
 
 module.exports.getFollowList = (pageIndex = 0) => new Promise(async function(resolve, reject) {
