@@ -1,6 +1,5 @@
 'use strict'
 
-const spawn = require('child_process').spawn
 const Result = require('@geordiep/result')
 
 const auth = require('./auth')
@@ -84,7 +83,7 @@ StreamInstance.prototype.open = function(quality) {
             let token = await auth.getTokenExistingOrNew()
 
             // spawn streamlink process using expected args
-            this.process = launchStreamlink([
+            this.process = await launchStreamlink([
                 this.channelURL,
                 this.quality,
                 '--twitch-oauth-token=' + token

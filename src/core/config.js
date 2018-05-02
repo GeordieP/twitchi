@@ -14,6 +14,7 @@ const defaults = {
     'auto-refresh-follow-list-intvl-minutes': 5,
     'live-notification-enabled': true,
     'favorite-streams': [],
+    'streamlink-exe-path': '',
 }
 
 const config = new electronStore({

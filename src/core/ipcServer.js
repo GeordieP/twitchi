@@ -1,7 +1,7 @@
 'use strict'
 
 const electron = require('electron')
-const { shell, dialog } = electron
+const { shell } = electron
 const ipc = electron.ipcMain
 
 const twitch = require('./twitch')
@@ -229,6 +229,21 @@ function listen() {
         ipcSend('streamlink-get-open-streams-res', result)
     })
 
+    ipc.on('streamlink-choose-exe-path', async function(evt) {
+        let result
+
+        try {
+            const userPath = await streamlinkProcess.askUserForPath()
+            streamlinkProcess.checkAndSetExePath(userPath)
+            result = Result.newOk()
+        } catch(e) {
+            console.error(e)
+            result = Result.newError(e.toString(), 'ipcServer @ streamlink-choose-exe-path')
+        }
+
+        ipcSend('streamlink-choose-exe-path-res', result)
+    })
+
     /* PREFERENCES */
     ipc.on('prefs-get-all', function(evt) {
         let result
@@ -338,35 +353,31 @@ const setupStreamlinkPath = async function() {
         // initially look in expected locations for an executable
         const validPath = await streamlinkProcess.checkForExpectedExes()
         // got a valid path, set it in the module
-        streamlinkProcess.setStreamlinkPath(validPath)
-        resolve()
+        streamlinkProcess.setExePath(validPath)
     } catch(e) {
         // no valid path in expected places, ask user for a path
+        const userPath = await streamlinkProcess.askUserForPath(false)
+              .catch(console.error)
 
-        // show an info box
-        dialog.showMessageBox(
-            'Could not locate Streamlink',
-            'Twitchi could not find your Streamlink install directory. You will be asked to provide a path after closing this message box.'
-        )
-
-        // TODO:
-        /*
-          - set up message box with proper buttons and other options
-          - on OK click, show file picker dialog
-          - take path result from file picker dialog and send to setStreamlinkPath()
-          - save path in config file 
-        */
+        try {
+            streamlinkProcess.checkAndSetExePath(userPath)
+        } catch(e) {
+            console.error(e)
+        }
     }
 }
 
 module.exports.start = function(mainWindow) {
-    // before anything, we need to ensure we can use streamlink
-    // do this async
-    setupStreamlinkPath()
-        .catch(console.error)
-
+    // store reference to mainWindow
     MAIN_WINDOW = mainWindow
+
+    // try and find a streamlink executable, and if one isn't found, ask user to specify
+    setupStreamlinkPath()
+
+    // set up notifications module
     notifManager.init(mainWindow)
+
+    // begin listening for IPC messages
     listen()
 }
 

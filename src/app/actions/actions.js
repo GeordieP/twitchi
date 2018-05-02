@@ -21,6 +21,7 @@ export default {
     // update the state with whatever is passed.
     setState: s => s,
     openURLInBrowser: url => ipc.send('open-url-in-browser', url),
+    getAllPrefs: () => ipc.send('prefs-get-all'),
 
     toggleStreamFavorite: name => state => {
         const newFavs = state.prefs['favorite-streams'].slice() || []
@@ -138,6 +139,9 @@ export default {
         // refresh open streams array
         actions.getOpenStreams()
     },
+
+    // open file chooser dialog for streamlink path
+    chooseStreamlinkExePath: () => ipc.send('streamlink-choose-exe-path'),
 
     // follow list pagination
     followListLoadNextPage: () => state => {
