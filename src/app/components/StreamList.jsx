@@ -56,7 +56,9 @@ export default ({ streams }) => (state, actions) => {
                             channelName={ stream.channel.display_name }
                             channelURL={ stream.channel.url }
                             preferredQuality={ state.prefs['preferred-stream-quality'] }
-                            openStream={ openStream }
+                            // must pass actions.openStream here; can't add quality arg to bound function object,
+                            // and it can't be applied as a separate arg due to hyperapp's action function signature.
+                            openStream={ actions.openStream }
                             closeModal={ actions.modal.hide }
                         />
                     )
