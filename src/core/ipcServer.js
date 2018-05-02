@@ -1,7 +1,7 @@
 'use strict'
 
 const electron = require('electron')
-const { shell } = electron
+const { shell, dialog } = electron
 const ipc = electron.ipcMain
 
 const twitch = require('./twitch')
@@ -10,6 +10,7 @@ const config = require('./config')
 const streamManager = require('./streamManager')
 const currentVersion = require('./version').version || '0.0.0'
 const notifManager = require('./notifManager')
+const streamlinkProcess = require('./streamlinkProcess')
 
 const Result = require('@geordiep/result')
 
@@ -332,7 +333,38 @@ module.exports.getMainWindow = function() {
     return MAIN_WINDOW
 }
 
+const setupStreamlinkPath = async function() {
+    try {
+        // initially look in expected locations for an executable
+        const validPath = await streamlinkProcess.checkForExpectedExes()
+        // got a valid path, set it in the module
+        streamlinkProcess.setStreamlinkPath(validPath)
+        resolve()
+    } catch(e) {
+        // no valid path in expected places, ask user for a path
+
+        // show an info box
+        dialog.showMessageBox(
+            'Could not locate Streamlink',
+            'Twitchi could not find your Streamlink install directory. You will be asked to provide a path after closing this message box.'
+        )
+
+        // TODO:
+        /*
+          - set up message box with proper buttons and other options
+          - on OK click, show file picker dialog
+          - take path result from file picker dialog and send to setStreamlinkPath()
+          - save path in config file 
+        */
+    }
+}
+
 module.exports.start = function(mainWindow) {
+    // before anything, we need to ensure we can use streamlink
+    // do this async
+    setupStreamlinkPath()
+        .catch(console.error)
+
     MAIN_WINDOW = mainWindow
     notifManager.init(mainWindow)
     listen()
