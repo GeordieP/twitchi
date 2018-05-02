@@ -255,8 +255,18 @@ export const listen = dispatch => {
 
             // refresh prefs object
             ipc.send('prefs-get-all')
+
+            dispatch.toaster.showToast({
+                title: 'Successfully changed Streamlink path ',
+                type: ToastTypes.SUCCESS
+            })
         } catch(e) {
-            handleErr('An error occurred when setting Streamlink executable path', e)
+            dispatch.toaster.showToast({
+                title: 'Streamlink path was not updated',
+                type: ToastTypes.WARNING
+            })
+
+            console.error(e)
         }
     })
 
