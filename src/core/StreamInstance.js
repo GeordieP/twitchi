@@ -1,12 +1,12 @@
 'use strict'
 
-const spawn = require('child_process').spawn
 const Result = require('@geordiep/result')
 
 const auth = require('./auth')
 const config = require('./config')
 const streamManager = require('./streamManager')
 const ipcServer = require('./ipcServer')
+const { launchStreamlink } = require('./streamlinkProcess')
 
 // reference to main window - currently gets set during StreamInstance construction
 // match 'error: No playable streams found on this URL: twitch.tv/INVALID_USERNAME_HERE'
@@ -22,11 +22,6 @@ const REGEX_STREAM_ENDED = /Stream ended/g
 // match ['1080', '60'] from '1080p60', for use in parsing real numbers
 // for resolution and fps from quality string
 const REGEX_NUMBERS_FROM_QUALITY_STR = /\d+p\d*/g
-
-// name of process to spawn - used to be livestreamer, now streamlink
-// TODO: allow changing this?
-// // if we stop using streamlink, need to update a lot of var names (mainly this file and ipcserver)
-const STREAMLINK_PROCESS_NAME = 'streamlink'
 
 // max number of log lines for a process to keep
 const MAX_LOG_LINES = 50
@@ -87,15 +82,12 @@ StreamInstance.prototype.open = function(quality) {
             // ask auth module for twitch auth token
             let token = await auth.getTokenExistingOrNew()
 
-            // spawn streamlink process, pass channel, quality, and twitch token
-            this.process = spawn(
-                STREAMLINK_PROCESS_NAME,
-                [
-                    this.channelURL,
-                    this.quality,
-                    '--twitch-oauth-token=' + token
-                ]
-            )
+            // spawn streamlink process using expected args
+            this.process = await launchStreamlink([
+                this.channelURL,
+                this.quality,
+                '--twitch-oauth-token=' + token
+            ])
 
             // update state now that the process has been started
             this.state = InstanceStates.OPEN

@@ -78,9 +78,8 @@ export const listen = dispatch => {
                 type: ToastTypes.SUCCESS
             })
 
-            ipc.send('prefs-get-all')
-
             dispatch.refreshFollowList()
+            ipc.send('prefs-get-all')
         } catch(e) {
             handleErr('An error occurred when logging in', e)
         }
@@ -95,9 +94,8 @@ export const listen = dispatch => {
                 type: ToastTypes.SUCCESS
             })
 
-            ipc.send('prefs-get-all')
-
             dispatch.setState({ streams: [] })
+            ipc.send('prefs-get-all')
         } catch(e) {
             handleErr('An error occurred when logging out', e)
         }
@@ -248,6 +246,27 @@ export const listen = dispatch => {
             })
         } catch(e) {
             handleErr('An error occurred when attempting to unfollow stream', e)
+        }
+    })
+
+    ipc.on('streamlink-choose-exe-path-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+
+            // refresh prefs object
+            ipc.send('prefs-get-all')
+
+            dispatch.toaster.showToast({
+                title: 'Successfully changed Streamlink path ',
+                type: ToastTypes.SUCCESS
+            })
+        } catch(e) {
+            dispatch.toaster.showToast({
+                title: 'Streamlink path was not updated',
+                type: ToastTypes.WARNING
+            })
+
+            console.error(e)
         }
     })
 

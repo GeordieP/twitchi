@@ -27,7 +27,7 @@ export default () => (state, actions) => {
     }
 
     return (
-        <main>
+        <main id='main-preferences' key='main-preferences' oncreate={ actions.getAllPrefs }>
             <NavBar />
 
             <section className='content'>
@@ -65,6 +65,14 @@ export default () => (state, actions) => {
                                         ))
                                     }
                                 </select>
+                            </li>
+
+                            <li>
+                                <h3>Streamlink Path</h3>
+                                <p>Path to Streamlink executable.</p>
+                                <p>Defaults to Streamlink in system PATH. Click the 'choose' button to customize.</p>
+                                <input type='text' disabled value={ state.prefs['streamlink-exe-path'] || '[ No path configured ]' }/>
+                                <button onclick={ actions.chooseStreamlinkExePath }>Choose a new path...</button>
                             </li>
                         </ul>
                     </div>
