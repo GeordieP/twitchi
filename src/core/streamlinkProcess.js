@@ -7,8 +7,8 @@ const config = require('./config')
 // *nix pasths
 const EXE_PATHS_NIX = [
     'streamlink',
-    '/usr/bin/streamlink',
     '/usr/local/bin/streamlink',
+    '/usr/bin/streamlink',
     '/bin/streamlink',
 ]
 
@@ -18,7 +18,7 @@ const EXE_PATHS_WIN = [
     'C:\\Program Files\\Streamlink\\bin\\streamlink.exe'
 ]
 
-module.exports.checkForExpectedExes = () => new Promise((resolve, reject) => {
+module.exports.checkForExpectedExes = () => new Promise(async (resolve, reject) => {
     let paths = (process.platform == 'win32') ? EXE_PATHS_WIN : EXE_PATHS_NIX
 
     let validPath
@@ -26,7 +26,7 @@ module.exports.checkForExpectedExes = () => new Promise((resolve, reject) => {
         try {
             // if commandExists resolves, the command exists at this path and we can use it.
             // it will resolve with the path it was given.
-            validPath = commandExists(paths[i])
+            validPath = await commandExists(paths[i])
 
             // resolve the valid path, break loop and return from function, so we don't reject later.
             resolve(validPath)
