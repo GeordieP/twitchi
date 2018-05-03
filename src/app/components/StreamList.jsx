@@ -5,7 +5,7 @@ import { QUALITY_OPTIONS } from 'util/constants'
 // components
 import Stream from 'components/Stream'
 
-const QualityModal = ({ channelName, channelURL, preferredQuality, openStream, closeModal }) => {
+const QualityModal = ({ displayName, channelName, channelURL, preferredQuality, openStream, closeModal }) => {
     let quality = preferredQuality
     const onchange = e => quality = e.target.value
 
@@ -31,7 +31,7 @@ const QualityModal = ({ channelName, channelURL, preferredQuality, openStream, c
                     ))
                 }
             </select>
-            <button onclick={ onOpen }>Watch { channelName }</button>
+            <button onclick={ onOpen }>Watch { displayName }</button>
         </div>
     )
 }
@@ -54,6 +54,7 @@ export default ({ streams }) => (state, actions) => {
                     content: (
                         <QualityModal
                             channelName={ stream.channel.display_name }
+                            channelName={ stream.channel.name }
                             channelURL={ stream.channel.url }
                             preferredQuality={ state.prefs['preferred-stream-quality'] }
                             // must pass actions.openStream here; can't add quality arg to bound function object,
