@@ -1,8 +1,8 @@
 const spawn = require('child_process').spawn
-const commandExists = require('command-exists')
 const commandExistsSync = require('command-exists').sync
 const { dialog } = require('electron')
 const config = require('./config')
+const fs = require('fs-extra')
 
 // *nix pasths
 const EXE_PATHS_NIX = [
@@ -18,28 +18,25 @@ const EXE_PATHS_WIN = [
     'C:\\Program Files\\Streamlink\\bin\\streamlink.exe'
 ]
 
+const REGEX_IS_FILE_PATH = /[/\\]/
+const checkSync = str =>
+    REGEX_IS_FILE_PATH.test(str)
+        ? fs.pathExistsSync(str)
+        : commandExistsSync(str)
+
 module.exports.checkForExpectedExes = () => new Promise(async (resolve, reject) => {
-    let paths = (process.platform == 'win32') ? EXE_PATHS_WIN : EXE_PATHS_NIX
+    let paths = (process.platform === 'win32') ? EXE_PATHS_WIN : EXE_PATHS_NIX
 
-    let validPath
     for (let i = 0; i < paths.length; i++) {
-        try {
-            // if commandExists resolves, the command exists at this path and we can use it.
-            // it will resolve with the path it was given.
-            validPath = await commandExists(paths[i])
+        // skip path on check returning false
+        if (!checkSync(paths[i])) continue
 
-            // resolve the valid path, break loop and return from function, so we don't reject later.
-            resolve(validPath)
-            return
-        } catch(e) {
-            // error; path was not valid, continue on
-            continue
-        }
+        // success; resolve this path and return fn, skipping reject call
+        resolve(paths[i])
+        return
     }
 
-    if (validPath == null) {
-        reject(new Error('Could not find a valid streamlink path.'))
-    }
+    reject(new Error('Could not find a valid Streamlink path.'))
 })
 
 module.exports.checkAndSetExePath = path => {
@@ -47,7 +44,10 @@ module.exports.checkAndSetExePath = path => {
         throw new Error('Could not set streamlink path: Path was empty or invalid.')
     }
 
-    commandExistsSync(path)
+    if (!checkSync(path)) {
+        throw 'Could not set streamlink path: File or command does not exist.'
+    }
+
     module.exports.setExePath(path)
 }
 
