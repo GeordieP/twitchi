@@ -1,5 +1,5 @@
 import { h } from 'hyperapp'
-import { Link } from '@hyperapp/router'
+import { Link } from 'hyperapp-hash-router'
 
 export default (props, children) => (
     <nav>

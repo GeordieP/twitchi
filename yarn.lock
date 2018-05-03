@@ -130,10 +130,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@geordiep/result/-/result-1.0.0.tgz#511ef50c9ed00136cfe726fcf2577a5b6a16f4ab"
 
-"@hyperapp/router@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@hyperapp/router/-/router-0.7.0.tgz#99fde37696d07949514c3519db1fe6785a053d2d"
-
 "@hyperapp/transitions@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@hyperapp/transitions/-/transitions-1.0.2.tgz#dc3093ce71cecca118c1248ca82e75065bfa5e4c"
@@ -4414,6 +4410,10 @@ http-signature@~1.2.0:
 https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
+
+hyperapp-hash-router@leavehouse/hyperapp-hash-router:
+  version "0.1.0"
+  resolved "https://codeload.github.com/leavehouse/hyperapp-hash-router/tar.gz/7f988069c9ccb8e29c7c0e2f23911587446bba60"
 
 hyperapp@^1.2.0:
   version "1.2.5"

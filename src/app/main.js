@@ -1,5 +1,5 @@
 import { app, h } from 'hyperapp'
-import { Route, Switch, location } from '@hyperapp/router'
+import { Route, Switch, location } from 'hyperapp-hash-router'
 
 import defaultState from 'state/state'
 import actions from 'actions/actions'

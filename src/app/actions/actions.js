@@ -1,4 +1,4 @@
-import { location } from '@hyperapp/router'
+import { location } from 'hyperapp-hash-router'
 import { actionsSlice as contextMenu } from 'components/global/ContextMenu'
 import { actionsSlice as toaster } from 'components/global/Toaster'
 import { actionsSlice as modal } from 'components/global/Modal'
