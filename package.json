@@ -43,9 +43,10 @@
         },
         "win": {
             "target": [
-                "nsis",
+                "msi",
                 "zip"
-            ]
+            ],
+            "icon": "resources/twitchi.ico"
         },
         "linux": {
             "target": [

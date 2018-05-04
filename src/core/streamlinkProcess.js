@@ -4,18 +4,18 @@ const { dialog } = require('electron')
 const config = require('./config')
 const fs = require('fs-extra')
 
-// *nix pasths
-const EXE_PATHS_NIX = [
+// paths array based on platform (windows or *nix)
+const PLATFORM_PATHS = (process.platform === 'win32') ? [
+    // windows paths
+    'streamlink',
+    'C:\\Program Files (x86)\\Streamlink\\bin\\streamlink.exe',
+    'C:\\Program Files\\Streamlink\\bin\\streamlink.exe'
+] : [
+    // nix paths
     'streamlink',
     '/usr/local/bin/streamlink',
     '/usr/bin/streamlink',
     '/bin/streamlink',
-]
-
-// windows paths
-const EXE_PATHS_WIN = [
-    'C:\\Program Files (x86)\\Streamlink\\bin\\streamlink.exe',
-    'C:\\Program Files\\Streamlink\\bin\\streamlink.exe'
 ]
 
 const REGEX_IS_FILE_PATH = /[/\\]/
@@ -25,18 +25,27 @@ const checkSync = str =>
         : commandExistsSync(str)
 
 module.exports.checkForExpectedExes = () => new Promise(async (resolve, reject) => {
-    let paths = (process.platform === 'win32') ? EXE_PATHS_WIN : EXE_PATHS_NIX
-
-    for (let i = 0; i < paths.length; i++) {
+    for (let i = 0; i < PLATFORM_PATHS.length; i++) {
         // skip path on check returning false
-        if (!checkSync(paths[i])) continue
+        if (!checkSync(PLATFORM_PATHS[i])) continue
 
         // success; resolve this path and return fn, skipping reject call
-        resolve(paths[i])
+        resolve(PLATFORM_PATHS[i])
         return
     }
 
     reject(new Error('Could not find a valid Streamlink path.'))
+})
+
+module.exports.checkOptsForExePath = () => new Promise((resolve, reject) => {
+    const optsPath = config.get('streamlink-exe-path')
+
+    if (!optsPath) {
+        reject('No path found in options file.')
+        return
+    }
+
+    resolve(optsPath)
 })
 
 module.exports.checkAndSetExePath = path => {
@@ -93,7 +102,8 @@ module.exports.askUserForPath = async (onlyFileChooser = true) => new Promise((r
             defaultId: 0,
             cancelId: 1,
             title: 'Could not locate Streamlink',
-            message: 'Twitchi could not find your Streamlink install directory. Click OK to choose a path to your Streamlink executable.'
+            message: 'Twitchi could not find your Streamlink install directory. ' +
+                     'Click OK to choose a path to your Streamlink executable.'
         },
 
         (btnIndex) => {

@@ -349,22 +349,31 @@ module.exports.getMainWindow = function() {
 }
 
 const setupStreamlinkPath = async function() {
-    try {
-        // initially look in expected locations for an executable
-        const validPath = await streamlinkProcess.checkForExpectedExes()
-        // got a valid path, set it in the module
-        streamlinkProcess.setExePath(validPath)
-    } catch(e) {
-        // no valid path in expected places, ask user for a path
-        const userPath = await streamlinkProcess.askUserForPath(false)
-              .catch(console.error)
+    // first check options file
 
-        try {
-            streamlinkProcess.checkAndSetExePath(userPath)
-        } catch(e) {
-            console.error(e)
-        }
-    }
+    try {
+        await streamlinkProcess.checkOptsForExePath()
+        // call above resolved; settings file has a path, ignore rest of logic
+        return
+    } catch(e) { console.error(e) }
+
+    // no path found in options file, check default locations
+
+    try {
+        const path = await streamlinkProcess.checkForExpectedExes()
+
+        // valid path, update module variable & preferences file
+        streamlinkProcess.setExePath(path)
+        return
+    } catch(e) { console.error(e) }
+
+    // no valid path in expected places or config file, ask user for a path
+
+    try {
+        const path = await streamlinkProcess.askUserForPath(false)
+        // got a path, check it and update module variable & preferences file
+        streamlinkProcess.checkAndSetExePath(path)
+    } catch(e) { console.error(e) }
 }
 
 module.exports.start = function(mainWindow) {
@@ -373,6 +382,8 @@ module.exports.start = function(mainWindow) {
 
     // try and find a streamlink executable, and if one isn't found, ask user to specify
     setupStreamlinkPath()
+        .then(() => {})
+        .catch(console.error)
 
     // set up notifications module
     notifManager.init(mainWindow)
