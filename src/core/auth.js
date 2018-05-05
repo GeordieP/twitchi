@@ -88,6 +88,9 @@ module.exports.saveToken = token => new Promise((resolve, reject) => {
     }
 })
 
+// only get cached token
+module.exports.getTokenExisting = () => config.get('user-access-token')
+
 // get token from configuration file, and if none exist,
 // open login window to get new token - return new token if successful.
 module.exports.getTokenExistingOrNew = () => new Promise((resolve, reject) => {

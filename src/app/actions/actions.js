@@ -146,5 +146,7 @@ export default {
     // follow list pagination
     followListLoadNextPage: () => state => {
         ipc.send('twitch-get-follow-list', state.followListCurrentPageNum + 1)
-    }
+    },
+
+    getCurrentUser: () => ipc.send('get-current-user'),
 }

@@ -80,6 +80,7 @@ export const listen = dispatch => {
 
             dispatch.refreshFollowList()
             ipc.send('prefs-get-all')
+            ipc.send('get-current-user')
         } catch(e) {
             handleErr('An error occurred when logging in', e)
         }
@@ -96,6 +97,7 @@ export const listen = dispatch => {
 
             dispatch.setState({ streams: [] })
             ipc.send('prefs-get-all')
+            ipc.send('get-current-user')
         } catch(e) {
             handleErr('An error occurred when logging out', e)
         }
@@ -266,6 +268,21 @@ export const listen = dispatch => {
                 type: ToastTypes.WARNING
             })
 
+            console.error(e)
+        }
+    })
+
+    ipc.on('get-current-user-res', (evt, res) => {
+        try {
+            const currentUser = parseResponse(res).expect()
+            dispatch.setState({ currentUser })
+        } catch(e) {
+            // NOTE: don't display error in a toast for this
+            // often the error messages coming back are simply because we're not logged in,
+            // and often when we're requesting the user object, the user doesn't have being
+            // logged in/out on their mind (eg: simply loading the preferences page).
+            // if there's an error here, print it silently
+            dispatch.setState({ currentUser: {} })
             console.error(e)
         }
     })

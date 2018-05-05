@@ -7,13 +7,14 @@ const Result = require('@geordiep/result')
 const ipcServer = require('./ipcServer')
 const config = require('./config')
 const notifManager = require('./notifManager')
+const { authedJSONRequest } = require('./util')
+const userModule = require('./userModule')
 
 // import API info from separate file
 // see the import in auth.js for more info
 const { clientID } = require('./twitchApiInfo')
 
 // JSON Request URLs
-const getUserURL = 'https://api.twitch.tv/kraken/user'
 const createUnfollowStreamURL = (myUserID, unfollowChanID) => (
     `https://api.twitch.tv/kraken/users/${myUserID}/follows/channels/${unfollowChanID}`
 )
@@ -39,35 +40,6 @@ let LIVE_CHANNEL_NAMES_CACHE = []
 // keep track of whether or not this is the first refresh.
 // if it is, we don't show a 'live streams' toast notification.
 let isFirstRefresh = true
-
-// call request() with twitch auth token in options.
-// Returns a promise. Resolves with response data, rejects with error.
-const authedJSONRequest = (uri, accessToken) => request({
-    uri,
-    headers: {
-        'Accept': 'application/vnd.twitchtv.v5+json',
-        'Client-ID': clientID,
-        'Authorization': 'OAuth ' + accessToken
-    },
-    json: true
-})
-
-module.exports.updateStoredUserInfo = () => new Promise(async function(resolve, reject) {
-    let token = await auth.getTokenExistingOrNew()
-    let user = await authedJSONRequest(getUserURL, token)
-
-    try {
-        config.set('user-id', user._id)
-        config.set('user-name', user.display_name)
-    } catch(e) {
-        reject(e)
-    }
-})
-
-module.exports.clearStoredUserInfo = () => {
-    config.set('user-id', '')
-    config.set('user-name', '')
-}
 
 module.exports.getFollowList = (pageIndex = 0) => new Promise(async function(resolve, reject) {
     ipcServer.ipcSend('event-twitch-follow-list-refresh-begin')
@@ -204,13 +176,13 @@ module.exports.restartInterval = () => {
 
 module.exports.unfollowChannel = unfollowChanID => new Promise(async (resolve, reject) => {
     try {
-        const userID = config.get('user-id')
+        let token = await auth.getTokenExistingOrNew()
+        const userID = (await userModule.getUserData(token))._id
 
         if (userID == null || userID.length === 0) {
             throw 'Could not unfollow channel: Logged in user ID was missing or empty'
         }
 
-        let token = await auth.getTokenExistingOrNew()
         const url = createUnfollowStreamURL(userID, unfollowChanID)
 
         await request.delete({

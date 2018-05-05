@@ -11,6 +11,7 @@ const streamManager = require('./streamManager')
 const currentVersion = require('./version').version || '0.0.0'
 const notifManager = require('./notifManager')
 const streamlinkProcess = require('./streamlinkProcess')
+const userModule = require('./userModule')
 
 const Result = require('@geordiep/result')
 
@@ -33,7 +34,7 @@ function listen() {
 
         try {
             const token = await auth.getTokenExistingOrNew()
-            await twitch.updateStoredUserInfo()
+            userModule.updateCachedUserData(token)
             result = Result.newOk(token)
         } catch(e) {
             console.error(e)
@@ -48,7 +49,7 @@ function listen() {
 
         try {
             const token = await auth.refreshToken()
-            await twitch.updateStoredUserInfo()
+            userModule.updateCachedUserData(token)
             result = Result.newOk()
         } catch(e) {
             console.error(e)
@@ -63,7 +64,7 @@ function listen() {
 
         try {
             await auth.revokeToken()
-            twitch.clearStoredUserInfo()
+            userModule.clearCachedUserData()
             result = Result.newOk()
         } catch(e) {
             console.error(e)
@@ -339,6 +340,30 @@ function listen() {
 
         ipcSend('open-url-in-browser-res', result)
     })
+
+    ipc.on('get-current-user', async function(evt) {
+        let result
+
+        try {
+            // only get existing token, don't refresh if it doesnt exist;
+            // when this ipc action gets called, it may be an inapropriate time to show
+            // a login window (as getTokenExistingOrNew would do). If we're not already
+            // signed in, send error.
+            const token = auth.getTokenExisting()
+            if (token == null) {
+                throw new Error('Could not get current user: Not signed in (no token)')
+            }
+
+            // we're signed in, get user object and hand it off to the IPC result object
+            const user = await userModule.getUserData(token)
+            result = Result.newOk(user)
+        } catch(e) {
+            console.error(e)
+            result = Result.newError(e.toString(), 'ipcServer @ get-current-user')
+        }
+
+        ipcSend('get-current-user-res', result)
+    })
 }
 
 // allow other modules to send ipc messages
@@ -384,6 +409,14 @@ module.exports.start = function(mainWindow) {
     setupStreamlinkPath()
         .then(() => {})
         .catch(console.error)
+
+    // get user info if we have a token already saved. if not, don't bother the
+    // user with a login window this early;
+    // the user info will be updated automatically when they get asked to sign in later.
+    const token = auth.getTokenExisting()
+    if (token != null) {
+        userModule.updateCachedUserData(token)
+    }
 
     // set up notifications module
     notifManager.init(mainWindow)

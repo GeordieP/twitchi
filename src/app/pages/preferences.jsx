@@ -26,8 +26,14 @@ export default () => (state, actions) => {
         actions.setFollowListAutoRefreshInterval(minutes)
     }
 
+    // certain things need to be refreshed every time we load the preferences page
+    const onMount = () => {
+        actions.getAllPrefs()
+        actions.getCurrentUser()
+    }
+
     return (
-        <main id='main-preferences' key='main-preferences' oncreate={ actions.getAllPrefs }>
+        <main id='main-preferences' key='main-preferences' oncreate={ onMount }>
             <NavBar />
 
             <section className='content'>
@@ -106,7 +112,7 @@ export default () => (state, actions) => {
                         </ul>
                     </div>
 
-                    <h2>Account <span style={{ color: '#555' }}>| { state.prefs['user-name'] || 'not signed in' }</span></h2>
+                    <h2>Account <span style={{ color: '#555' }}>| { state.currentUser.display_name || 'not signed in' }</span></h2>
                     <div className='pageSection'>
                         <ul>
                             <li>

@@ -9,7 +9,6 @@ export default {
     contextMenu,
     toaster,
     modal,
-
     // misc slices
     logs: {
         logLines: {},
@@ -17,6 +16,7 @@ export default {
 
     // misc //
     appVersion: 'x.x.x',
+    currentUser: {},
     prefs: {},
     streams: [],
     openStreams: [],
