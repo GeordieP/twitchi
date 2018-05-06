@@ -12,3 +12,10 @@ module.exports.authedJSONRequest = (uri, token) => request({
     },
     json: true
 })
+
+module.exports.InstanceStates = Object.freeze({
+    IDLE: 0,
+    OPEN: 1,
+    DELETEQUEUED: 2
+})
+

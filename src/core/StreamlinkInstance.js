@@ -7,8 +7,9 @@ const config = require('./config')
 const streamManager = require('./streamManager')
 const ipcServer = require('./ipcServer')
 const { launchStreamlink } = require('./streamlinkProcess')
+const { InstanceStates } = require('./util')
 
-// reference to main window - currently gets set during StreamInstance construction
+// reference to main window - currently gets set during StreamlinkInstance construction
 // match 'error: No playable streams found on this URL: twitch.tv/INVALID_USERNAME_HERE'
 const REGEX_NO_STREAM_FOUND = /No playable/g
 // match 'error: Unable to find channel: [INVALID_USERNAME_HERE]
@@ -26,20 +27,14 @@ const REGEX_NUMBERS_FROM_QUALITY_STR = /\d+p\d*/g
 // max number of log lines for a process to keep
 const MAX_LOG_LINES = 50
 
-const InstanceStates = Object.freeze({
-    IDLE: 0,
-    OPEN: 1,
-    DELETEQUEUED: 2
-})
-
-function StreamInstance(name, url) {
+function StreamlinkInstance(name, url) {
     this.state = InstanceStates.IDLE
     this.channelName = name
     this.channelURL = url
     this.logLines = []
 }
 
-StreamInstance.prototype.logLine = function(line) {
+StreamlinkInstance.prototype.logLine = function(line) {
     this.logLines.push(line)
 
     // over lines limit, trunc first line
@@ -57,7 +52,7 @@ StreamInstance.prototype.logLine = function(line) {
     }
 }
 
-StreamInstance.prototype.open = function(quality) {
+StreamlinkInstance.prototype.open = function(quality) {
     return new Promise(async (resolve, reject) => {
         // ignore request if stream is already open
         // TODO for now we resolve; we don't tell the
@@ -75,7 +70,7 @@ StreamInstance.prototype.open = function(quality) {
 
             // attempt to launch stream with preferred quality.
             // if no quality is passed, use what's in config.
-            // calls to StreamInstance.open from the onProcMsg invalid quality handler
+            // calls to StreamlinkInstance.open from the onProcMsg invalid quality handler
             // should always pass a quality and it should be preferred.
             this.quality = quality || config.get('options')['preferredStreamQuality']
 
@@ -103,12 +98,11 @@ StreamInstance.prototype.open = function(quality) {
             resolve()
         } catch(e) {
             reject(e)
-            return
         }
     })
 }
 
-StreamInstance.prototype.close = function() {
+StreamlinkInstance.prototype.close = function() {
     return new Promise((resolve, reject) => {
         // if we're in any state but open, resolve;
         // we don't need to do any extra work.
@@ -131,26 +125,23 @@ StreamInstance.prototype.close = function() {
     })
 }
 
-StreamInstance.prototype.getLogs = function() {
+StreamlinkInstance.prototype.getLogs = function() {
     return this.logLines
 }
 
-StreamInstance.prototype.getState = function() {
+StreamlinkInstance.prototype.getState = function() {
     return this.state
 }
 
-StreamInstance.prototype.setStateIdle = function() {
+StreamlinkInstance.prototype.setStateIdle = function() {
     this.state = InstanceStates.IDLE
 }
 
-StreamInstance.prototype.setStateDeleteQueued = function() {
+StreamlinkInstance.prototype.setStateDeleteQueued = function() {
     this.state = InstanceStates.DELETEQUEUED
 }
 
-module.exports = {
-    StreamInstance,
-    InstanceStates
-}
+module.exports = StreamlinkInstance
 
 /*-----------------------
 * PROCESS STDOUT HANDLER
@@ -182,7 +173,7 @@ async function onProcMsg(msg) {
             'streamlink-event',
             Result.newError(
                 `${msg}`,
-                '@ StreamInstance stdout'
+                '@ StreamlinkInstance stdout'
             )
         )
 
@@ -197,7 +188,7 @@ async function onProcMsg(msg) {
             'streamlink-event',
             Result.newError(
                 `${msg}`,
-                '@ StreamInstance stdout'
+                '@ StreamlinkInstance stdout'
             )
         )
 

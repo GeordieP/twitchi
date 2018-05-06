@@ -1,6 +1,8 @@
 'use strict'
 
-const { StreamInstance, InstanceStates } = require('./StreamInstance')
+const StreamlinkInstance = require('./StreamlinkInstance')
+const StreamWindowInstance = require('./StreamWindowInstance')
+const { InstanceStates } = require('./util')
 
 // keep track of all stream instances
 const activeInstances = {}
@@ -21,7 +23,8 @@ module.exports.createStream = (name, url) => new Promise((resolve, reject) => {
             return
         }
 
-        activeInstances[name] = new StreamInstance(name, url)
+        // activeInstances[name] = new StreamlinkInstance(name, url)
+        activeInstances[name] = new StreamWindowInstance(name, url)
         resolve()
     } catch(e) {
         reject(e)
@@ -61,9 +64,8 @@ module.exports.openStream = (name, quality) => new Promise(async (resolve, rejec
 
 module.exports.closeStream = (name, delay = INSTANCE_DELETE_TIMEOUT) => new Promise(async (resolve, reject) => {
     try {
-
         // fail silently if no instance exists;
-        // this function is called many times by StreamInstance event handlers, sometimes
+        // this function is called many times by StreamlinkInstance event handlers, sometimes
         // after the instance has already been removed and marked for GC
         if (activeInstances[name] == null) {
             resolve()
@@ -208,3 +210,4 @@ module.exports.getOpenStreams = () => new Promise(resolve => {
 
     resolve(names)
 })
+
