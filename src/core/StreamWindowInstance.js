@@ -4,13 +4,14 @@ const { BrowserWindow } = require('electron')
 
 const ipcServer = require('./ipcServer')
 const streamManager = require('./streamManager')
-const { InstanceStates } = require('./util')
+const { InstanceStates, StreamViewerTypes } = require('./util')
 
 
 // max number of log lines for a process to keep
 const MAX_LOG_LINES = 50
 
 function StreamWindowInstance(name) {
+    this.type = StreamViewerTypes.ELECTRON
     this.state = InstanceStates.IDLE
     this.channelName = name
     this.channelURL = `https://player.twitch.tv/?volume=25!muted&channel=${this.channelName}`
@@ -111,6 +112,10 @@ StreamWindowInstance.prototype.getLogs = function() {
 
 StreamWindowInstance.prototype.getState = function() {
     return this.state
+}
+
+StreamWindowInstance.prototype.getType = function() {
+    return this.type
 }
 
 StreamWindowInstance.prototype.setStateIdle = function() {

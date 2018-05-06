@@ -5,14 +5,13 @@ import { QUALITY_OPTIONS } from 'util/constants'
 // components
 import Stream from 'components/Stream'
 
-const QualityModal = ({ displayName, channelName, channelURL, preferredQuality, openStream, closeModal }) => {
+const QualityModal = ({ displayName, channelName, preferredQuality, openStream, closeModal }) => {
     let quality = preferredQuality
     const onchange = e => quality = e.target.value
 
     const onOpen = () => {
         openStream({
             channelName,
-            channelURL,
             quality
         })
         closeModal()
@@ -38,7 +37,7 @@ const QualityModal = ({ displayName, channelName, channelURL, preferredQuality, 
 
 export default ({ streams }) => (state, actions) => {
     const createStreamrClickMenu = (stream, isFav, isOpen) => {
-        const openStream = actions.openStream.bind(null, { channelName: stream.channel.name, channelURL: stream.channel.url })
+        const openStream = actions.openStream.bind(null, { channelName: stream.channel.name })
         const closeStream = actions.closeStream.bind(null, stream.channel.name)
 
         return [
@@ -101,7 +100,7 @@ export default ({ streams }) => (state, actions) => {
                     const isFav = state.prefs['favorite-streams'].includes(stream.channel.name)
                     const isOpen = state.openStreams.includes(stream.channel.name)
 
-                    const onClick = actions.openStream.bind(null, { channelName: stream.channel.name, channelURL: stream.channel.url })
+                    const onClick = actions.openStream.bind(null, { channelName: stream.channel.name })
 
                     const onRClick = event => {
                         actions.contextMenu.show({

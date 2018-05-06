@@ -7,7 +7,7 @@ const config = require('./config')
 const streamManager = require('./streamManager')
 const ipcServer = require('./ipcServer')
 const { launchStreamlink } = require('./streamlinkProcess')
-const { InstanceStates } = require('./util')
+const { InstanceStates, StreamViewerTypes } = require('./util')
 
 // reference to main window - currently gets set during StreamlinkInstance construction
 // match 'error: No playable streams found on this URL: twitch.tv/INVALID_USERNAME_HERE'
@@ -27,10 +27,11 @@ const REGEX_NUMBERS_FROM_QUALITY_STR = /\d+p\d*/g
 // max number of log lines for a process to keep
 const MAX_LOG_LINES = 50
 
-function StreamlinkInstance(name, url) {
+function StreamlinkInstance(name) {
+    this.type = StreamViewerTypes.STREAMLINK
     this.state = InstanceStates.IDLE
     this.channelName = name
-    this.channelURL = url
+    this.channelURL = `twitch.tv/${this.channelName}`
     this.logLines = []
 }
 
@@ -131,6 +132,10 @@ StreamlinkInstance.prototype.getLogs = function() {
 
 StreamlinkInstance.prototype.getState = function() {
     return this.state
+}
+
+StreamlinkInstance.prototype.getType = function() {
+    return this.type
 }
 
 StreamlinkInstance.prototype.setStateIdle = function() {

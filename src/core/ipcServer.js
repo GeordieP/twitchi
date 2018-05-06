@@ -163,7 +163,7 @@ function listen() {
     })
 
     /* STREAMLINK */
-    ipc.on('streamlink-open-url', async function(evt, { channelName, channelURL, quality }) {
+    ipc.on('streamlink-open-url', async function(evt, { channelName, quality }) {
         let result
         
         try {
@@ -171,12 +171,8 @@ function listen() {
                 throw new Error('Could not open stream: Channel name was missing or empty.')
             }
 
-            if (channelURL == null || channelURL.length === 0) {
-                throw new Error('Could not open stream: Channel URL was missing or empty.')
-            }
-            
             // create stream instance
-            await streamManager.createStream(channelName, channelURL)
+            await streamManager.createStream(channelName)
             // attempt to open instance with desired quality
             await streamManager.openStream(channelName, quality)
             result = Result.newOk(channelName)

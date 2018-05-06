@@ -129,10 +129,9 @@ export default {
         ipc.send('streamlink-get-open-streams', username)
     },
 
-    openStream: ({ channelName, channelURL, quality }) => (state, actions) => {
+    openStream: ({ channelName, quality }) => (state, actions) => {
         ipc.send('streamlink-open-url', {
             channelName,
-            channelURL,
             quality: quality || state.prefs['preferred-stream-quality']
         })
 

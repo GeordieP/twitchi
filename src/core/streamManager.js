@@ -2,7 +2,8 @@
 
 const StreamlinkInstance = require('./StreamlinkInstance')
 const StreamWindowInstance = require('./StreamWindowInstance')
-const { InstanceStates } = require('./util')
+const { InstanceStates, StreamViewerTypes } = require('./util')
+const config = require('./config')
 
 // keep track of all stream instances
 const activeInstances = {}
@@ -15,7 +16,7 @@ const INSTANCE_DELETE_TIMEOUT_MINUTES = 5
 const INSTANCE_DELETE_TIMEOUT = 1000 * 60 * INSTANCE_DELETE_TIMEOUT_MINUTES
 
 // create stream instance
-module.exports.createStream = (name, url) => new Promise((resolve, reject) => {
+module.exports.createStream = name => new Promise((resolve, reject) => {
     try {
         // stream is already open, do nothing
         if (activeInstances[name] != null) {
@@ -23,8 +24,18 @@ module.exports.createStream = (name, url) => new Promise((resolve, reject) => {
             return
         }
 
-        // activeInstances[name] = new StreamlinkInstance(name, url)
-        activeInstances[name] = new StreamWindowInstance(name, url)
+        // check stream viewer preference, create appropriate instance type
+        switch(config.get('stream-viewer')) {
+            case StreamViewerTypes.STREAMLINK:
+                activeInstances[name] = new StreamlinkInstance(name)
+                break
+            case StreamViewerTypes.ELECTRON:
+                activeInstances[name] = new StreamWindowInstance(name)
+                break
+            default:
+                throw new Error('Options stream-viewer value was not recognized, aborting stream instance creation.')
+        }
+
         resolve()
     } catch(e) {
         reject(e)
@@ -37,7 +48,7 @@ module.exports.launchStream = (name, quality) => new Promise(async (resolve, rej
         // create stream if it's not open yet
         if (activeInstances[name] == null) {
             // create the instance and store it in activeInstances
-            await module.exports.createStream()
+            await module.exports.createStream(name)
         }
 
         await activeInstances[name].open(quality)
@@ -52,6 +63,21 @@ module.exports.openStream = (name, quality) => new Promise(async (resolve, rejec
     try {
         if (activeInstances[name] == null) {
             throw new Error('Could not open stream '+name+': No instance exists. Make sure to call createStream first.')
+        }
+
+        // stream viewer preference changed since this instance was last active, we need
+        // to create a new instance of the correct type before calling open.
+        if (activeInstances[name].getType() !== config.get('stream-viewer')) {
+            // delete current instance with 0 delay
+            await module.exports.deleteAfter(name, 0)
+
+            // create the new instance
+            await module.exports.createStream(name)
+
+            // make sure we still have an instance to work on
+            if (activeInstances[name] == null) {
+                throw new Error('New instance for channel'+name+' was not created.')
+            }
         }
 
         await activeInstances[name].open(quality)

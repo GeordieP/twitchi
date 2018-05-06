@@ -19,3 +19,7 @@ module.exports.InstanceStates = Object.freeze({
     DELETEQUEUED: 2
 })
 
+module.exports.StreamViewerTypes = Object.freeze({
+    STREAMLINK: 0,
+    ELECTRON: 1
+})
