@@ -3,6 +3,7 @@ const commandExistsSync = require('command-exists').sync
 const { dialog } = require('electron')
 const config = require('./config')
 const fs = require('fs-extra')
+const { StreamViewerTypes } = require('./util')
 
 // paths array based on platform (windows or *nix)
 const PLATFORM_PATHS = (process.platform === 'win32') ? [
@@ -98,20 +99,32 @@ module.exports.askUserForPath = async (onlyFileChooser = true) => new Promise((r
     dialog.showMessageBox(
         {
             type: 'info',
-            buttons: ['OK', 'Cancel'],
+            buttons: ['OK', 'Use Twitch Player', 'Cancel'],
             defaultId: 0,
             cancelId: 1,
             title: 'Could not locate Streamlink',
             message: 'Twitchi could not find your Streamlink install directory. ' +
-                     'Click OK to choose a path to your Streamlink executable.'
+                     'Click "OK" to choose a path to your Streamlink executable.\n\n' +
+                     'If you would rather use the default Twitch player inside a Twitchi pop-out window, ' +
+                     'click "Use Twitch Player".\n\n' +
+                     'This option can be changed layer in the preferences page.'
         },
 
         (btnIndex) => {
-            // ok button
-            if (btnIndex === 0) {
-                showFileChooser()
-            } else {
-                reject('File picker message box was cancelled.')
+            switch(btnIndex) {
+                // OK
+                case 0:
+                    showFileChooser()
+                    break
+                // Use Twitch Player
+                case 1:
+                    config.set('stream-viewer', StreamViewerTypes.ELECTRON)
+                    resolve()
+                    return
+                // Cancel/Something went wrong
+                default:
+                    reject('File picker message box was cancelled.')
+
             }
         }
     )
