@@ -47,6 +47,11 @@ export default ({ streams }) => (state, actions) => {
             },
 
             {
+                label: 'Open Chat',
+                handler: actions.openChat.bind(null, stream.channel.name)
+            },
+
+            {
                 label: 'Watch stream with quality...',
                 handler: actions.modal.show.bind(null, {
                     header: 'Choose Quality',

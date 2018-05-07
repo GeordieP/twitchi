@@ -14,7 +14,8 @@ const defaults = {
     'live-notification-enabled': true,
     'favorite-streams': [],
     'streamlink-exe-path': '',
-    'stream-viewer': StreamViewerTypes.ELECTRON
+    'stream-viewer': StreamViewerTypes.ELECTRON,
+    'open-chat-with-stream': false,
 }
 
 const config = new electronStore({
