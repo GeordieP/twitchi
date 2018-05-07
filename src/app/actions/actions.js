@@ -110,6 +110,15 @@ export default {
         value: quality
     }),
 
+    // value accepted by this function should be a number; the value of which should be
+    // an option in the STREAM_VIEWER_OPTIONS enum (app/util/constants.js).
+    // these values should exactly match the values in the core enum,
+    // located at core/util.js.
+    updateStreamViewer: streamViewerEnumValue => ipc.send('prefs-set-one', {
+        key: 'stream-viewer',
+        value: streamViewerEnumValue
+    }),
+
     // notifications
     disableLiveNotif: () => ipc.send('prefs-set-one', {
         key: 'live-notification-enabled',
@@ -129,10 +138,9 @@ export default {
         ipc.send('streamlink-get-open-streams', username)
     },
 
-    openStream: ({ channelName, channelURL, quality }) => (state, actions) => {
+    openStream: ({ channelName, quality }) => (state, actions) => {
         ipc.send('streamlink-open-url', {
             channelName,
-            channelURL,
             quality: quality || state.prefs['preferred-stream-quality']
         })
 

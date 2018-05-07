@@ -2,19 +2,19 @@
 
 const electronStore = require('electron-store')
 const currentVersion = require('./version').version
+const { StreamViewerTypes } = require('./util')
 
 // config defaults
 // these are used if the expected config file is empty or does not exist
 const defaults = {
     'user-access-token': '',
-    'user-id': '',
-    'user-name': '',
     'preferred-stream-quality': 'best',
     'auto-refresh-follow-list-enabled': true,
     'auto-refresh-follow-list-intvl-minutes': 5,
     'live-notification-enabled': true,
     'favorite-streams': [],
     'streamlink-exe-path': '',
+    'stream-viewer': StreamViewerTypes.ELECTRON
 }
 
 const config = new electronStore({

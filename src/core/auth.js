@@ -59,8 +59,8 @@ const spawnLoginWindow = (onRedirect, onClosed, onCrashed) => new Promise((resol
         authWindow.loadURL(authURL)
 
         // events
+        authWindow.on('closed', onClosed)
         authWindow.webContents.on('did-get-redirect-request', onRedirect)
-        authWindow.webContents.on('closed', onClosed)
         authWindow.webContents.on('crashed', onCrashed)
 
         resolve(authWindow)

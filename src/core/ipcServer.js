@@ -4,14 +4,15 @@ const electron = require('electron')
 const { shell } = electron
 const ipc = electron.ipcMain
 
+const config = require('./config')
 const twitch = require('./twitch')
 const auth = require('./auth')
-const config = require('./config')
 const streamManager = require('./streamManager')
 const currentVersion = require('./version').version || '0.0.0'
 const notifManager = require('./notifManager')
 const streamlinkProcess = require('./streamlinkProcess')
 const userModule = require('./userModule')
+const { StreamViewerTypes } = require('./util')
 
 const Result = require('@geordiep/result')
 
@@ -163,7 +164,7 @@ function listen() {
     })
 
     /* STREAMLINK */
-    ipc.on('streamlink-open-url', async function(evt, { channelName, channelURL, quality }) {
+    ipc.on('streamlink-open-url', async function(evt, { channelName, quality }) {
         let result
         
         try {
@@ -171,12 +172,8 @@ function listen() {
                 throw new Error('Could not open stream: Channel name was missing or empty.')
             }
 
-            if (channelURL == null || channelURL.length === 0) {
-                throw new Error('Could not open stream: Channel URL was missing or empty.')
-            }
-            
             // create stream instance
-            await streamManager.createStream(channelName, channelURL)
+            await streamManager.createStream(channelName)
             // attempt to open instance with desired quality
             await streamManager.openStream(channelName, quality)
             result = Result.newOk(channelName)
@@ -392,20 +389,24 @@ const setupStreamlinkPath = async function() {
         return
     } catch(e) { console.error(e) }
 
-    // no valid path in expected places or config file, ask user for a path
+    // no valid path in expected places or config file, ask user for a path.
+    // first check if the viewer preference is set to use Streamlink;
+    // if the user doesn't use streamlink, there's no reason to ask for a path.
 
-    try {
-        const path = await streamlinkProcess.askUserForPath(false)
-        // got a path, check it and update module variable & preferences file
-        streamlinkProcess.checkAndSetExePath(path)
-    } catch(e) { console.error(e) }
+    if (config.get('stream-viewer') === StreamViewerTypes.STREAMLINK) {
+        try {
+            const path = await streamlinkProcess.askUserForPath(false)
+            // got a path, check it and update module variable & preferences file
+            streamlinkProcess.checkAndSetExePath(path)
+        } catch (e) { console.error(e) }
+    }
 }
 
 module.exports.start = function(mainWindow) {
     // store reference to mainWindow
     MAIN_WINDOW = mainWindow
 
-    // try and find a streamlink executable, and if one isn't found, ask user to specify
+    // try and find a streamlink executable. if one isn't found, maybe ask user to specify a path.
     setupStreamlinkPath()
         .then(() => {})
         .catch(console.error)

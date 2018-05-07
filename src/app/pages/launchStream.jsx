@@ -7,8 +7,7 @@ export default () => (state, actions) => {
     const onOpenClick = () => {
         const channelName = document.getElementById('openStream_username').value || ''
         const quality = document.getElementById('openStream_quality').value || ''
-        const channelURL = `twitch.tv/${channelName}`
-        actions.openStream({ channelName, channelURL, quality })
+        actions.openStream({ channelName, quality })
     }
     
     return (
