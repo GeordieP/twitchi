@@ -13,6 +13,7 @@ const notifManager = require('./notifManager')
 const streamlinkProcess = require('./streamlinkProcess')
 const userModule = require('./userModule')
 const { StreamViewerTypes } = require('./util')
+const chatWinManager = require('./chatWinManager')
 
 const Result = require('@geordiep/result')
 
@@ -360,6 +361,34 @@ function listen() {
         }
 
         ipcSend('get-current-user-res', result)
+    })
+
+    ipc.on('open-chat', async function(evt, name) {
+        let result
+
+        try {
+            chatWinManager.openChat(name)
+            result = Result.newOk()
+        } catch(e) {
+            console.error(e)
+            result = Result.newError(e.toString(), 'ipcServer @ open-chat')
+        }
+
+        ipcSend('open-chat-res', result)
+    })
+
+    ipc.on('close-chat', async function(evt, name) {
+        let result
+
+        try {
+            chatWinManager.closeChat(name)
+            result = Result.newOk()
+        } catch(e) {
+            console.error(e)
+            result = Result.newError(e.toString(), 'ipcServer @ close-chat')
+        }
+
+        ipcSend('close-chat-res', result)
     })
 }
 

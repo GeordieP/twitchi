@@ -63,20 +63,15 @@ export default () => (state, actions) => {
                             </li>
 
                             <li>
-                                <h3>Stream Viewer</h3>
-                                <p>View the stream using Streamlink, or using the Twitch popout player inside a Twitchi window.</p>
-                                <select onchange={onChangeStreamViewer}>
-                                    {
-                                        Object.keys(STREAM_VIEWER_OPTIONS).map((v, i) => (
-                                            <option
-                                                selected={i === state.prefs['stream-viewer']}
-                                                value={v}
-                                            >
-                                                {v}
-                                            </option>
-                                        ))
-                                    }
-                                </select>
+                                <h3>Chat</h3>
+                                <p>Open chat when a stream is opened</p>
+                                <input
+                                    type='checkbox'
+                                    id='autoOpenChatCheckbox'
+                                    checked={state.prefs['open-chat-with-stream']}
+                                    onchange={state.prefs['open-chat-with-stream'] ? actions.disableAutoOpenChat : actions.enableAutoOpenChat}
+                                />
+                                <label htmlFor='autoOpenChatCheckbox'>Enable auto-open chat</label>
                             </li>
 
                             <li>
@@ -92,6 +87,23 @@ export default () => (state, actions) => {
                                                 value={q}
                                             >
                                                 {q}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </li>
+
+                            <li>
+                                <h3>Stream Viewer</h3>
+                                <p>View the stream using Streamlink, or using the Twitch popout player inside a Twitchi window.</p>
+                                <select onchange={onChangeStreamViewer}>
+                                    {
+                                        Object.keys(STREAM_VIEWER_OPTIONS).map((v, i) => (
+                                            <option
+                                                selected={i === state.prefs['stream-viewer']}
+                                                value={v}
+                                            >
+                                                {v}
                                             </option>
                                         ))
                                     }

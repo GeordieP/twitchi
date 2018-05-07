@@ -287,6 +287,22 @@ export const listen = dispatch => {
         }
     })
 
+    ipc.on('open-chat-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+        } catch(e) {
+            handleErr('An error occurred when attempting to open chat', e)
+        }
+    })
+
+    ipc.on('close-chat-res', (evt, res) => {
+        try {
+            parseResponse(res).expect()
+        } catch(e) {
+            handleErr('An error occurred when attempting to close chat', e)
+        }
+    })
+
     // events
     ipc.on('event-twitch-follow-list-refresh-begin', evt => {
         dispatch.setState({ refreshingFollowList: true })

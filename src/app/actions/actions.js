@@ -103,6 +103,16 @@ export default {
 
         return { streams: newStreams }
     },
+    openChat: name => ipc.send('open-chat', name),
+    closeChat: name => ipc.send('close-chat', name),
+    enableAutoOpenChat: () => ipc.send('prefs-set-one', {
+        key: 'open-chat-with-stream',
+        value: true
+    }),
+    disableAutoOpenChat: () => ipc.send('prefs-set-one', {
+        key: 'open-chat-with-stream',
+        value: false
+    }),
 
     // preferences //
     updatePreferredQuality: quality => ipc.send('prefs-set-one', {
@@ -143,6 +153,11 @@ export default {
             channelName,
             quality: quality || state.prefs['preferred-stream-quality']
         })
+
+        // if open chat with stream is enabled, also open the chat now
+        if (state.prefs['open-chat-with-stream']) {
+            actions.openChat(channelName)
+        }
 
         // refresh open streams array
         actions.getOpenStreams()
