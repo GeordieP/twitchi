@@ -1,14 +1,18 @@
 <p align="center">
-  <img alt="Twitchi" src="./resources/twitchi.png">
+  <img alt="Twitchi" src="./resources/twitchi.png" width=220>
 </p>
 
 # Twitchi
 
 A Twitch follow list viewer integrated with Streamlink.
 
-## See more information, installation instructions, and more:
+<p align="center">
+  <img alt="Twitchi" src="./docs/img/twitchi-home.png">
+</p>
 
-[GeordieP.github.io/twitchi/](https://geordiep.github.io/twitchi/)
+### See more information, installation instructions, and more:
+
+[geordiep.github.io/twitchi/](https://geordiep.github.io/twitchi/)
 
 ## Development Setup
 
