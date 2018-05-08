@@ -36,7 +36,7 @@ const QualityModal = ({ displayName, channelName, preferredQuality, openStream, 
 }
 
 export default ({ streams }) => (state, actions) => {
-    const createStreamrClickMenu = (stream, isFav, isOpen) => {
+    const createStreamrClickMenu = (stream, isFav, isOpen, toggleFav) => {
         const openStream = actions.openStream.bind(null, { channelName: stream.channel.name })
         const closeStream = actions.closeStream.bind(null, stream.channel.name)
 
@@ -72,7 +72,7 @@ export default ({ streams }) => (state, actions) => {
 
             {
                 label: isFav ? 'Remove from favorites' : 'Add to favorites',
-                handler: actions.toggleStreamFavorite.bind(null, stream.channel.name)
+                handler: toggleFav
             },
 
             {
@@ -105,12 +105,12 @@ export default ({ streams }) => (state, actions) => {
                     const isFav = state.prefs['favorite-streams'].includes(stream.channel.name)
                     const isOpen = state.openStreams.includes(stream.channel.name)
 
+                    const toggleFav = actions.toggleStreamFavorite.bind(null, stream.channel.name)
                     const onClick = actions.openStream.bind(null, { channelName: stream.channel.name })
-
                     const onRClick = event => {
                         actions.contextMenu.show({
                             event,
-                            items: createStreamrClickMenu(stream, isFav, isOpen)
+                            items: createStreamrClickMenu(stream, isFav, isOpen, toggleFav)
                         })
                     }
 
@@ -122,6 +122,7 @@ export default ({ streams }) => (state, actions) => {
                                 isOpen={ isOpen }
                                 onClick={ onClick }
                                 onRClick={ onRClick }
+                                toggleFav={ toggleFav }
                             />
                         </Enter>
                     )
