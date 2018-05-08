@@ -50,11 +50,6 @@ export default ({ streams }) => (state, actions) => {
             },
 
             {
-                label: 'Open Chat',
-                handler: actions.openChat.bind(null, stream.channel.name)
-            },
-
-            {
                 label: 'Watch stream with quality...',
                 handler: actions.modal.show.bind(null, {
                     header: 'Choose Quality',
@@ -74,17 +69,22 @@ export default ({ streams }) => (state, actions) => {
             },
 
             {
+                label: 'Open Chat',
+                handler: actions.openChat.bind(null, stream.channel.name)
+            },
+
+            {
                 label: isFav ? 'Remove from favorites' : 'Add to favorites',
                 handler: toggleFav
             },
 
             {
-                label: 'View channel page',
+                label: 'Open Twitch channel',
                 handler: actions.openURLInBrowser.bind(null, stream.channel.url)
             },
 
             {
-                label: 'View game directory',
+                label: 'Open game directory',
                 handler: actions.openURLInBrowser.bind(null, `https://www.twitch.tv/directory/game/${stream.channel.game}`)
             },
 
