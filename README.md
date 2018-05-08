@@ -10,9 +10,9 @@ A Twitch follow list viewer integrated with Streamlink.
   <img alt="Twitchi" src="./docs/img/twitchi-home.png">
 </p>
 
-### See more information, installation instructions, and more:
+## See more information, installation instructions, and more:
 
-[geordiep.github.io/twitchi/](https://geordiep.github.io/twitchi/)
+### [geordiep.github.io/twitchi/](https://geordiep.github.io/twitchi/)
 
 ## Development Setup
 
