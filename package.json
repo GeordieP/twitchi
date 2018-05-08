@@ -1,6 +1,6 @@
 {
     "name": "twitchi",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "author": "Geordie P [github/GeordieP] <gp@gpow.ca>",
     "license": "MIT",
     "description": "View your Twitch following list, and open live streams in a native video player with just a click",

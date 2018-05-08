@@ -29,10 +29,11 @@ const configVersion = config.get('twitchi-version')
 if (configVersion == null || versIsLowerThan(configVersion, currentVersion)) {
     config.clear()
     config.set(defaults)
-    config.set({
-        'twitchi-version': currentVersion
-    })
 }
+
+config.set({
+    'twitchi-version': currentVersion
+})
 
 // return true if 'compare' represents a lower version than 'base'.
 // compare and base should both be strings in SemVer format.
