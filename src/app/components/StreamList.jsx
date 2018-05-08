@@ -19,6 +19,9 @@ const QualityModal = ({ displayName, channelName, preferredQuality, openStream, 
 
     return (
         <div className='vflex'>
+            <p><strong>NOTE</strong> that the quality selector only applies to Streamlink players!</p>
+            <br />
+            <p>The Twitch player uses the standard quality selector in the player cog menu.</p>
             <select id='qualityModalSelect' onchange={ onchange }>
                 {
                     QUALITY_OPTIONS.map(q => (

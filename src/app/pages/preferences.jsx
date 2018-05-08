@@ -52,33 +52,32 @@ export default () => (state, actions) => {
                         <ul>
                             <li>
                                 <h3>Live Notification</h3>
-                                <p>Show a system notification when streams you follow go live.</p>
                                 <input
                                     type='checkbox'
                                     id='liveNotifCheckbox'
                                     checked={state.prefs['live-notification-enabled']}
                                     onchange={state.prefs['live-notification-enabled'] ? actions.disableLiveNotif : actions.enableLiveNotif}
                                 />
-                                <label htmlFor='liveNotifCheckbox'>Enable live notifications</label>
+                                <label htmlFor='liveNotifCheckbox'>Show a system notification when streams you follow go live</label>
                             </li>
 
                             <li>
                                 <h3>Chat</h3>
-                                <p>Open chat when a stream is opened</p>
                                 <input
                                     type='checkbox'
                                     id='autoOpenChatCheckbox'
                                     checked={state.prefs['open-chat-with-stream']}
                                     onchange={state.prefs['open-chat-with-stream'] ? actions.disableAutoOpenChat : actions.enableAutoOpenChat}
                                 />
-                                <label htmlFor='autoOpenChatCheckbox'>Enable auto-open chat</label>
+                                <label htmlFor='autoOpenChatCheckbox'>Automatically open chat when a stream is opened</label>
                             </li>
 
                             <li>
                                 <h3>Preferred Stream Quality</h3>
                                 <p>Quality to (attempt) to use when opening a stream with Streamlink.</p>
-                                <p>If the preferred quality is not available, the next lowest option will be used
-                                    (eventually falling back to 'best').</p>
+                                <p>If the preferred quality is not available, the next lowest option will be used (eventually falling back to 'best').</p>
+                                <p><strong>NOTE</strong> that the quality selector only applies to Streamlink players! The Twitch player uses the standard quality selector in the player cog menu.</p>
+
                                 <select onchange={onQualChange}>
                                     {
                                         QUALITY_OPTIONS.map(q => (
@@ -126,14 +125,13 @@ export default () => (state, actions) => {
                         <ul>
                             <li>
                                 <h3>Auto-refresh</h3>
-                                <p>Enable or disable automatic refreshing of the main following list.</p>
                                 <input
                                     type='checkbox'
                                     id='autoRefreshCheckbox'
                                     checked={state.prefs['auto-refresh-follow-list-enabled']}
                                     onchange={state.prefs['auto-refresh-follow-list-enabled'] ? actions.disableFollowListAutoRefresh : actions.enableFollowListAutoRefresh}
                                 />
-                                <label htmlFor='autoRefreshCheckbox'>Enable auto-refresh</label>
+                                <label htmlFor='autoRefreshCheckbox'>Automatically refresh the follow list</label>
                             </li>
 
                             <li>
