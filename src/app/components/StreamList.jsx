@@ -85,16 +85,22 @@ export default ({ streams }) => (state, actions) => {
                 handler: actions.openURLInBrowser.bind(null, `https://www.twitch.tv/directory/game/${stream.channel.game}`)
             },
 
-            {
-                label: 'Unfollow channel',
-                handler: actions.unfollowChannel.bind(
-                    null,
-                    {
-                        channelID: stream.channel._id,
-                        displayName: stream.channel.display_name
-                    }
-                )
-            }
+            // NOTE:
+            // Removing the unfollow button for now, as it probably doesn't see much use, and upon
+            // adding the "menus dont overflow viewport" fix, sometimes the unfollow button
+            // (the last element in the menu) happens to be where the mouse pointer is; this
+            // could lead to some unfortunate and frustrating misclicks.
+            //
+            // {
+            //     label: 'Unfollow channel',
+            //     handler: actions.unfollowChannel.bind(
+            //         null,
+            //         {
+            //             channelID: stream.channel._id,
+            //             displayName: stream.channel.display_name
+            //         }
+            //     )
+            // }
         ]
     }
 
