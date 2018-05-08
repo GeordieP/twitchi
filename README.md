@@ -1,10 +1,16 @@
+<p align="center">
+  <img alt="Twitchi" src="./resources/twitchi.png">
+</p>
 
 # Twitchi
 
 A Twitch follow list viewer integrated with Streamlink.
 
+## See more information, installation instructions, and more:
 
-## Setup
+[GeordieP.github.io/twitchi/](https://geordiep.github.io/twitchi/)
+
+## Development Setup
 
 1. Clone repository
 
