@@ -26,7 +26,8 @@ export default () => (state, actions) => {
                             <li>
 
                                 <h3>Stream Quality</h3>
-                                <p>Only applies to this instance. Does not affect global setting in options page.</p>
+                                <p>Only applies to this instance, and only affects Streamlink players. This seting does not affect the global quality setting in the options page.</p>
+                                <p>The Twitch player uses the standard quality selector in the player cog menu.</p>
                                 <select id='openStream_quality'>
                                     {
                                         QUALITY_OPTIONS.map(q => (
