@@ -2,6 +2,7 @@ import { h } from 'hyperapp'
 
 export default ({ enterDelay, stream, isFav, isOpen, onClick, onRClick, toggleFav }) => {
     const channelName = stream.channel.name
+    const title = `${stream.channel.display_name} playing ${stream.game} - ${stream.channel.status}`
 
     const clickFavBtn = e => {
         e.stopPropagation()
@@ -14,7 +15,7 @@ export default ({ enterDelay, stream, isFav, isOpen, onClick, onRClick, toggleFa
     }
 
     return (
-        <div className='stream' onclick={ onClick } oncontextmenu={ onRClick }>
+        <div className='stream' onclick={ onClick } oncontextmenu={ onRClick } title={ title }>
             <div className="stream_controls">
                 { isFav
                     ? <i className="fas fa-star" onclick={ clickFavBtn } title="Unfavorite" />
