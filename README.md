@@ -10,6 +10,16 @@ A Twitch follow list viewer integrated with Streamlink.
   <img alt="Twitchi" src="./docs/img/twitchi-home.png">
 </p>
 
+
+### Notable Features
+
+- View streams using Streamlink, or in a Twitch pop-out player
+- Maintain a list of favorite channels, sorted to the top of the list whenever they're live
+- Automatically open chat whenever a stream is opened (optional)
+- System notifications when streams go live (optional)
+
+
+
 ## See more information, installation instructions, and more:
 
 ### [geordiep.github.io/twitchi/](https://geordiep.github.io/twitchi/)
