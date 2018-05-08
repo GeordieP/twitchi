@@ -1,11 +1,23 @@
 #+TITLE: 
 #+HTML_HEAD: <link rel="stylesheet" href="org-css/marx.min.css" type="text/css" />
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" href="org-css/extra-styles.css" type="text/css" />
-#+OPTIONS: toc:1
+#+OPTIONS: toc:nil
+#+BEGIN_ABSTRACT
+#+HTML: <div class="centered flexCol">
+#+HTML: <img src="./img/icon.png" width=200 />
+#+HTML: <h1>Twitchi</h1>
+#+HTML: <p>Help & Documentation</p>
+#+HTML: </div>
+#+END_ABSTRACT
+#+TOC: headlines 1
 #+OPTIONS: num:nil
+-----
 
 * About Twitchi
   Twitchi is a desktop application for macOS, Linux, and Windows that displays live channels in your Twitch follow list, and provides an easy interface for viewing them, using either a native video player (VLC, MPC-HC, MPV, etc) via Streamlink, or using the default Twitch player in a pop-out window.
+  
+   [[./img/twitchi-home.png]]
+  
 ** Notable Features
    - View streams using Streamlink, or in a Twitch pop-out player
    - Maintain a list of favorite channels, sorted to the top of the list whenever they're live
@@ -19,7 +31,7 @@
    
    Twitchi's Streamlink integration relies on Streamlink being installed on your system, and available in your PATH environment variable.
    
-   Follow the instructions on the [[https://streamlink.github.io/install.html][Streamlink Website]] to get Streamlink set up. There are options for Linux, MacOS, and Windows available. Once it's installed, verify that it works and can be accessed via the command-line. Open up a command prompt or terminal window, type =streamlink=, and press enter.
+   Follow the instructions on the [[https://streamlink.github.io/install.html][Streamlink Website]] to get Streamlink set up. There are options for Linux, macOS, and Windows available. Once it's installed, verify that it works and can be accessed via the command-line. Open up a command prompt or terminal window, type =streamlink=, and press enter.
 
    It should print something similar to the following:
    
@@ -32,8 +44,9 @@
    
    Once the application is installed, it should be ready for use. Launch it and you should be presented with a Twitch login window. Fill out the form, click login, and all the live streams in your follow list should show up.
    
-   TODO: VIDEO
-   #+HTML: <video src="./vid/login.mp4" controls></video>
+   #+HTML: <div class="centered">
+   #+HTML: <video src="./vid/login.webm" controls width=850></video>
+   #+HTML: </div>
 
    You may also be presented with an info dialog informing you that Twitchi couldn't find a Streamlink installation. Read the instructions on the dialog and make the choice that suits your needs.
 * Usage / Stream List Page
@@ -42,13 +55,19 @@
     Left-click a channel preview in the stream list to open it with your desired stream viewer (configured in the Preferences page).
 
     If your stream viewer preference is set to Streamlink, your system-wide Streamlink configuration will be used; whichever video player you have specified in your Streamlink config will be opened by Twitchi (currently Streamlink uses VLC by default).
+    
+    #+HTML: <div class="centered">
+    #+HTML: <video src="./vid/open-stream.webm" controls width=850></video>
+    #+HTML: </div>
+    
 *** Other Streams
     To watch a stream that you don't follow, use the Launch Stream page.
 
     Example Video:
     
-   TODO: VIDEO
-    #+HTML: <video src="./vid/open-stream-page.mp4" controls></video>
+    #+HTML: <div class="centered">
+    #+HTML: <video src="./vid/open-stream-page.webm" controls width=850></video>
+    #+HTML: </div>
 ** Right-click menu options
    An explanation of the right-click menu items.
 *** Right-click on a channel in the stream list
