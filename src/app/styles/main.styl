@@ -69,6 +69,10 @@ h5 {
     color: darken($clr_header, 5%)
 }
 
+strong {
+    font-weight: bold
+}
+
 .vflex {
     display: flex
     flex-direction: column
@@ -104,6 +108,9 @@ input, select, button, textarea {
 button:disabled, input:disabled {
     color: #686868
     border-color: transparent
+    &:hover {
+        background: lighten($clr_pageBg, 12%)
+    }
 }
 
 select {
@@ -137,6 +144,10 @@ section.content {
     padding: 30px
     display: flex
     flex-direction: column
+
+    p {
+        line-height: 1.6rem
+    }
 
     h3 {
         margin-bottom: 5px
