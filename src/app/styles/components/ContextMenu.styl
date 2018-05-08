@@ -11,9 +11,8 @@
 
 .ctxMenuList {
     position: absolute
-    min-width: 200px
-    max-width: 300px
-    max-height: 300px
+    // NOTE: if changing width, also update ContextMenu.jsx constants - calculations depend on this value!
+    width: 220px
     border-radius: 3px
     overflow: auto
     z-index: $zindex_ctxMenu
@@ -23,6 +22,7 @@
     li {
         background: lighten($clr_pageBg, 8%)
         width: 100%
+        // NOTE: if changing padding or margin, also update ContextMenu.jsx constants - calculations depend on this value!!!
         padding: 10px 5px
         margin: 0 3px 5px 0
         cursor: pointer
