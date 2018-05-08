@@ -74,11 +74,6 @@ export default ({ streams }) => (state, actions) => {
             },
 
             {
-                label: isFav ? 'Remove from favorites' : 'Add to favorites',
-                handler: toggleFav
-            },
-
-            {
                 label: 'Open Twitch channel',
                 handler: actions.openURLInBrowser.bind(null, stream.channel.url)
             },
@@ -86,6 +81,11 @@ export default ({ streams }) => (state, actions) => {
             {
                 label: 'Open game directory',
                 handler: actions.openURLInBrowser.bind(null, `https://www.twitch.tv/directory/game/${stream.channel.game}`)
+            },
+
+            {
+                label: isFav ? 'Remove from favorites' : 'Add to favorites',
+                handler: toggleFav
             },
 
             // NOTE:
