@@ -41,7 +41,7 @@ export default () => (state, actions) => {
 
     return (
         <main id='main-preferences' key='main-preferences' oncreate={onMount}>
-            <NavBar/>
+            <NavBar path={state.location.pathname} />
 
             <section className='content'>
                 <div className='page'>

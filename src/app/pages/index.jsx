@@ -38,7 +38,8 @@ const IndexNavbar = ({
     refreshFollowList,
     showContextMenu,
     disableFollowListAutoRefresh,
-    enableFollowListAutoRefresh}) => {
+    enableFollowListAutoRefresh,
+    path }) => {
     const menuItems = [
         {
             label: 'Refresh now',
@@ -57,21 +58,21 @@ const IndexNavbar = ({
     const showMenu = event => showContextMenu({ event, items: menuItems })
 
     return (
-        <NavBar>
-            <a href='#'
+        <NavBar path={path}>
+            <a
                 title={
                     'Refresh List ' +
                     (autoRefreshEnabled ? '(Auto refresh is on)' : '(Auto refresh is disabled)')
                 }
-                className='refreshListBtn'
+                className='refreshListBtn clickable'
                 onclick={ refreshFollowList }
                 oncontextmenu={ showMenu }
-                >
+            >
                 <i className={
                     'fas fa-sync-alt ' +
                     (refreshingFollowList ? 'refreshing ' : '') +
                     (autoRefreshEnabled ? 'autoRefreshEnabled ' : '')
-                }></i> 
+                } />
             </a>
         </NavBar>
     )
@@ -90,6 +91,7 @@ export default () => (state, actions) => {
                 showContextMenu={actions.contextMenu.show}
                 disableFollowListAutoRefresh={actions.disableFollowListAutoRefresh}
                 enableFollowListAutoRefresh={actions.enableFollowListAutoRefresh}
+                path={state.location.pathname}
             />
 
             {state.streams.length > 0 ? (

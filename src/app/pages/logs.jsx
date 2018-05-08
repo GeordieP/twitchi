@@ -23,7 +23,7 @@ export default () => (state, actions) => {
     }
     return (
         <main>
-            <NavBar />
+            <NavBar path={state.location.pathname} />
 
             <section
                 key='logsContent'
