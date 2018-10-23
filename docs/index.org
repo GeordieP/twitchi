@@ -17,13 +17,25 @@
   Twitchi is a desktop application for macOS, Linux, and Windows that displays live channels in your Twitch follow list, and provides an easy interface for viewing them, using either a native video player (VLC, MPC-HC, MPV, etc) via Streamlink, or using the default Twitch player in a pop-out window.
   
    [[./img/twitchi-home.png]]
-  
+   
 ** Notable Features
    - View streams using Streamlink, or in a Twitch pop-out player
    - Maintain a list of favorite channels, sorted to the top of the list whenever they're live
    - Automatically open chat whenever a stream is opened (optional)
    - System notifications when streams go live (optional)
 * Installation
+** Twitchi Setup
+   First, download a release from the [[https://github.com/GeordieP/twitchi/releases][GitHub releases page]], or compile the application from source yourself (instructions in GitHub README [[https://github.com/enjoi0/twitchi/blob/master/README.md][here]]).
+   
+   Once the application is installed, it should be ready for use. Launch it and you should be presented with a Twitch login window. Fill out the form, click login, and all the live streams in your follow list should show up.
+   
+   #+HTML: <div class="centered">
+   #+HTML: <video src="./vid/login.webm" controls width=850></video>
+   #+HTML: </div>
+
+   You may also be presented with an info dialog informing you that Twitchi couldn't find a Streamlink installation. Read the instructions on the dialog and make the choice that suits your needs.
+   
+   If you don't already have Streamlink installed and would like to use it, read the section below.
 ** Streamlink Setup
    *NOTE:* This section can be ignored if you intend on only using the default Twitch player option.
    
@@ -39,16 +51,6 @@
    [[./img/verify-streamlink-installed.png]]
    
    If you get an error, Streamlink is not installed properly, and Twitchi won't be able to use Streamlink until you set up a path manually. The Twitch pop-out player option will still work just fine.
-** Twitchi Setup
-   First, download a release from the [[https://github.com/GeordieP/twitchi/releases][GitHub releases page]], or compile the application from source yourself (instructions in GitHub README [[https://github.com/enjoi0/twitchi/blob/master/README.md][here]]).
-   
-   Once the application is installed, it should be ready for use. Launch it and you should be presented with a Twitch login window. Fill out the form, click login, and all the live streams in your follow list should show up.
-   
-   #+HTML: <div class="centered">
-   #+HTML: <video src="./vid/login.webm" controls width=850></video>
-   #+HTML: </div>
-
-   You may also be presented with an info dialog informing you that Twitchi couldn't find a Streamlink installation. Read the instructions on the dialog and make the choice that suits your needs.
 * Usage / Stream List Page
 ** Open a Stream
 *** Followed Streams
